@@ -1,0 +1,466 @@
+
+<!DOCTYPE html >
+
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core" xmlns:pe="http://primefaces.org/ui/extensions" xmlns:pa="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions">
+
+<h:head></h:head>
+<h:body>
+	<ui:composition template="/template/template.xhtml">
+		<ui:define name="content">
+			<style>
+.carrinho {
+	color: #fff;
+	background: url('../resources/img/carrinho2.jpg') center/cover;
+	background-position: 50% 40%;
+}
+
+.endereco {
+	color: #fff;
+	background: url('../resources/img/endereco.jpg') center/cover;
+}
+
+.frete {
+	color: #fff;
+	background: url('../resources/img/frete1.jpg') center/cover;
+}
+
+.totalpagar {
+	color: #fff;
+	background: url('../resources/img/pagamento2.jpg') center/cover;
+}
+</style>
+			<script>
+/* <![CDATA[ */ 
+$(document).ready(function() {
+
+
+	
+
+
+            	 $('input[type=radio][name=frete]').change(function() {
+		console.log("FRETEEEEEEEE")
+                	 
+            	        if (this.value == 'SEDEX') {
+            	        	updateFreteEscolhido([{name:'frete', value:40010}])
+            	        }else if (this.value == 'SEDEX10') {
+            	        	updateFreteEscolhido([{name:'frete', value:40215}])
+            	        }else if(this.value == 'PAC'){
+            	        	updateFreteEscolhido([{name:'frete', value:41106}])
+                	        }
+            	    });
+         	    
+            
+
+
+
+    $(".cep").inputmask('99999-999');
+    $(".cep").keyup(function() {
+        var string = this.value,
+            substring = "_";
+        if (string.indexOf(substring) == -1) {
+            app_key = 'PGfWjOmrFPac9yHZD6cWaTSxLPioaUle';
+            app_secret = '8aOC02s1W1DOCt2P1Jgsq6oWJT574tU16E9s7w8kOvHucGPk';
+            $.getJSON("https://webmaniabr.com/api/1/cep/" + this.value + "/?app_key=" + app_key + "&app_secret=" + app_secret, function(data) {
+                
+            	  $("#idEstado").parent().addClass('is-dirty'); 
+                  $("#idCidade").parent().addClass('is-dirty'); 
+                  $("#idRua").parent().addClass('is-dirty'); 
+                  $("#idBairro").parent().addClass('is-dirty'); 
+                  $("#idCep").parent().addClass('is-dirty');
+
+                  console.log(data);
+                  console.log(data.endereco);
+                  $("#idEstado").val(converterEstados(data.uf));
+                  $("#idCidade").val(data.cidade);
+                  $("#idRua").val(data.endereco);
+                  $("#idBairro").val(data.bairro);
+                  $("#idCep").val(data.cep);
+
+                  if(data.uf!=""){
+                      console.log("DATA FU"+data.uf)
+                  updateCEPFrete([{name:'cep', value:data.cep} ])
+                  }
+
+            });
+        }
+    });
+
+});
+ /* ]]> */
+ </script>
+			<h:form>
+
+				<p:remoteCommand update="@(.updateFrete)" name="updateFreteEscolhido" actionListener="#{freteBean.updateFreteEscolhido()}" style="display: none;" />
+				<p:remoteCommand update="@(.updateFrete)" name="updateCEPFrete" actionListener="#{freteBean.updateCEPFrete()}" style="display: none;" />
+			</h:form>
+			<f:metadata>
+			
+				<f:viewAction action="#{carrinhoBean.veriricarProdutosEstoque}" />
+			</f:metadata>
+
+
+
+			<div class="demo-blog__posts produto-container">
+
+				<section style="width: 100%;" class="section--center mdl-grid mdl-cell--strech mdl-grid--no-spacing ">
+					<div style="width: 100%;" class="mdl-grid mdl-cell mdl-cell--12-col">
+						<p:outputPanel style="width:100%" id="listCarrinho">
+							<h:form style="width:100%">
+								<div style="width: 100%" class="demo-card-wide mdl-card mdl-cell--12-col mdl-shadow--2dp mdl-cell--middle">
+									<div class="mdl-card__title carrinho ">
+										<div style="padding: 0px;" class="mdl-grid carrinho-top">
+											<div class="mdl-cell--12-col ">
+												<h4 class=" mdl-card__title-text carrinho-titulo">Meu Carrinho</h4>
+												<h4 class=" mdl-card__title-text carrinho-total">
+													<h:outputText rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()>0}" value="Total: R$#{carrinhoBean.carrinho.valorTotal}" />
+												</h4>
+											</div>
+										</div>
+									</div>
+									<div style="margin: 0" class=" mdl-grid mdl-grid--no-spacing">
+
+
+
+
+
+										<ui:repeat value="#{carrinhoBean.itemCarrinhoKeySetList}" var="key">
+
+
+
+											<div class="mdl-grid mdl-cell--12-col carrinho-item-full-container">
+												<div style="margin-bottom: 0; margin-top: 0" class="section__circle-container mdl-cell my-cell--1-col">
+
+													<div class="section__circle-container__circle ">
+														<div class="carrinho-item-image"></div>
+													</div>
+												</div>
+												<div
+													class="section__text mdl-grid mdl-cell--top mdl-cell--stretch mdl-cell mdl-cell--10-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone carrinho-item carrinho-item-container">
+													<div class=" mdl-grid mdl-cell--top carrinho-item-container mdl-cell--12-col">
+														<h5 style="margin: 0px 0px 8px 0px;" class="mdl-cell--middle  mdl-cell mdl-cell--8-col mdl-cell--5-col-tablet  mdl-cell--12-col-phone ">#{carrinhoBean.carrinho.itemCarrinhoMap[key].produto.nome}</h5>
+														<div class="mdl-layout-spacer"></div>
+														<div style="padding: 0; margin: 0px 0px 8px 0px;"
+															class="mdl-cell mdl-grid mdl-cell--12-col-phone mdl-cell--3-col-desktop my-cell--4-col-tablet ">
+															<div class="mdl-layout-spacer mdl-cell--hide-phone"></div>
+
+
+
+
+															<h:commandLink class="mdl-cell--middle" immediate="true" action="#{carrinhoBean.removeItem(key)}">
+																<h5 style="width: 73px;"
+																	class="carrinho-item-nome mdl-cell mdl-cell--middle  mdl-cell--2-col mdl-cell--2-col-phone carrinho-item-container ">Remover</h5>
+																<p:ajax render="listCarrinho" />
+															</h:commandLink>
+
+
+															<div class="mdl-layout-spacer "></div>
+															<h5 style="width: 34px"
+																class="carrinho-item-nome mdl-cell mdl-cell--middle  mdl-cell--1-col mdl-cell--1-col-phone carrinho-item-container">Qtd.</h5>
+															<h:inputText style="text-align: center; width:  16px" pa:min="1"
+																class="mdl-textfield__input  carrinho-item-nome mdl-cell mdl-cell--middle  mdl-cell--2-col mdl-cell--2-col-phone carrinho-item-container"
+																type="text" id="produtoQtd#{item.value.produto.id}" />
+
+														</div>
+
+													</div>
+													<div class="mdl-grid carrinho-item-container mdl-cell--bottom mdl-cell--12-col">
+
+														<div class="mdl-cell mdl-cell--4-col-desktop mdl-cell--4-col-tablet mdl-cell--12-col-phone carrinho-item-container">
+															<h5 class="preco-unitario">Preço Unitário: #{carrinhoBean.carrinho.itemCarrinhoMap[key].produto.valor}</h5>
+														</div>
+														<div class="mdl-layout-spacer"></div>
+														<div
+															class="mdl-cell mdl-cell--4-col-desktop mdl-cell--4-col-tablet mdl-cell--top mdl-cell--12-col carrinho-item-container carrinho-item-precototal">
+															<div class="mdl-layout-spacer"></div>
+															<h5 class="preco-total">Preço Total: #{carrinhoBean.carrinho.itemCarrinhoMap[key].valor}</h5>
+														</div>
+													</div>
+												</div>
+											</div>
+
+										</ui:repeat>
+
+
+										<h:panelGroup layout="block" rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()>0}">
+
+											<div style="text-align: right;" class="mdl-card__actions">
+												<h:commandLink class="mdl-button" immediate="true" value="Remover Todos" action="#{carrinhoBean.removeAll()}">
+
+													<p:ajax render="listCarrinho" />
+													<p:ajax render="carrinho" />
+												</h:commandLink>
+
+
+												<h:commandLink class="mdl-button" value="Checkout" action="#{carrinhoBean.verificarPedido()}" />
+											</div>
+										</h:panelGroup>
+										<h:panelGroup layout="block" rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()==0}">
+
+											<h2>Nenhum item no carrinho</h2>
+										</h:panelGroup>
+
+
+									</div>
+								</div>
+							</h:form>
+						</p:outputPanel>
+					</div>
+
+
+
+
+
+
+					<p:outputPanel rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()>0}" style="width:100%">
+						<div style="width: 100%; margin: 0" class="mdl-grid mdl-cell mdl-cell--12-col">
+							<p:outputPanel style="width:100%" id="endereco">
+								<div style="margin-top: 16px; width: 100%" class=" demo-card-wide mdl-card mdl-cell--12-col mdl-shadow--2dp">
+									<div class="mdl-card__title endereco ">
+										<div style="padding: 0px;" class="mdl-grid carrinho-top">
+											<div class="mdl-cell--12-col ">
+												<h4 class="mdl-card__title-text carrinho-titulo">Endereço</h4>
+
+											</div>
+										</div>
+									</div>
+
+									<div class="mdl-grid">
+										<form class="mdl-cell mdl-cell--4-col" action="#">
+											<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
+												<h:inputText value="Brasil" disabled="true" class="mdl-textfield__input card-input" type="text" id="idPais" />
+												<label class="mdl-textfield__label" for="sample3">País</label>
+											</div>
+										</form>
+										<form class="mdl-cell mdl-cell--4-col" action="#">
+											<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
+												<h:inputText value="#{clienteBean.cliente.endereco.estado}" class="mdl-textfield__input card-input" type="text" id="idEstado" />
+												<label class="mdl-textfield__label" for="sample3">Estado</label>
+											</div>
+										</form>
+										<form class="mdl-cell mdl-cell--4-col" action="#">
+											<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
+												<h:inputText value="#{clienteBean.cliente.endereco.cidade}" class="mdl-textfield__input card-input" type="text" id="idCidade" />
+												<label class="mdl-textfield__label" for="sample3">Cídade</label>
+											</div>
+										</form>
+										<form class="mdl-cell mdl-cell--2-col" action="#">
+											<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+												<input class="mdl-textfield__input cep" value="#{clienteBean.cliente.endereco.cep}" type="text" pattern="\d{5}-?\d{3}" jsf:id="idCep" />
+												<label class="mdl-textfield__label " for="idCep">CEP</label> <span class="mdl-textfield__error">#####-###</span>
+											</div>
+										</form>
+
+
+										<form class="mdl-cell mdl-cell--2-col" action="#">
+											<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
+												<h:inputText value="#{clienteBean.cliente.endereco.bairro}" class="mdl-textfield__input card-input bairro" type="text" id="idBairro" />
+												<label class="mdl-textfield__label" for="sample3">Baírro</label>
+											</div>
+										</form>
+										<form class="mdl-cell mdl-cell--4-col" action="#">
+											<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
+												<h:inputText value="#{clienteBean.cliente.endereco.rua}" class="mdl-textfield__input card-input" type="text" id="idRua" />
+												<label id="labelRua" class="mdl-textfield__label" for="idRua">Rua</label>
+											</div>
+										</form>
+										<form class="mdl-cell mdl-cell--2-col" action="#">
+											<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
+												<h:inputText value="#{clienteBean.cliente.endereco.numero}" class="mdl-textfield__input card-input" type="text" id="idNumero" />
+												<label class="mdl-textfield__label" for="sample3">Número</label>
+											</div>
+										</form>
+										<form class="mdl-cell mdl-cell--2-col" action="#">
+											<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
+												<h:inputText value="#{clienteBean.cliente.endereco.complemento}" class="mdl-textfield__input card-input" type="text" id="idComplemento" />
+												<label class="mdl-textfield__label" for="sample3">Complemento</label>
+											</div>
+										</form>
+									</div>
+
+								</div>
+							</p:outputPanel>
+
+						</div>
+
+
+						<div style="margin: 0; width: 100%" class="mdl-grid mdl-cell mdl-cell--12-col ">
+							<div style="margin-top: 16px;" class="demo-card-wide mdl-card mdl-cell--6-col mdl-cell--12-col-phone mdl-shadow--2dp frete-total">
+								<div class="mdl-card__title frete ">
+
+									<div style="padding: 0px;" class="mdl-grid carrinho-top">
+										<div class="mdl-cell--12-col ">
+											<h4 class=" mdl-card__title-text carrinho-titulo">Frete</h4>
+
+
+											<h4 class=" mdl-card__title-text carrinho-total">
+												<h:outputText styleClass="updateFrete" id="valorFreteEscolhido" value="#{freteBean.valorFreteEscolhido}" />
+											</h4>
+
+										</div>
+									</div>
+
+								</div>
+
+
+								<div style="width: 100%;" class="mdl-grid frete-container">
+
+
+									<h:form style="width: 100%;">
+										<div class="mdl-grid carrinho-item ">
+											<div class="mdl-cell mdl-cell--4-col mdl-cell--2-col-phone mdl-cell--2-col-tablet">
+												<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="idSedex"> <input data-code="40010" class="mdl-radio__button"
+													id="idSedex" name="frete" type="radio" value="SEDEX" /> <span class="mdl-radio__label">SEDEX</span></label>
+											</div>
+
+											<div class="mdl-layout-spacer"></div>
+
+											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
+												<span><h:outputText styleClass="updateFrete" id="etaSedexs" value="#{freteBean.etaSedex} dias uteis"
+														rendered="#{freteBean.etaSedex > 1}" /> <h:outputText styleClass="updateFrete" id="etaSedex" value="#{freteBean.etaSedex} dia utíl"
+														rendered="#{freteBean.etaSedex == 1}" /></span>
+											</div>
+											<div class="mdl-layout-spacer"></div>
+
+											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
+												<span><h:outputText styleClass="updateFrete" id="valorSedex" value="R$#{freteBean.valorFreteSedex}"
+														rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()>0}" /></span>
+											</div>
+										</div>
+										<div class="mdl-grid carrinho-item ">
+											<div class="mdl-cell mdl-cell--4-col mdl-cell--2-col-phone mdl-cell--2-col-tablet">
+												<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="idSedex10"> <input class="mdl-radio__button" data-code="40215"
+													id="idSedex10" name="frete" type="radio" value="SEDEX10" /> <span class="mdl-radio__label">SEDEX 10</span></label>
+											</div>
+											<div class="mdl-layout-spacer"></div>
+											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
+												<span><h:outputText styleClass="updateFrete" id="etaSedex10s" value="#{freteBean.etaSedex10} dias uteis"
+														rendered="#{freteBean.etaSedex10 > 1}" /> <h:outputText styleClass="updateFrete" id="etaSedex10" value="#{freteBean.etaSedex} dia útil"
+														rendered="#{freteBean.etaSedex10 == 1}" /></span>
+											</div>
+											<div class="mdl-layout-spacer"></div>
+											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
+												<span><h:outputText styleClass="updateFrete" id="valorSedex10" value="R$#{freteBean.valorFreteSedex10}"
+														rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()>0}" /></span>
+											</div>
+										</div>
+
+										<div class="mdl-grid  carrinho-item">
+
+											<div class="mdl-cell mdl-cell--4-col mdl-cell--2-col-phone mdl-cell--2-col-tablet">
+												<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="idPac"> <input class="mdl-radio__button" id="idPac"
+													data-code="41106" name="frete" type="radio" value="PAC" /> <span class="mdl-radio__label">Encomenda PAC</span></label>
+											</div>
+											<div class="mdl-layout-spacer"></div>
+											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
+												<span><h:outputText styleClass="updateFrete" id="etaPacs" value="#{freteBean.etaPac} dias uteis" rendered="#{freteBean.etaPac > 1}" />
+													<h:outputText styleClass="updateFrete" id="etaPac" value="#{freteBean.etaPac} dia utíl" rendered="#{freteBean.etaPac == 1}" /></span>
+											</div>
+											<div class="mdl-layout-spacer"></div>
+											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
+												<span><h:outputText styleClass="updateFrete" id="valorPac" value="R$#{freteBean.valorFretePac}"
+														rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()>0}" /></span>
+											</div>
+										</div>
+
+
+
+									</h:form>
+								</div>
+
+
+							</div>
+							<div class="mdl-layout-spacer"></div>
+							<div style="margin-top: 16px; display: table;"
+								class="demo-card-wide mdl-card mdl-cell--6-col mdl-cell--12-col-phone  mdl-shadow--2dp frete-total">
+								<div class="mdl-card__title totalpagar ">
+									<div style="padding: 0px;" class="mdl-grid carrinho-top">
+										<div style="padding: 0px;" class=" carrinho-top">
+											<div class="mdl-cell--12-col ">
+												<h4 class=" mdl-card__title-text carrinho-titulo">
+													Total a pagar <small>(Com desconto)</small>
+
+												</h4>
+
+
+
+												<h4 class=" mdl-card__title-text carrinho-total ">R$#{carrinhoBean.carrinho.valorTotal }</h4>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<style type="text/css">
+html, body, .container, .placeholder {
+	height: 100%;
+}
+
+.content, .placeholder {
+	display: inline-block;
+	vertical-align: middle;
+}
+</style>
+
+								<div style="width: 100%; padding-bottom: 0;" class="mdl-grid frete-container">
+									<h:form style="width: 100%;">
+
+										<div class="mdl-grid carrinho-item ">
+											<div class="mdl-cell mdl-cell--3-col mdl-cell--2-col-phone mdl-cell--2-col-tablet">
+												<span class="mdl-radio__label content">No boleto</span> <span class="placeholder"></span>
+											</div>
+											<div class="mdl-layout-spacer"></div>
+											<div style="text-align: center;" class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
+												<span>15% de desconto</span>
+											</div>
+											<div class="mdl-layout-spacer"></div>
+											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
+												<span class="content">R$550,00</span> <span class="placeholder"></span>
+											</div>
+										</div>
+
+										<div class="mdl-grid carrinho-item ">
+
+											<div class="mdl-cell mdl-cell--3-col mdl-cell--2-col-phone mdl-cell--2-col-tablet">
+												<span class="mdl-radio__label content">No cartão</span> <span class="placeholder"></span>
+											</div>
+											<div class="mdl-layout-spacer"></div>
+											<div style="text-align: center;" class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
+												<span>Até 10x de R$55,00</span>
+											</div>
+											<div class="mdl-layout-spacer"></div>
+											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
+												<span class="content">R$550,00</span> <span class="placeholder"></span>
+											</div>
+										</div>
+
+
+
+									</h:form>
+								</div>
+
+
+
+							</div>
+
+						</div>
+
+					</p:outputPanel>
+
+				</section>
+
+
+
+
+
+
+			</div>
+
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

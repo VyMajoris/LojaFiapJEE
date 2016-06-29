@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:jsf="http://xmlns.jcp.org/jsf/" xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core" xmlns:pe="http://primefaces.org/ui/extensions" xmlns:pa="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:o="http://omnifaces.org/ui"
+xmlns:of="http://omnifaces.org/functions">
+
+<h:head>
+
+
+</h:head>
+<h:body>
+	<ui:composition template="/template/template.xhtml">
+		<ui:define name="content">
+			
+
+				<div style='align-items: center; justify-content: center;' class="intro_container  mdl-typography--text-center">
+					<div class="mdl-cell mdl-cell--12-col">
+						<span id="display_name" class="logo_intro">Bem vindo, Visitante!</span>
+					</div>
+					<div class="mdl-cell mdl-cell--12-col">
+
+
+						<img class="logo" src="https://jhipster.github.io/img/logo-jhipster-drink-coffee.png" />
+					</div>
+					<div class="mdl-cell mdl-cell--12-col">
+						<span class="logo_intro">Veja nossas ofertas!</span>
+
+
+					</div>
+				</div>
+
+				<p:outputPanel id="listPanel" class="demo-blog__posts mdl-grid" autoUpdate="true">
+					<ui:repeat id="listaProduto" var="produto" value="#{listaProdutoBean.listProduto}">
+
+						<div class="mdl-card  mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--12-col-phone mdl-shadow--4dp">
+						<h:form>
+							<div style="background: url('../resources/img/cafe.jpg') center/cover;" class="mdl-card__media mdl-color-text--grey-50">
+								<h3>
+									<a href="entry.html">#{produto.nome}</a>
+								</h3>
+							</div>
+							<div class="mdl-card__supporting-text meta mdl-color-text--grey-600 mdl-grid ">
+
+								<div class=" mdl-cell mdl-cell--3-col mdl-cell--12-col-tablet mdl-cell--12-col-phone ">
+									<strong>R$ #{produto.valor}</strong> <span>2 days ago</span>
+								</div>
+								<div class="  mdl-cell mdl-cell--8-col mdl-cell--12-col-tablet mdl-cell--12-col-phone  ">
+									<strong>Descrição</strong> <span>#{produto.descricao}</span>
+								</div>
+
+							</div>
+							
+							<div class="mdl-card__actions">
+			
+								<a href="#" class="mdl-button">Comprar</a> <h:commandLink immediate="true" action="#{carrinhoBean.putItem(produto.id,1)}" value="Adicionar ao Carrinho"  class="mdl-button">
+								<p:ajax render="carrinho"/></h:commandLink>
+							</div>
+						
+							</h:form>
+						</div>
+					</ui:repeat>
+
+
+
+
+		
+
+				</p:outputPanel>
+				
+				
+			
+  
+				  
+	
+		</ui:define>
+
+
+	</ui:composition>
+
+</h:body>
+</html>

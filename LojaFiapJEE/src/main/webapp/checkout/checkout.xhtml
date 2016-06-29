@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+<h:head></h:head>
+<h:body>
+	<ui:composition template="/template/template.xhtml">
+		<ui:define name="content">
+
+
+			<style>
+.boleto {
+	color: #fff;
+	background: url('../resources/img/boleto.jpg') center/cover;
+	background-position: 50% 40%;
+}
+
+.cartao {
+	color: #fff;
+	background: url('../resources/img/cartao.jpg') center/cover;
+	background-position: 50% 40%;
+}
+
+.frete {
+	color: #fff;
+	background: url('../resources/img/frete1.jpg') center/cover;
+}
+
+.totalpagar {
+	color: #fff;
+	background: url('../resources/img/pagamento2.jpg') center/cover;
+}
+</style>
+
+			<div class="demo-blog__posts produto-container">
+
+				<section style="width:100%;" class="section--center mdl-grid mdl-cell--strech mdl-grid--no-spacing ">
+				<div style="width: 100%;" class="mdl-grid mdl-cell mdl-cell--12-col">
+					<div style="width: 100%" class="demo-card-wide mdl-card mdl-cell--12-col mdl-shadow--2dp mdl-cell--middle">
+						<div class="mdl-card__title boleto ">
+							<div style="padding: 0px;" class="mdl-grid carrinho-top">
+								<div class="mdl-cell--12-col ">
+									<h4 class=" mdl-card__title-text carrinho-titulo">Boleto</h4>
+
+
+									<h4 class=" mdl-card__title-text carrinho-total">R$ #{checkoutBean.valorBoleto}</h4>
+								</div>
+							</div>
+						</div>
+						<div class="mdl-card__supporting-text mdl-grid pagamento-container my-full-width">
+							<div class="mdl-cell mdl-cell--2-col mdl-cell--hide-phone mdl-cell--hide-tablet mdl-cell--1-col-tablet boleto-icon-container">
+								<i class="fa fa-barcode " aria-hidden="true"></i>
+							</div>
+							<div class="mdl-cell  mdl-cell--10-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone mdl-cell--7-col-tablet">
+								<h5 class="titulo-boleto">Ganhe até 15% de desconto, válido para todo o Brasil!</h5>
+
+								<span class="texto-boleto">Este é o método mais prático para quem deseja pagar à vista. Você poderá efetuar o pagamento do boleto em
+									qualquer Banco ou Casa Lotérica em qualquer lugar do Brasil, sem necessidade de confirmação do pagamento. Além disso, é a forma de pagamento
+									que recebe o maior desconto para cliente final sob o valor total da compra. </span>
+								<hr></hr>
+								<span class="total-boleto">O total a pagar de sua compra é de <span class="total-boleto preco">R$ #{checkoutBean.valorCC}.</span> Por este método de
+									pagamento, será <span class="total-boleto preco">R$#{checkoutBean.valorBoleto}</span>
+								</span>
+							</div>
+
+						</div>
+
+						<div style="text-align: right;" class="mdl-card__actions">
+							<a href="#" class="mdl-button">Pagar com Boleto</a>
+						</div>
+					</div>
+				</div>
+
+				<div style="width: 100%;" class="mdl-grid mdl-cell mdl-cell--12-col">
+					<div style="width: 100%" class="demo-card-wide mdl-card mdl-cell--12-col mdl-shadow--2dp mdl-cell--middle">
+						<div class="mdl-card__title cartao">
+							<div style="padding: 0px;" class="mdl-grid carrinho-top">
+								<div class="mdl-cell--12-col ">
+									<h4 class=" mdl-card__title-text carrinho-titulo">Cartão</h4>
+
+
+									<h4 class=" mdl-card__title-text carrinho-total">R$ #{checkoutBean.valorCC}</h4>
+								</div>
+							</div>
+						</div>
+						<div class="mdl-card__supporting-text mdl-grid pagamento-container my-full-width">
+							<div class="mdl-cell mdl-cell--2-col mdl-cell--hide-phone  mdl-cell--hide-tablet mdl-cell--1-col-tablet boleto-icon-container">
+								<i class="fa fa-credit-card-alt" aria-hidden="true"></i>
+							</div>
+							<div class="mdl-cell  mdl-cell--10-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone mdl-cell--7-col-tablet">
+								<h5 class="titulo-boleto">Até 10x sem juros!</h5>
+
+								<div style="padding: 0px;" class="mdl-grid">
+									<div class="mdl-cell mdl-cell--4-col mdl-cell--3-col-tablet  mdl-cell--3-col-phone small-phone-font">
+										<gold-cc-input class="card-input" required="true" auto-validate="true" label="Número do cartão" />
+									</div>
+									<div class="mdl-cell mdl-cell--2-col  mdl-cell--2-col-tablet mdl-cell--1-col-phone small-phone-font">
+										<gold-cc-cvc-input required="true" auto-validate="true" label="CCV"></gold-cc-cvc-input>
+									</div>
+									<div class="mdl-cell mdl-cell--6-col mdl-cell--3-col-tablet mdl-cell--12-col-phone small-phone-font phone-full-width  ">
+										<paper-input label="Data de validade(dd/MM/aaaa)"></paper-input>
+									</div>
+									<div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-phone small-phone-font phone-full-width ">
+										<paper-input label="Nome(Como escrito no cartão)"></paper-input>
+									</div>
+									
+
+
+								</div>
+								
+							</div>
+
+						</div>
+
+						<div style="text-align: right;" class="mdl-card__actions">
+							<a href="#" class="mdl-button">Pagar com Cartão</a>
+						</div>
+					</div>
+				</div>
+
+
+
+
+				</section>
+
+
+
+
+
+
+			</div>
+
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

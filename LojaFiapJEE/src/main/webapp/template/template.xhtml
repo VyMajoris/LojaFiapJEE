@@ -1,0 +1,363 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:jsf="http://xmlns.jcp.org/jsf/" xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core" xmlns:pe="http://primefaces.org/ui/extensions" xmlns:pa="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions">
+
+
+<h:head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+	<meta name="description" content="A front-end template that helps you build fast, modern mobile web apps." />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+	<title>Material Design Lite</title>
+
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en" />
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet"
+		integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous" />
+	<link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+	<link rel="stylesheet" href="https://code.getmdl.io/1.1.3/material.grey-orange.min.css" />
+
+	<h:outputStylesheet library="css" name="styles.css" />
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dialog-polyfill/0.4.3/dialog-polyfill.js" />
+	<script  src="https://code.getmdl.io/1.1.3/material.min.js"/>
+	<h:outputScript name="js/jquery.inputmask.bundle.min.js" />
+	<h:outputStylesheet library="css" name="getmdl-select.min.css" />
+	<h:outputScript library="js" name="getmdl-select.min.js" />
+	<h:outputScript library="js" name="conversor-estados.js" />
+	<h:outputScript library="js" name="inputmask.binding.js" />
+
+
+
+
+	<!-- POLYMER ELEMENTS -->
+	<script type="text/javascript" src="../bower_components/webcomponentsjs/webcomponents-lite.js" />
+
+	<link rel="import" href="../bower_components/gold-cc-input/gold-cc-input.html" />
+	<link rel="import" href="../bower_components/paper-input/paper-input-container.html" />
+	<link rel="import" href="../bower_components/paper-input/paper-input-error.html" />
+	<link rel="import" href="../bower_components/paper-input/paper-input.html" />
+	<link rel="import" href="../bower_components/gold-cc-cvc-input/gold-cc-cvc-input.html" />
+
+
+
+	<style>
+.demo-layout-transparent {
+	background: url('https://i.imgur.com/JYDQ1vI.jpg') center/cover;
+}
+
+.demo-layout-transparent .mdl-layout__header, .demo-layout-transparent .mdl-navigation__link,
+	.demo-layout-transparent .mdl-layout__drawer-button {
+	/* This background is dark, so we set text to white. Use 87% black instead if
+                your background is light. */
+	color: white;
+}
+
+#carrinho-button {
+	position: fixed;
+	display: block;
+	right: 0;
+	bottom: 0;
+	margin-right: 40px;
+	margin-bottom: 40px;
+	z-index: 900;
+}
+</style>
+	<script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+	<script>
+	
+            // Initialize Firebase
+            var config = {
+                apiKey: "AIzaSyCKRIBWMBmqSNkXaQow_fsFBdjv0lQkKJk",
+                authDomain: "lojafiapjee.firebaseapp.com",
+                databaseURL: "http://lojafiapjee.firebaseio.com",
+                storageBucket: "lojafiapjee.appspot.com",
+            };
+            firebase.initializeApp(config);
+        </script>
+
+	<script type="text/javascript">
+
+            /**
+     * Function called when clicking the Login/Logout button.
+     */
+            // [START buttoncallback]
+            function toggleSignIn() {
+                if (!firebase.auth().currentUser) {
+                    // [START createprovider]
+                    var provider = new firebase.auth.GoogleAuthProvider();
+                    // [END createprovider]
+                    // [START addscopes]
+                    provider.addScope('https://www.googleapis.com/auth/plus.login');
+                    // [END addscopes]
+                    // [START signin]
+                    firebase.auth().signInWithPopup(provider).then(function(result) {
+                        // This gives you a Google Access Token. You can use it to access the Google API.
+                        var token = result.credential.accessToken;
+                        // The signed-in user info.
+                        var user = result.user;
+
+                        console.log(user.getToken())
+                        
+					login([{name:'uid', value:user.uid},
+							 {name:'email', value:user.email},
+							  {name:'displayName', value:user.displayName},
+							  {name:'photoURL', value:user.photoURL},
+							  {name:'providerData', value:user.providerData},
+							  {name:'refreshToken', value:user.refreshToken},
+							  {name:'emailVerified', value:user.emailVerified},
+							  {name:'token', value:user.getToken()}
+							  ]);
+                        
+                    }).catch(function(error) {
+                        // Handle Errors here.
+                        var errorCode = error.code;
+                        var errorMessage = error.message;
+                        // The email of the user's account used.
+                        var email = error.email;
+                        // The firebase.auth.AuthCredential type that was used.
+                        var credential = error.credential;
+                        // [START_EXCLUDE]
+                        if (errorCode === 'auth/account-exists-with-different-credential') {
+                            alert('You have already signed up with a different auth provider for that email.');
+                            // If you are using multiple auth providers on your app you should handle linking
+                            // the user's accounts here.
+                        } else {
+                            console.error(error);
+                        }
+                        // [END_EXCLUDE]
+                    });
+                    // [END signin]
+                } else {
+                    // [START signout]
+                    firebase.auth().signOut();
+                    // [END signout]
+                }
+                // [START_EXCLUDE]
+                document.getElementById('quickstart-sign-in').disabled = true;
+                // [END_EXCLUDE]
+            }
+            // [END buttoncallback]
+
+            /**
+     * initApp handles setting up the Firebase context and registering
+     * callbacks for the auth status.
+     *
+     * The core initialization is in firebase.App - this is the glue class
+     * which stores configuration. We provide an app name here to allow
+     * distinguishing multiple app instances.
+     *
+     * This method also registers a listener with firebase.auth().onAuthStateChanged.
+     * This listener is called when the user is signed in or out, and that
+     * is where we update the UI.
+     *
+     * When signed in, we also authenticate to the Firebase Realtime Database.
+     */
+            function initApp() {
+                // Listening for auth state changes.
+                // [START authstatelistener]
+                firebase.auth().onAuthStateChanged(function(user) {
+                    if (user) {
+                        // User is signed in.
+                        var displayName = user.displayName;
+                        var email = user.email;
+                        var emailVerified = user.emailVerified;
+                        var photoURL = user.photoURL;
+                        var isAnonymous = user.isAnonymous;
+                        var uid = user.uid;
+                        var refreshToken = user.refreshToken;
+                        var providerData = user.providerData;
+
+                        $("#display_name").text("Bem vindo, "+displayName);
+                        console.log("displayName")
+                        document.getElementById('quickstart-sign-in').textContent = 'SAIR';
+
+                    } else {
+                        // User is signed out.
+                        $("#display_name").text("Bem vindo, visitante");
+                        document.getElementById('quickstart-sign-in').textContent = 'ENTRAR';
+                        console.log("asdsad")
+                    }
+                    // [START_EXCLUDE]
+                    document.getElementById('quickstart-sign-in').disabled = false;
+                    // [END_EXCLUDE]
+                });
+                // [END authstatelistener]
+
+                document.getElementById('quickstart-sign-in').addEventListener('click', toggleSignIn, false);
+            }
+
+            window.onload = function() {
+                initApp();
+            };
+        </script>
+
+
+</h:head>
+<body>
+
+	<h:form>
+		<p:remoteCommand name="login" actionListener="#{clienteBean.login()}" style="display: none;" />
+	</h:form>
+
+
+	<dialog class=" custom-dialog">
+	<h4 class="mdl-dialog__title">Completar Cadastro?</h4>
+	<div class="mdl-dialog__content">
+		<p>Seu perfil ainda não está completo. Deseja completar-lo agora?</p>
+		<p>Você precisa completar-lo para poder concluíru uma compra.</p>
+	</div>
+	<div class="mdl-dialog__actions">
+		<h:button class="mdl-button" value=" Completar" outcome="/faces/cadastro/cadastro.xhtml" />
+		<button type="button" class="mdl-button close">Fechar</button>
+
+	</div>
+	</dialog>
+
+	<script>
+            var dialog = document.querySelector('dialog');
+            var showDialogButton = document.querySelector('#show-dialog');
+            if (! dialog.showModal) {
+                dialogPolyfill.registerDialog(dialog);
+            }
+            showDialogButton.addEventListener('click', function() {
+                dialog.showModal();
+            });
+            dialog.querySelector('.close').addEventListener('click', function() {
+                dialog.close();
+            });
+        </script>
+	<div class="demo-blog demo-layout-transparent mdl-layout mdl-js-layout ">
+		
+		<header class="mdl-layout__header mdl-layout__header--scroll  mdl-layout--fixed-header mdl-layout__header--transparent">
+			<div class="mdl-layout__header-row">
+
+				<!-- Title -->
+				<span style="font-family: 'Pacifico', cursive;" class="titulo mdl-layout-title ">Loja Hipster Genérica</span>
+				<!-- Add spacer, to align navigation to the right -->
+				<div class="mdl-layout-spacer"></div>
+				<!-- Navigation -->
+				<div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable mdl-textfield--floating-label mdl-textfield--align-right">
+					<label class="mdl-button mdl-js-button mdl-button--icon " for="fixed-header-drawer-exp"> <i class="material-icons">search</i>
+					</label>
+
+					<div class="mdl-textfield__expandable-holder">
+						<input class="mdl-textfield__input" type="text" name="sample" id="fixed-header-drawer-exp" />
+					</div>
+				</div>
+
+				<button id="quickstart-sign-in"
+					class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--accent mdl-color-text--accent-contrast"></button>
+			</div>
+
+		</header>
+
+
+
+		<div class="demo-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50" aria-hidden="false">
+			<header class="demo-drawer-header">
+				<img src="images/user.jpg" class="demo-avatar" />
+				<div class="demo-avatar-dropdown">
+					<span style="line-height: 2;">hello@example.com</span>
+					<div class="mdl-layout-spacer"></div>
+
+				</div>
+			</header>
+			<nav class="demo-navigation mdl-navigation mdl-color--blue-grey-800"><a class="mdl-navigation__link" href=""><i
+					class="mdl-color-text--blue-grey-400 material-icons " role="presentation">home</i>Home</a> <a class="mdl-navigation__link" href=""><i
+					class="mdl-color-text--blue-grey-400 material-icons" role="presentation">inbox</i>Inbox</a> <a class="mdl-navigation__link" href=""><i
+					class="mdl-color-text--blue-grey-400 material-icons" role="presentation">delete</i>Trash</a> <a class="mdl-navigation__link" href=""><i
+					class="mdl-color-text--blue-grey-400 material-icons" role="presentation">report</i>Spam</a> <a class="mdl-navigation__link" href=""><i
+					class="mdl-color-text--blue-grey-400 material-icons" role="presentation">forum</i>Forums</a> <a class="mdl-navigation__link" href=""><i
+					class="mdl-color-text--blue-grey-400 material-icons" role="presentation">flag</i>Updates</a> <a class="mdl-navigation__link" href=""><i
+					class="mdl-color-text--blue-grey-400 material-icons" role="presentation">local_offer</i>Promos</a> <a class="mdl-navigation__link" href=""><i
+					class="mdl-color-text--blue-grey-400 material-icons" role="presentation">shopping_cart</i>Purchases</a> <a class="mdl-navigation__link" href=""><i
+					class="mdl-color-text--blue-grey-400 material-icons" role="presentation">people</i>Social</a>
+				<div class="mdl-layout-spacer"></div> <a class="mdl-navigation__link" href=""><i class="mdl-color-text--blue-grey-400 material-icons"
+					role="presentation">help_outline</i><span class="visuallyhidden">Help</span></a></nav>
+		</div>
+
+		<main class="mdl-layout__content"> <ui:insert name="content">
+		</ui:insert> </main>
+
+
+
+
+		<footer class="mdl-mega-footer">
+			<div class="mdl-mega-footer__middle-section ">
+
+				<div class="mdl-mega-footer__drop-down-section">
+					<input class="mdl-mega-footer__heading-checkbox" type="checkbox" checked="true" />
+					<h1 class="mdl-mega-footer__heading">Features</h1>
+					<ul class="mdl-mega-footer__link-list">
+						<li><a href="#">About</a></li>
+						<li><a href="#">Terms</a></li>
+						<li><a href="#">Partners</a></li>
+						<li><a href="#">Updates</a></li>
+					</ul>
+				</div>
+
+				<div class="mdl-mega-footer__drop-down-section">
+					<input class="mdl-mega-footer__heading-checkbox" type="checkbox" checked="true" />
+					<h1 class="mdl-mega-footer__heading">Details</h1>
+					<ul class="mdl-mega-footer__link-list">
+						<li><a href="#">Specs</a></li>
+						<li><a href="#">Tools</a></li>
+						<li><a href="#">Resources</a></li>
+					</ul>
+				</div>
+
+				<div class="mdl-mega-footer__drop-down-section">
+					<input class="mdl-mega-footer__heading-checkbox" type="checkbox" checked="true" />
+					<h1 class="mdl-mega-footer__heading">Technology</h1>
+					<ul class="mdl-mega-footer__link-list">
+						<li><a href="#">How it works</a></li>
+						<li><a href="#">Patterns</a></li>
+						<li><a href="#">Usage</a></li>
+						<li><a href="#">Products</a></li>
+						<li><a href="#">Contracts</a></li>
+					</ul>
+				</div>
+
+				<div class="mdl-mega-footer__drop-down-section">
+					<input class="mdl-mega-footer__heading-checkbox" type="checkbox" checked="true" />
+					<h1 class="mdl-mega-footer__heading">FAQ</h1>
+					<ul class="mdl-mega-footer__link-list">
+						<li><a href="#">Questions</a></li>
+						<li><a href="#">Answers</a></li>
+						<li><a href="#">Contact us</a></li>
+					</ul>
+				</div>
+
+			</div>
+
+			<div class="mdl-mega-footer__bottom-section">
+				<div class="mdl-logo">Title</div>
+				<ul class="mdl-mega-footer__link-list">
+					<li><a href="#">Help</a></li>
+					<li><a href="#">Privacy Terms</a></li>
+				</ul>
+			</div>
+
+
+
+
+		</footer>
+		<p:outputPanel id="carrinho">
+
+			<div id="carrinho-button" class="mdl-badge mdl-badge--overlap" data-badge="#{carrinhoBean.carrinho.qtdItens}">
+
+
+				<h:link type="button" outcome="/carrinho/carrinho" class="mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored ">
+					<i class="material-icons">shopping_cart</i>
+				</h:link>
+			</div>
+		</p:outputPanel>
+	</div>
+
+
+
+</body>
+</html>
