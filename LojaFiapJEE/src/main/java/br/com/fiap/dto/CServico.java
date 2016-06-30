@@ -18,7 +18,7 @@ public class CServico
 	@Element(name="ValorAvisoRecebimento")
     private String valorAvisoRecebimento;
 
-	@Element(name="ValorMaoPropria")
+	@Element(name="ValorMaoPropria", required=false)
     private String valorMaoPropria;
 
 	@Element(name="MsgErro" , required=false)
@@ -27,19 +27,19 @@ public class CServico
 	@Element(name="ValorValorDeclarado")
     private String valorValorDeclarado;
 
-	@Element(name="Valor")
+	@Element(name="Valor", required=false)
     private String valor;
 
 	@Element(name="PrazoEntrega")
     private String prazoEntrega;
 
-	@Element(name="EntregaSabado")
+	@Element(name="EntregaSabado", required=false)
     private String entregaSabado;
 
-	@Element(name="Erro")
+	@Element(name="Erro", required=false)
     private String erro;
 
-	@Element(name="ValorSemAdicionais")
+	@Element(name="ValorSemAdicionais", required=false)
     private String valorSemAdicionais;
 
 	@Override

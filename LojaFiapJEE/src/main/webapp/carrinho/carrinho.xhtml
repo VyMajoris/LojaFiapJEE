@@ -36,25 +36,20 @@
 /* <![CDATA[ */ 
 $(document).ready(function() {
 
-
-	
-
-
             	 $('input[type=radio][name=frete]').change(function() {
-		console.log("FRETEEEEEEEE")
+
                 	 
             	        if (this.value == 'SEDEX') {
             	        	updateFreteEscolhido([{name:'frete', value:40010}])
+            	        	updateCalcularValor();
             	        }else if (this.value == 'SEDEX10') {
             	        	updateFreteEscolhido([{name:'frete', value:40215}])
+            	        	updateCalcularValor();
             	        }else if(this.value == 'PAC'){
             	        	updateFreteEscolhido([{name:'frete', value:41106}])
+            	        	updateCalcularValor();
                 	        }
             	    });
-         	    
-            
-
-
 
     $(".cep").inputmask('99999-999');
     $(".cep").keyup(function() {
@@ -80,7 +75,7 @@ $(document).ready(function() {
                   $("#idCep").val(data.cep);
 
                   if(data.uf!=""){
-                      console.log("DATA FU"+data.uf)
+                     
                   updateCEPFrete([{name:'cep', value:data.cep} ])
                   }
 
@@ -95,11 +90,16 @@ $(document).ready(function() {
 
 				<p:remoteCommand update="@(.updateFrete)" name="updateFreteEscolhido" actionListener="#{freteBean.updateFreteEscolhido()}" style="display: none;" />
 				<p:remoteCommand update="@(.updateFrete)" name="updateCEPFrete" actionListener="#{freteBean.updateCEPFrete()}" style="display: none;" />
+				<p:remoteCommand update="@(.updateFrete)" name="updateCalcularValor" actionListener="#{carrinhoBean.calcularValor()}" style="display: none;" />
 			</h:form>
 			<f:metadata>
-			
+
 				<f:viewAction action="#{carrinhoBean.veriricarProdutosEstoque}" />
+				<f:viewAction action="#{freteBean.checkCep}" />
+				<f:viewAction action="#{carrinhoBean.calcularValor}" />
+				
 			</f:metadata>
+
 
 
 
@@ -124,7 +124,11 @@ $(document).ready(function() {
 
 
 
-
+	AA #{freteBean.sedexChecked} AA <BR></BR>
+	
+	AA #{freteBean.sedex10Checked} AA <BR></BR>
+	
+	AA #{freteBean.pacChecked} AA <BR></BR>
 
 										<ui:repeat value="#{carrinhoBean.itemCarrinhoKeySetList}" var="key">
 
@@ -296,7 +300,7 @@ $(document).ready(function() {
 
 
 											<h4 class=" mdl-card__title-text carrinho-total">
-												<h:outputText styleClass="updateFrete" id="valorFreteEscolhido" value="#{freteBean.valorFreteEscolhido}" />
+												<h:outputText styleClass="updateFrete" id="valorFreteEscolhido" value="#{freteValues.freteEscolhido}" />
 											</h4>
 
 										</div>
@@ -312,37 +316,37 @@ $(document).ready(function() {
 										<div class="mdl-grid carrinho-item ">
 											<div class="mdl-cell mdl-cell--4-col mdl-cell--2-col-phone mdl-cell--2-col-tablet">
 												<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="idSedex"> <input data-code="40010" class="mdl-radio__button"
-													id="idSedex" name="frete" type="radio" value="SEDEX" /> <span class="mdl-radio__label">SEDEX</span></label>
+													id="idSedex" name="frete" type="radio" value="SEDEX" checked="#{freteValues.sedexChecked}" /> <span class="mdl-radio__label">SEDEX</span></label>
 											</div>
 
 											<div class="mdl-layout-spacer"></div>
 
 											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
-												<span><h:outputText styleClass="updateFrete" id="etaSedexs" value="#{freteBean.etaSedex} dias uteis"
-														rendered="#{freteBean.etaSedex > 1}" /> <h:outputText styleClass="updateFrete" id="etaSedex" value="#{freteBean.etaSedex} dia utíl"
-														rendered="#{freteBean.etaSedex == 1}" /></span>
+												<span><h:outputText styleClass="updateFrete" id="etaSedexs" value="#{freteValues.freteSedex.prazoEntrega} dias uteis"
+														rendered="#{freteValues.freteSedex.prazoEntrega > 1}" /> <h:outputText styleClass="updateFrete" id="etaSedex" value="#{freteValues.freteSedex.prazoEntrega} dia utíl"
+														rendered="#{freteValues.freteSedex.prazoEntrega == 1}" /></span>
 											</div>
 											<div class="mdl-layout-spacer"></div>
 
 											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
-												<span><h:outputText styleClass="updateFrete" id="valorSedex" value="R$#{freteBean.valorFreteSedex}"
+												<span><h:outputText styleClass="updateFrete" id="valorSedex" value="R$#{freteValues.freteSedex.valor}"
 														rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()>0}" /></span>
 											</div>
 										</div>
 										<div class="mdl-grid carrinho-item ">
 											<div class="mdl-cell mdl-cell--4-col mdl-cell--2-col-phone mdl-cell--2-col-tablet">
 												<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="idSedex10"> <input class="mdl-radio__button" data-code="40215"
-													id="idSedex10" name="frete" type="radio" value="SEDEX10" /> <span class="mdl-radio__label">SEDEX 10</span></label>
+													id="idSedex10" name="frete" type="radio" value="SEDEX10" checked="#{freteValues.sedex10Checked}" /> <span class="mdl-radio__label">SEDEX 10</span></label>
 											</div>
 											<div class="mdl-layout-spacer"></div>
 											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
-												<span><h:outputText styleClass="updateFrete" id="etaSedex10s" value="#{freteBean.etaSedex10} dias uteis"
-														rendered="#{freteBean.etaSedex10 > 1}" /> <h:outputText styleClass="updateFrete" id="etaSedex10" value="#{freteBean.etaSedex} dia útil"
-														rendered="#{freteBean.etaSedex10 == 1}" /></span>
+												<span><h:outputText styleClass="updateFrete" id="etaSedex10s" value="#{freteValues.freteSedex10.prazoEntrega} dias uteis"
+														rendered="#{freteValues.freteSedex10.prazoEntrega > 1}" /> <h:outputText styleClass="updateFrete" id="etaSedex10" value="#{freteValues.freteSedex10.prazoEntrega} dia útil"
+														rendered="#{freteValues.freteSedex10.prazoEntrega == 1}" /></span>
 											</div>
 											<div class="mdl-layout-spacer"></div>
 											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
-												<span><h:outputText styleClass="updateFrete" id="valorSedex10" value="R$#{freteBean.valorFreteSedex10}"
+												<span><h:outputText styleClass="updateFrete" id="valorSedex10" value="#{freteValues.freteSedex10.valor}"
 														rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()>0}" /></span>
 											</div>
 										</div>
@@ -351,16 +355,16 @@ $(document).ready(function() {
 
 											<div class="mdl-cell mdl-cell--4-col mdl-cell--2-col-phone mdl-cell--2-col-tablet">
 												<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="idPac"> <input class="mdl-radio__button" id="idPac"
-													data-code="41106" name="frete" type="radio" value="PAC" /> <span class="mdl-radio__label">Encomenda PAC</span></label>
+													data-code="41106" name="frete" type="radio" value="PAC" checked="#{freteValues.pacChecked}" /> <span class="mdl-radio__label">Encomenda PAC</span></label>
 											</div>
 											<div class="mdl-layout-spacer"></div>
 											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
-												<span><h:outputText styleClass="updateFrete" id="etaPacs" value="#{freteBean.etaPac} dias uteis" rendered="#{freteBean.etaPac > 1}" />
-													<h:outputText styleClass="updateFrete" id="etaPac" value="#{freteBean.etaPac} dia utíl" rendered="#{freteBean.etaPac == 1}" /></span>
+												<span><h:outputText styleClass="updateFrete" id="etaPacs" value="#{freteValues.fretePac.prazoEntrega} dias uteis" rendered="#{freteValues.fretePac.prazoEntrega > 1}" />
+													<h:outputText styleClass="updateFrete" id="etaPac" value="#{freteValues.fretePac.prazoEntrega} dia utíl" rendered="#{freteValues.fretePac.prazoEntrega == 1}" /></span>
 											</div>
 											<div class="mdl-layout-spacer"></div>
 											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
-												<span><h:outputText styleClass="updateFrete" id="valorPac" value="R$#{freteBean.valorFretePac}"
+												<span><h:outputText styleClass="updateFrete" id="valorPac" value="#{freteValues.fretePac.valor}"
 														rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()>0}" /></span>
 											</div>
 										</div>
@@ -380,13 +384,12 @@ $(document).ready(function() {
 										<div style="padding: 0px;" class=" carrinho-top">
 											<div class="mdl-cell--12-col ">
 												<h4 class=" mdl-card__title-text carrinho-titulo">
-													Total a pagar <small>(Com desconto)</small>
-
+													Total a pagar
 												</h4>
 
 
 
-												<h4 class=" mdl-card__title-text carrinho-total ">R$#{carrinhoBean.carrinho.valorTotal }</h4>
+											
 											</div>
 										</div>
 									</div>
@@ -416,7 +419,7 @@ html, body, .container, .placeholder {
 											</div>
 											<div class="mdl-layout-spacer"></div>
 											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
-												<span class="content">R$550,00</span> <span class="placeholder"></span>
+												<h:outputText styleClass="updateFrete" value="#{carrinhoBean.valorBoleto}" /><span class="placeholder"></span>
 											</div>
 										</div>
 
@@ -427,11 +430,11 @@ html, body, .container, .placeholder {
 											</div>
 											<div class="mdl-layout-spacer"></div>
 											<div style="text-align: center;" class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
-												<span>Até 10x de R$55,00</span>
+												<h:outputText styleClass="updateFrete content" value="#{carrinhoBean.valorParcela}" />
 											</div>
 											<div class="mdl-layout-spacer"></div>
 											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
-												<span class="content">R$550,00</span> <span class="placeholder"></span>
+												<h:outputText styleClass="updateFrete content" value="#{carrinhoBean.valorCC}" /> <span class="placeholder"></span>
 											</div>
 										</div>
 

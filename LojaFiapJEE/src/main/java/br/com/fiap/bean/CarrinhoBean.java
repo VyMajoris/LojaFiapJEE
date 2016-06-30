@@ -12,17 +12,32 @@ import javax.servlet.http.HttpSession;
 
 import org.omnifaces.util.Ajax;
 
+import br.com.fiap.business.Calculos;
 import br.com.fiap.dao.GenericDao;
 import br.com.fiap.dto.Carrinho;
 import br.com.fiap.entity.Produto;
 
-@ManagedBean
+
 @SessionScoped
+@ManagedBean
 public class CarrinhoBean {
+	private static final int CARRINHO_MAX_PARCELAS = 10;
 	GenericDao<Produto> produtoDao;
 	HttpSession session;
-	@ManagedProperty("#{freteBean}")
-	FreteBean freteBean;
+
+
+
+	@ManagedProperty("#{freteValues}")
+	FreteValues freteValues;
+
+	public FreteValues getFreteValues() {
+		return freteValues;
+	}
+
+	public void setFreteValues(FreteValues freteValues) {
+		this.freteValues = freteValues;
+	}
+
 	ArrayList<Produto> listProdutosSemEstoque = new ArrayList<>();
 
 	public ArrayList<Produto> getListProdutosSemEstoque() {
@@ -36,25 +51,26 @@ public class CarrinhoBean {
 	private ArrayList<Long> itemCarrinhoKeySetList = new ArrayList<>();
 
 	private String qtdItens;
+	private Double valorBoleto;
+	private Double valorCC;
+	private Double valorParcela;
 
 	@PostConstruct
 	public void init() {
 		produtoDao = new GenericDao<>(Produto.class);
+		 calcularValor();
+
 
 	}
 
 	public String verificarPedido(){
 
-		if (freteBean.isFreteOk()) {
-
 			  return "/checkout/checkout.xhtml?faces-redirect=true";
 
-		}else{
-			//show dialog ERRO FRETE
-			return null;
-		}
+
 
 	}
+
 
 	public void veriricarProdutosEstoque(){
 		if (listProdutosSemEstoque.size()>0) {
@@ -63,6 +79,40 @@ public class CarrinhoBean {
 		}
 
 	}
+
+	public Double getValorBoleto() {
+		return valorBoleto;
+	}
+
+	public void setValorBoleto(Double valorBoleto) {
+		this.valorBoleto = valorBoleto;
+	}
+
+	public Double getValorCC() {
+		return valorCC;
+	}
+
+	public void setValorCC(Double valorCC) {
+		this.valorCC = valorCC;
+	}
+
+	public void calcularValor() {
+
+		System.out.println("CALCULAR"+ freteValues.isFreteOk());
+
+		if (freteValues.isFreteOk()) {
+			System.out.println("CALCULAR OK");
+			valorBoleto =  Calculos.calcularValorBoleto(carrinho.getValorTotal(), freteValues.getValorFreteEscolhido());
+			valorParcela =  Calculos.calcularParcelasSemJurosCartao(carrinho.getValorTotal(), freteValues.getValorFreteEscolhido(), CARRINHO_MAX_PARCELAS);
+			valorCC =    Calculos.calcularValorCartao(carrinho.getValorTotal(), freteValues.getValorFreteEscolhido());
+		}
+		Ajax.update("@(.updateFrete)");
+
+
+	}
+
+
+
 
 
 	public void updateSession(Carrinho carrinho){
@@ -152,14 +202,13 @@ public class CarrinhoBean {
 		this.itemCarrinhoKeySetList = itemCarrinhoKeySetList;
 	}
 
-	public FreteBean getFreteBean() {
-		return freteBean;
+	public Double getValorParcela() {
+		return valorParcela;
 	}
 
-	public void setFreteBean(FreteBean freteBean) {
-		this.freteBean = freteBean;
+	public void setValorParcela(Double valorParcela) {
+		this.valorParcela = valorParcela;
 	}
-
 
 
 

@@ -10,6 +10,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
+import br.com.fiap.business.Calculos;
 import br.com.fiap.dao.GenericDao;
 import br.com.fiap.dto.Carrinho;
 import br.com.fiap.dto.ItemCarrinho;
@@ -17,10 +18,12 @@ import br.com.fiap.entity.Cliente;
 import br.com.fiap.entity.Item;
 import br.com.fiap.entity.Pedido;
 import br.com.fiap.entity.Produto;
-
 @ManagedBean
 @RequestScoped
-public class CheckoutBean {
+public class CheckoutBean  {
+
+
+
 	public CarrinhoBean getCarrinhoBean() {
 		return carrinhoBean;
 	}
@@ -32,11 +35,30 @@ public class CheckoutBean {
 
 	HttpSession session;
 	Carrinho carrinho;
+	private Double valor;
+	public Double getValor() {
+		return valor;
+	}
+
+
+	public void setValor(Double valor) {
+		this.valor = valor;
+	}
+
 	private Double valorBoleto;
 	private Double valorCC;
 
 
 	private GenericDao<Pedido> pedidoDao;
+	public FreteBean getFreteBean() {
+		return freteBean;
+	}
+
+
+	public void setFreteBean(FreteBean freteBean) {
+		this.freteBean = freteBean;
+	}
+
 	private GenericDao<Item> itemDao;
 	private GenericDao<Cliente> clienteDao;
 
@@ -46,6 +68,10 @@ public class CheckoutBean {
 
 	@ManagedProperty("#{carrinhoBean}")
 	CarrinhoBean carrinhoBean;
+
+	@ManagedProperty("#{freteBean}")
+	FreteBean freteBean;
+
 
 	@PostConstruct
 	public void init(){
@@ -62,13 +88,13 @@ public class CheckoutBean {
 
 
 	private void calcularValorBoleto() {
-		Double valor = carrinho.getValorTotal();
-
+		valorBoleto = Calculos.calcularValorBoleto(valor, freteBean.getValorFreteEscolhido());
 	}
 
 
 	private void calcularValorCC() {
-		// TODO Auto-generated method stub
+		valorCC = carrinho.getValorTotal();
+		valorCC = valorCC + freteBean.getValorFreteEscolhido();
 
 	}
 

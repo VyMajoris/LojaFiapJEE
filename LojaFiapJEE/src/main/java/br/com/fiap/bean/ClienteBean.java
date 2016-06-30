@@ -45,7 +45,7 @@ public class ClienteBean {
 	@PostConstruct
 	public void init(){
 		session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-		clienteDao = new GenericDao<Cliente>(Cliente.class);
+		clienteDao = new GenericDao<>(Cliente.class);
 
 		cliente = (Cliente) session.getAttribute("cliente");
 		System.out.println("as "+cliente);
@@ -58,13 +58,15 @@ public class ClienteBean {
 			cliente.setEndereco(new Endereco());
 		}
 	}
+
+
+
+
 	public void login(){
 
 		getRequestParams();
 
 		cliente = clienteDao.buscarById(uid);
-
-
 
 		System.out.println("a");
 		if (cliente == null) {

@@ -6,9 +6,10 @@ import java.text.ParseException;
 import java.util.Locale;
 
 import javax.annotation.PostConstruct;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.inject.Named;
 import javax.servlet.http.HttpSession;
 
 import br.com.fiap.business.CepRestClient;
@@ -17,8 +18,30 @@ import br.com.fiap.dto.CServico;
 import br.com.fiap.entity.Cliente;
 
 @SessionScoped
-@Named
+@ManagedBean
 public class FreteBean {
+
+	@ManagedProperty("#{freteValues}")
+	FreteValues freteValues;
+
+	@ManagedProperty("#{carrinhoBean}")
+	CarrinhoBean carrinhoBean;
+
+	public FreteValues getFreteValues() {
+		return freteValues;
+	}
+
+	public void setFreteValues(FreteValues freteValues) {
+		this.freteValues = freteValues;
+	}
+
+	public CarrinhoBean getCarrinhoBean() {
+		return carrinhoBean;
+	}
+
+	public void setCarrinhoBean(CarrinhoBean carrinhoBean) {
+		this.carrinhoBean = carrinhoBean;
+	}
 
 	private CResultado frete;
 	HttpSession session;
@@ -32,8 +55,10 @@ public class FreteBean {
 	private final String  pacCod = "41106";
 
 
-	private boolean isFreteOk = false;
-	private String valorFreteEscolhido;
+	private boolean freteOk = false;
+	private Double valorFreteEscolhido;
+
+	private String freteEscolhido;
 	private Double valorFreteSedex;
 	private Double valorFreteSedex10;
 	private Double valorFretePac;
@@ -42,17 +67,44 @@ public class FreteBean {
 	private String etaPac;
 	private String cep;
 	CServico freteSedex;
+
+
 	CServico freteSedex10;
 	CServico fretePac;
+	private String sedexChecked ;
+	private String sedex10Checked;
+	private String pacChecked;
+	private String freteChecked ="";
+
 
 
 	@PostConstruct
-	public  void init() {
+	public void init() {
 		session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+
+		sedexChecked = "";
+		sedex10Checked = "";
+		pacChecked = "";
+
+
+		try {
+			checkCep();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+	}
+
+	public void checkCep() throws ParseException {
 		cliente =	(Cliente) session.getAttribute("cliente");
 		if (cliente !=null) {
+			System.out.println("FRETE B");
 			if (cliente.getEndereco()!=null) {
+				System.out.println("FRETE C");
 				if (cliente.getEndereco().getCep()!= null) {
+					System.out.println("FRETE D");
 					try {
 						updateFreteValues(cliente.getEndereco().getCep());
 					} catch (ParseException e) {
@@ -60,19 +112,20 @@ public class FreteBean {
 						e.printStackTrace();
 					}
 					//valorFreteEscolhido = freteSedex.getValor();
-					valorFreteEscolhido = "";
-					isFreteOk = false;
+					freteValues.setFreteEscolhido("Selecione o frete");
+
+					freteValues.setFreteOk(false);
 				}else{
-					valorFreteEscolhido = "Insira um CEP válido";
-					isFreteOk = false;
+					freteValues.setFreteEscolhido("Insira um CEP válido");
+					freteValues.setFreteOk(false);
 				}
 
 			}else{
-				valorFreteEscolhido = "Insira um CEP válido";
-				isFreteOk = false;
+				freteValues.setFreteEscolhido("Insira um CEP válido");
+				freteValues.setFreteOk(false);
 			}
 		}else{
-			 try {
+			try {
 				FacesContext.getCurrentInstance().getExternalContext().redirect("../index/newIndex.xhtml");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -81,57 +134,106 @@ public class FreteBean {
 		}
 
 
+		switch (freteChecked) {
+		case "sedex":
+
+
+			freteValues.setFreteEscolhido("R$"+freteSedex.getValor());
+			freteValues.setValorFreteEscolhido(format.parse(freteSedex.getValor()).doubleValue());
+
+			break;
+		case "sedex10":
+			freteValues.setFreteEscolhido("R$"+freteSedex10.getValor());
+			freteValues.setValorFreteEscolhido(format.parse(freteSedex.getValor()).doubleValue());
+
+			break;
+		case "pac":
+			freteValues.setFreteEscolhido("R$"+fretePac.getValor());
+			freteValues.setValorFreteEscolhido(format.parse(fretePac.getValor()).doubleValue());
+
+			break;
+
+		default:
+			break;
+		}
+
 	}
 
 	private void updateFreteValues(String cep) throws ParseException {
 		System.out.println("AAAAA");
-		freteSedex = CepRestClient.consultar(sedexCod, cep).getServicos().getCServico();
+		freteValues.setFreteSedex(CepRestClient.consultar(sedexCod, cep).getServicos().getCServico());
 		System.out.println("bbbbb");
-		freteSedex10 = CepRestClient.consultar(sedex10Cod, cep).getServicos().getCServico();
+		freteValues.setFreteSedex10(CepRestClient.consultar(sedex10Cod, cep).getServicos().getCServico());
 		System.out.println("cccc");
-		fretePac = CepRestClient.consultar(pacCod, cep).getServicos().getCServico();
+		freteValues.setFretePac(CepRestClient.consultar(pacCod, cep).getServicos().getCServico());
 		System.out.println("dddd");
 
 
 
-		valorFreteSedex =  format.parse(freteSedex.getValor()).doubleValue();
-		etaSedex = freteSedex.getPrazoEntrega();
 
-		valorFreteSedex10 =   format.parse(freteSedex10.getValor()).doubleValue();
-		etaSedex10 = freteSedex10.getPrazoEntrega();
-
-		valorFretePac =    format.parse(fretePac.getValor()).doubleValue();
-		etaPac= fretePac.getPrazoEntrega();
-
+		updateFreteEscolhido();
 	}
 
 
 
 	public void updateFreteEscolhido() throws ParseException{
-		freteId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("frete");
 
+		String freteTemp = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("frete");
+
+		if (freteTemp != null) {
+			freteId = freteTemp;
+		}
+
+
+		System.out.println("UPDATE FRETEEEE : "+freteId);
 
 		switch (freteId) {
 		case sedexCod:
-			valorFreteEscolhido =   "R$"+freteSedex.getValor();
-			isFreteOk = true;
+
+			freteValues.setFreteEscolhido("R$"+freteValues.getFreteSedex().getValor());
+			freteValues.setValorFreteEscolhido( format.parse(freteValues.getFreteSedex().getValor()).doubleValue());
+			freteValues.setFreteOk(true);
+			System.out.println(" SEDEX IS FRETE OK: "+freteOk);
+			freteValues.setSedex10Checked("");
+			freteValues.setSedexChecked("checked");
+			freteValues.setPacChecked("");
+			freteValues.setFreteChecked("sedex");
 			break;
 		case sedex10Cod:
-			valorFreteEscolhido =   "R$"+freteSedex10.getValor();
-			isFreteOk = true;
+			freteValues.setFreteEscolhido("R$"+freteValues.getFreteSedex10().getValor());
+			freteValues.setValorFreteEscolhido( format.parse(freteValues.getFreteSedex10().getValor()).doubleValue());
+			freteValues.setFreteOk(true);
+			System.out.println(" SEDEX 10 IS FRETE OK: "+freteOk);
+
+
+			freteValues.setSedex10Checked("checked");
+			freteValues.setSedexChecked("");
+			freteValues.setPacChecked("");
+			freteValues.setFreteChecked("sedex10");
+
+
+			System.out.println("SEDEX 10: asdas"+sedex10Checked);
 
 			break;
 		case pacCod:
-			valorFreteEscolhido =   "R$"+fretePac.getValor();
-			isFreteOk = true;
+			freteValues.setFreteEscolhido("R$"+freteValues.getFretePac().getValor());
+			freteValues.setValorFreteEscolhido( format.parse(freteValues.getFretePac().getValor()).doubleValue());
+			freteValues.setFreteOk(true);
+			System.out.println(" PAC IS FRETE OK: "+freteOk);
+			freteValues.setSedex10Checked("");
+			freteValues.setSedexChecked("");
+			freteValues.setPacChecked("checked");
+			freteValues.setFreteChecked("pac");
 			break;
 
 		default:
-			valorFreteEscolhido = "Erro";
-			isFreteOk = false;
+			freteEscolhido = "Escolha um frete";
+			freteOk = false;
 			break;
 		}
 
+
+		carrinhoBean.calcularValor();
 
 
 	}
@@ -195,6 +297,21 @@ public class FreteBean {
 	public void setFretePac(CServico fretePac) {
 		this.fretePac = fretePac;
 	}
+	public Double getValorFreteEscolhido() {
+		return valorFreteEscolhido;
+	}
+
+	public void setValorFreteEscolhido(Double valorFreteEscolhido) {
+		this.valorFreteEscolhido = valorFreteEscolhido;
+	}
+
+	public String getFreteEscolhido() {
+		return freteEscolhido;
+	}
+
+	public void setFreteEscolhido(String freteEscolhido) {
+		this.freteEscolhido = freteEscolhido;
+	}
 
 	public String getSedexCod() {
 		return sedexCod;
@@ -208,13 +325,7 @@ public class FreteBean {
 		return pacCod;
 	}
 
-	public String getValorFreteEscolhido() {
-		return valorFreteEscolhido;
-	}
 
-	public void setValorFreteEscolhido(String valorFreteEscolhido) {
-		this.valorFreteEscolhido = valorFreteEscolhido;
-	}
 
 	public Double getValorFreteSedex() {
 		return valorFreteSedex;
@@ -273,13 +384,47 @@ public class FreteBean {
 	}
 
 	public boolean isFreteOk() {
-		return isFreteOk;
+		return freteOk;
 	}
 
 	public void setFreteOk(boolean isFreteOk) {
-		this.isFreteOk = isFreteOk;
+		this.freteOk = isFreteOk;
 	}
 
+
+
+
+	public String getSedexChecked() {
+		return sedexChecked;
+	}
+
+	public void setSedexChecked(String sedexChecked) {
+		this.sedexChecked = sedexChecked;
+	}
+
+	public String getSedex10Checked() {
+		return sedex10Checked;
+	}
+
+	public void setSedex10Checked(String sedex10Checked) {
+		this.sedex10Checked = sedex10Checked;
+	}
+
+	public String getPacChecked() {
+		return pacChecked;
+	}
+
+	public void setPacChecked(String pacChecked) {
+		this.pacChecked = pacChecked;
+	}
+
+	public String getFreteChecked() {
+		return freteChecked;
+	}
+
+	public void setFreteChecked(String freteChecked) {
+		this.freteChecked = freteChecked;
+	}
 
 
 
