@@ -17,7 +17,7 @@
 	background-position: 50% 40%;
 }
 
-.endereco {
+.endereco-card {
 	color: #fff;
 	background: url('../resources/img/endereco.jpg') center/cover;
 }
@@ -40,16 +40,36 @@ $(document).ready(function() {
 
                 	 
             	        if (this.value == 'SEDEX') {
+            	     
+            	        	
             	        	updateFreteEscolhido([{name:'frete', value:40010}])
-            	        	updateCalcularValor();
+            	       
             	        }else if (this.value == 'SEDEX10') {
+            	     
+            	        	
             	        	updateFreteEscolhido([{name:'frete', value:40215}])
-            	        	updateCalcularValor();
+            	       
             	        }else if(this.value == 'PAC'){
+            	     
             	        	updateFreteEscolhido([{name:'frete', value:41106}])
-            	        	updateCalcularValor();
+            	 
                 	        }
             	    });
+            	 $('#idRua').keyup(function() {
+
+            		 console.log( $(this))
+            		  console.log( $(this).parent())
+                	 if( $(this).val().length  == 0){
+                		 $(this).parent().removeClass('is-dirty')
+                		 console.log("isdirty ")
+                	 }
+         	    });
+            	 
+            	 
+            	 
+            	 
+            	 
+            	 
 
     $(".cep").inputmask('99999-999');
     $(".cep").keyup(function() {
@@ -77,11 +97,16 @@ $(document).ready(function() {
                   if(data.uf!=""){
                      
                   updateCEPFrete([{name:'cep', value:data.cep} ])
+             
+                  
                   }
 
             });
         }
     });
+    
+    
+    
 
 });
  /* ]]> */
@@ -90,14 +115,15 @@ $(document).ready(function() {
 
 				<p:remoteCommand update="@(.updateFrete)" name="updateFreteEscolhido" actionListener="#{freteBean.updateFreteEscolhido()}" style="display: none;" />
 				<p:remoteCommand update="@(.updateFrete)" name="updateCEPFrete" actionListener="#{freteBean.updateCEPFrete()}" style="display: none;" />
-				<p:remoteCommand update="@(.updateFrete)" name="updateCalcularValor" actionListener="#{carrinhoBean.calcularValor()}" style="display: none;" />
+				<p:remoteCommand name="onload" action="#{freteBean.checkChecked}" autoRun="true" />
 			</h:form>
 			<f:metadata>
 
 				<f:viewAction action="#{carrinhoBean.veriricarProdutosEstoque}" />
 				<f:viewAction action="#{freteBean.checkCep}" />
-				<f:viewAction action="#{carrinhoBean.calcularValor}" />
-				
+
+
+
 			</f:metadata>
 
 
@@ -122,17 +148,7 @@ $(document).ready(function() {
 									</div>
 									<div style="margin: 0" class=" mdl-grid mdl-grid--no-spacing">
 
-
-
-	AA #{freteBean.sedexChecked} AA <BR></BR>
-	
-	AA #{freteBean.sedex10Checked} AA <BR></BR>
-	
-	AA #{freteBean.pacChecked} AA <BR></BR>
-
 										<ui:repeat value="#{carrinhoBean.itemCarrinhoKeySetList}" var="key">
-
-
 
 											<div class="mdl-grid mdl-cell--12-col carrinho-item-full-container">
 												<div style="margin-bottom: 0; margin-top: 0" class="section__circle-container mdl-cell my-cell--1-col">
@@ -222,7 +238,7 @@ $(document).ready(function() {
 						<div style="width: 100%; margin: 0" class="mdl-grid mdl-cell mdl-cell--12-col">
 							<p:outputPanel style="width:100%" id="endereco">
 								<div style="margin-top: 16px; width: 100%" class=" demo-card-wide mdl-card mdl-cell--12-col mdl-shadow--2dp">
-									<div class="mdl-card__title endereco ">
+									<div class="mdl-card__title endereco-card ">
 										<div style="padding: 0px;" class="mdl-grid carrinho-top">
 											<div class="mdl-cell--12-col ">
 												<h4 class="mdl-card__title-text carrinho-titulo">Endereço</h4>
@@ -234,19 +250,19 @@ $(document).ready(function() {
 									<div class="mdl-grid">
 										<form class="mdl-cell mdl-cell--4-col" action="#">
 											<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
-												<h:inputText value="Brasil" disabled="true" class="mdl-textfield__input card-input" type="text" id="idPais" />
+												<h:inputText value="Brasil" disabled="true" class="mdl-textfield__input card-input " type="text" id="idPais" />
 												<label class="mdl-textfield__label" for="sample3">País</label>
 											</div>
 										</form>
 										<form class="mdl-cell mdl-cell--4-col" action="#">
 											<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
-												<h:inputText value="#{clienteBean.cliente.endereco.estado}" class="mdl-textfield__input card-input" type="text" id="idEstado" />
+												<h:inputText value="#{clienteBean.cliente.endereco.estado}" class="mdl-textfield__input card-input endereco" type="text" id="idEstado" />
 												<label class="mdl-textfield__label" for="sample3">Estado</label>
 											</div>
 										</form>
 										<form class="mdl-cell mdl-cell--4-col" action="#">
 											<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
-												<h:inputText value="#{clienteBean.cliente.endereco.cidade}" class="mdl-textfield__input card-input" type="text" id="idCidade" />
+												<h:inputText value="#{clienteBean.cliente.endereco.cidade}" class="mdl-textfield__input card-input endereco" type="text" id="idCidade" />
 												<label class="mdl-textfield__label" for="sample3">Cídade</label>
 											</div>
 										</form>
@@ -260,25 +276,25 @@ $(document).ready(function() {
 
 										<form class="mdl-cell mdl-cell--2-col" action="#">
 											<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
-												<h:inputText value="#{clienteBean.cliente.endereco.bairro}" class="mdl-textfield__input card-input bairro" type="text" id="idBairro" />
+												<h:inputText value="#{clienteBean.cliente.endereco.bairro}" class="mdl-textfield__input card-input bairro endereco" type="text" id="idBairro" />
 												<label class="mdl-textfield__label" for="sample3">Baírro</label>
 											</div>
 										</form>
 										<form class="mdl-cell mdl-cell--4-col" action="#">
 											<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
-												<h:inputText value="#{clienteBean.cliente.endereco.rua}" class="mdl-textfield__input card-input" type="text" id="idRua" />
+												<h:inputText value="#{clienteBean.cliente.endereco.rua}" class="mdl-textfield__input card-input endereco" type="text" id="idRua" />
 												<label id="labelRua" class="mdl-textfield__label" for="idRua">Rua</label>
 											</div>
 										</form>
 										<form class="mdl-cell mdl-cell--2-col" action="#">
 											<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
-												<h:inputText value="#{clienteBean.cliente.endereco.numero}" class="mdl-textfield__input card-input" type="text" id="idNumero" />
+												<h:inputText value="#{clienteBean.cliente.endereco.numero}" class="mdl-textfield__input card-input " type="text" id="idNumero" />
 												<label class="mdl-textfield__label" for="sample3">Número</label>
 											</div>
 										</form>
 										<form class="mdl-cell mdl-cell--2-col" action="#">
 											<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
-												<h:inputText value="#{clienteBean.cliente.endereco.complemento}" class="mdl-textfield__input card-input" type="text" id="idComplemento" />
+												<h:inputText value="#{clienteBean.cliente.endereco.complemento}" class="mdl-textfield__input card-input " type="text" id="idComplemento" />
 												<label class="mdl-textfield__label" for="sample3">Complemento</label>
 											</div>
 										</form>
@@ -290,8 +306,13 @@ $(document).ready(function() {
 						</div>
 
 
+
+
+
 						<div style="margin: 0; width: 100%" class="mdl-grid mdl-cell mdl-cell--12-col ">
-							<div style="margin-top: 16px;" class="demo-card-wide mdl-card mdl-cell--6-col mdl-cell--12-col-phone mdl-shadow--2dp frete-total">
+
+							<p:outputPanel id="frete" style="margin-top: 16px;"
+								class="demo-card-wide mdl-card mdl-cell--12-col mdl-cell--12-col-phone mdl-shadow--2dp frete-total">
 								<div class="mdl-card__title frete ">
 
 									<div style="padding: 0px;" class="mdl-grid carrinho-top">
@@ -315,16 +336,17 @@ $(document).ready(function() {
 									<h:form style="width: 100%;">
 										<div class="mdl-grid carrinho-item ">
 											<div class="mdl-cell mdl-cell--4-col mdl-cell--2-col-phone mdl-cell--2-col-tablet">
-												<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="idSedex"> <input data-code="40010" class="mdl-radio__button"
-													id="idSedex" name="frete" type="radio" value="SEDEX" checked="#{freteValues.sedexChecked}" /> <span class="mdl-radio__label">SEDEX</span></label>
+												<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect #{freteValues.sedexLabelChecked}" for="idSedex"> <input
+													data-code="40010" class="mdl-radio__button" id="idSedex" name="frete" type="radio" value="SEDEX" checked="#{freteValues.sedexChecked}" />
+													<span class="mdl-radio__label">SEDEX</span></label>
 											</div>
 
 											<div class="mdl-layout-spacer"></div>
 
 											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
 												<span><h:outputText styleClass="updateFrete" id="etaSedexs" value="#{freteValues.freteSedex.prazoEntrega} dias uteis"
-														rendered="#{freteValues.freteSedex.prazoEntrega > 1}" /> <h:outputText styleClass="updateFrete" id="etaSedex" value="#{freteValues.freteSedex.prazoEntrega} dia utíl"
-														rendered="#{freteValues.freteSedex.prazoEntrega == 1}" /></span>
+														rendered="#{freteValues.freteSedex.prazoEntrega > 1}" /> <h:outputText styleClass="updateFrete" id="etaSedex"
+														value="#{freteValues.freteSedex.prazoEntrega} dia utíl" rendered="#{freteValues.freteSedex.prazoEntrega == 1}" /></span>
 											</div>
 											<div class="mdl-layout-spacer"></div>
 
@@ -335,18 +357,19 @@ $(document).ready(function() {
 										</div>
 										<div class="mdl-grid carrinho-item ">
 											<div class="mdl-cell mdl-cell--4-col mdl-cell--2-col-phone mdl-cell--2-col-tablet">
-												<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="idSedex10"> <input class="mdl-radio__button" data-code="40215"
-													id="idSedex10" name="frete" type="radio" value="SEDEX10" checked="#{freteValues.sedex10Checked}" /> <span class="mdl-radio__label">SEDEX 10</span></label>
+												<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect #{freteValues.sedex10LabelChecked}" for="idSedex10"> <input
+													class="mdl-radio__button" data-code="40215" id="idSedex10" name="frete" type="radio" value="SEDEX10"
+													checked="#{freteValues.sedex10Checked}" /> <span class="mdl-radio__label">SEDEX 10</span></label>
 											</div>
 											<div class="mdl-layout-spacer"></div>
 											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
 												<span><h:outputText styleClass="updateFrete" id="etaSedex10s" value="#{freteValues.freteSedex10.prazoEntrega} dias uteis"
-														rendered="#{freteValues.freteSedex10.prazoEntrega > 1}" /> <h:outputText styleClass="updateFrete" id="etaSedex10" value="#{freteValues.freteSedex10.prazoEntrega} dia útil"
-														rendered="#{freteValues.freteSedex10.prazoEntrega == 1}" /></span>
+														rendered="#{freteValues.freteSedex10.prazoEntrega > 1}" /> <h:outputText styleClass="updateFrete" id="etaSedex10"
+														value="#{freteValues.freteSedex10.prazoEntrega} dia útil" rendered="#{freteValues.freteSedex10.prazoEntrega == 1}" /></span>
 											</div>
 											<div class="mdl-layout-spacer"></div>
 											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
-												<span><h:outputText styleClass="updateFrete" id="valorSedex10" value="#{freteValues.freteSedex10.valor}"
+												<span><h:outputText styleClass="updateFrete" id="valorSedex10" value="R$#{freteValues.freteSedex10.valor}"
 														rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()>0}" /></span>
 											</div>
 										</div>
@@ -354,17 +377,19 @@ $(document).ready(function() {
 										<div class="mdl-grid  carrinho-item">
 
 											<div class="mdl-cell mdl-cell--4-col mdl-cell--2-col-phone mdl-cell--2-col-tablet">
-												<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="idPac"> <input class="mdl-radio__button" id="idPac"
-													data-code="41106" name="frete" type="radio" value="PAC" checked="#{freteValues.pacChecked}" /> <span class="mdl-radio__label">Encomenda PAC</span></label>
+												<label class="mdl-radio mdl-js-radio mdl-js-ripple-effect #{freteValues.pacLabelChecked}" id="pacLabel" for="idPac"> <input
+													class="mdl-radio__button" id="idPac" data-code="41106" name="frete" type="radio" value="PAC" checked="#{freteValues.pacChecked}" /> <span
+													class="mdl-radio__label">Encomenda PAC</span></label>
 											</div>
 											<div class="mdl-layout-spacer"></div>
 											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
-												<span><h:outputText styleClass="updateFrete" id="etaPacs" value="#{freteValues.fretePac.prazoEntrega} dias uteis" rendered="#{freteValues.fretePac.prazoEntrega > 1}" />
-													<h:outputText styleClass="updateFrete" id="etaPac" value="#{freteValues.fretePac.prazoEntrega} dia utíl" rendered="#{freteValues.fretePac.prazoEntrega == 1}" /></span>
+												<span><h:outputText styleClass="updateFrete" id="etaPacs" value="#{freteValues.fretePac.prazoEntrega} dias uteis"
+														rendered="#{freteValues.fretePac.prazoEntrega > 1}" /> <h:outputText styleClass="updateFrete" id="etaPac"
+														value="#{freteValues.fretePac.prazoEntrega} dia utíl" rendered="#{freteValues.fretePac.prazoEntrega == 1}" /></span>
 											</div>
 											<div class="mdl-layout-spacer"></div>
 											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
-												<span><h:outputText styleClass="updateFrete" id="valorPac" value="#{freteValues.fretePac.valor}"
+												<span><h:outputText styleClass="updateFrete" id="valorPac" value="R$#{freteValues.fretePac.valor}"
 														rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()>0}" /></span>
 											</div>
 										</div>
@@ -375,79 +400,16 @@ $(document).ready(function() {
 								</div>
 
 
-							</div>
-							<div class="mdl-layout-spacer"></div>
-							<div style="margin-top: 16px; display: table;"
-								class="demo-card-wide mdl-card mdl-cell--6-col mdl-cell--12-col-phone  mdl-shadow--2dp frete-total">
-								<div class="mdl-card__title totalpagar ">
-									<div style="padding: 0px;" class="mdl-grid carrinho-top">
-										<div style="padding: 0px;" class=" carrinho-top">
-											<div class="mdl-cell--12-col ">
-												<h4 class=" mdl-card__title-text carrinho-titulo">
-													Total a pagar
-												</h4>
+							</p:outputPanel>
 
 
 
-											
-											</div>
-										</div>
-									</div>
-								</div>
-
-								<style type="text/css">
-html, body, .container, .placeholder {
-	height: 100%;
-}
-
-.content, .placeholder {
-	display: inline-block;
-	vertical-align: middle;
-}
-</style>
-
-								<div style="width: 100%; padding-bottom: 0;" class="mdl-grid frete-container">
-									<h:form style="width: 100%;">
-
-										<div class="mdl-grid carrinho-item ">
-											<div class="mdl-cell mdl-cell--3-col mdl-cell--2-col-phone mdl-cell--2-col-tablet">
-												<span class="mdl-radio__label content">No boleto</span> <span class="placeholder"></span>
-											</div>
-											<div class="mdl-layout-spacer"></div>
-											<div style="text-align: center;" class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
-												<span>15% de desconto</span>
-											</div>
-											<div class="mdl-layout-spacer"></div>
-											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
-												<h:outputText styleClass="updateFrete" value="#{carrinhoBean.valorBoleto}" /><span class="placeholder"></span>
-											</div>
-										</div>
-
-										<div class="mdl-grid carrinho-item ">
-
-											<div class="mdl-cell mdl-cell--3-col mdl-cell--2-col-phone mdl-cell--2-col-tablet">
-												<span class="mdl-radio__label content">No cartão</span> <span class="placeholder"></span>
-											</div>
-											<div class="mdl-layout-spacer"></div>
-											<div style="text-align: center;" class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
-												<h:outputText styleClass="updateFrete content" value="#{carrinhoBean.valorParcela}" />
-											</div>
-											<div class="mdl-layout-spacer"></div>
-											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
-												<h:outputText styleClass="updateFrete content" value="#{carrinhoBean.valorCC}" /> <span class="placeholder"></span>
-											</div>
-										</div>
 
 
 
-									</h:form>
-								</div>
-
-
-
-							</div>
 
 						</div>
+
 
 					</p:outputPanel>
 

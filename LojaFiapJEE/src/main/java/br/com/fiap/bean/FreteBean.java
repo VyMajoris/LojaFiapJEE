@@ -87,12 +87,7 @@ public class FreteBean {
 		pacChecked = "";
 
 
-		try {
-			checkCep();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 
 
 	}
@@ -104,7 +99,7 @@ public class FreteBean {
 			if (cliente.getEndereco()!=null) {
 				System.out.println("FRETE C");
 				if (cliente.getEndereco().getCep()!= null) {
-					System.out.println("FRETE D");
+					freteValues.setFreteEscolhido("Selecione o frete");
 					try {
 						updateFreteValues(cliente.getEndereco().getCep());
 					} catch (ParseException e) {
@@ -112,7 +107,7 @@ public class FreteBean {
 						e.printStackTrace();
 					}
 					//valorFreteEscolhido = freteSedex.getValor();
-					freteValues.setFreteEscolhido("Selecione o frete");
+
 
 					freteValues.setFreteOk(false);
 				}else{
@@ -134,29 +129,37 @@ public class FreteBean {
 		}
 
 
-		switch (freteChecked) {
+
+	}
+
+	public void checkChecked() throws ParseException {
+		switch (freteValues.getFreteChecked()) {
 		case "sedex":
 
+			System.out.println("==CHCKED SEDEX");
 
-			freteValues.setFreteEscolhido("R$"+freteSedex.getValor());
-			freteValues.setValorFreteEscolhido(format.parse(freteSedex.getValor()).doubleValue());
+
+			freteValues.setFreteEscolhido("R$"+freteValues.getFreteSedex().getValor());
+			freteValues.setValorFreteEscolhido(format.parse(freteValues.getFreteSedex().getValor()).doubleValue());
+
 
 			break;
 		case "sedex10":
-			freteValues.setFreteEscolhido("R$"+freteSedex10.getValor());
-			freteValues.setValorFreteEscolhido(format.parse(freteSedex.getValor()).doubleValue());
+			System.out.println("==CHCKED SEDEX10");
+			freteValues.setFreteEscolhido("R$"+freteValues.getFreteSedex10().getValor());
+			freteValues.setValorFreteEscolhido(format.parse(freteValues.getFreteSedex10().getValor()).doubleValue());
 
 			break;
 		case "pac":
-			freteValues.setFreteEscolhido("R$"+fretePac.getValor());
-			freteValues.setValorFreteEscolhido(format.parse(fretePac.getValor()).doubleValue());
+			System.out.println("==CHCKED pac");
+			freteValues.setFreteEscolhido("R$"+freteValues.getFretePac().getValor());
+			freteValues.setValorFreteEscolhido(format.parse(freteValues.getFretePac().getValor()).doubleValue());
 
 			break;
 
 		default:
 			break;
 		}
-
 	}
 
 	private void updateFreteValues(String cep) throws ParseException {
@@ -190,50 +193,60 @@ public class FreteBean {
 		switch (freteId) {
 		case sedexCod:
 
+
+
+
+
 			freteValues.setFreteEscolhido("R$"+freteValues.getFreteSedex().getValor());
 			freteValues.setValorFreteEscolhido( format.parse(freteValues.getFreteSedex().getValor()).doubleValue());
 			freteValues.setFreteOk(true);
-			System.out.println(" SEDEX IS FRETE OK: "+freteOk);
 			freteValues.setSedex10Checked("");
 			freteValues.setSedexChecked("checked");
+			freteValues.setSedexLabelChecked("is-checked");
+			freteValues.setSedex10LabelChecked("");
+			freteValues.setPacLabelChecked("");
 			freteValues.setPacChecked("");
 			freteValues.setFreteChecked("sedex");
+
+
 			break;
 		case sedex10Cod:
+
+
 			freteValues.setFreteEscolhido("R$"+freteValues.getFreteSedex10().getValor());
 			freteValues.setValorFreteEscolhido( format.parse(freteValues.getFreteSedex10().getValor()).doubleValue());
 			freteValues.setFreteOk(true);
-			System.out.println(" SEDEX 10 IS FRETE OK: "+freteOk);
-
-
+			freteValues.setSedexLabelChecked("");
+			freteValues.setSedex10LabelChecked("is-checked");
+			freteValues.setPacLabelChecked("");
 			freteValues.setSedex10Checked("checked");
 			freteValues.setSedexChecked("");
 			freteValues.setPacChecked("");
 			freteValues.setFreteChecked("sedex10");
 
 
-			System.out.println("SEDEX 10: asdas"+sedex10Checked);
-
 			break;
 		case pacCod:
 			freteValues.setFreteEscolhido("R$"+freteValues.getFretePac().getValor());
 			freteValues.setValorFreteEscolhido( format.parse(freteValues.getFretePac().getValor()).doubleValue());
 			freteValues.setFreteOk(true);
-			System.out.println(" PAC IS FRETE OK: "+freteOk);
+			freteValues.setSedexLabelChecked("");
+			freteValues.setSedex10LabelChecked("");
+			freteValues.setPacLabelChecked("is-checked");
 			freteValues.setSedex10Checked("");
 			freteValues.setSedexChecked("");
 			freteValues.setPacChecked("checked");
 			freteValues.setFreteChecked("pac");
+
+
 			break;
 
 		default:
 			freteEscolhido = "Escolha um frete";
 			freteOk = false;
 			break;
+
 		}
-
-
-		carrinhoBean.calcularValor();
 
 
 	}

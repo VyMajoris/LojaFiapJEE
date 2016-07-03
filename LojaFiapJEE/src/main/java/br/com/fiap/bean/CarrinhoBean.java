@@ -58,7 +58,7 @@ public class CarrinhoBean {
 	@PostConstruct
 	public void init() {
 		produtoDao = new GenericDao<>(Produto.class);
-		 calcularValor();
+
 
 
 	}
@@ -98,15 +98,17 @@ public class CarrinhoBean {
 
 	public void calcularValor() {
 
-		System.out.println("CALCULAR"+ freteValues.isFreteOk());
 
-		if (freteValues.isFreteOk()) {
-			System.out.println("CALCULAR OK");
+
 			valorBoleto =  Calculos.calcularValorBoleto(carrinho.getValorTotal(), freteValues.getValorFreteEscolhido());
 			valorParcela =  Calculos.calcularParcelasSemJurosCartao(carrinho.getValorTotal(), freteValues.getValorFreteEscolhido(), CARRINHO_MAX_PARCELAS);
 			valorCC =    Calculos.calcularValorCartao(carrinho.getValorTotal(), freteValues.getValorFreteEscolhido());
-		}
-		Ajax.update("@(.updateFrete)");
+
+			System.out.println("CALC VALOR: getValorFreteEscolhido "+  freteValues.getValorFreteEscolhido());
+			System.out.println("CALC VALOR: BOLETO "+  valorBoleto);
+			System.out.println("CALC VALOR: valorParcela "+  valorParcela);
+			System.out.println("CALC VALOR: valorCC "+  valorCC);
+
 
 
 	}

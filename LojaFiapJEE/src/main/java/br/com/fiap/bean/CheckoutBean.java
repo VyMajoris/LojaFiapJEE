@@ -50,14 +50,6 @@ public class CheckoutBean  {
 
 
 	private GenericDao<Pedido> pedidoDao;
-	public FreteBean getFreteBean() {
-		return freteBean;
-	}
-
-
-	public void setFreteBean(FreteBean freteBean) {
-		this.freteBean = freteBean;
-	}
 
 	private GenericDao<Item> itemDao;
 	private GenericDao<Cliente> clienteDao;
@@ -69,8 +61,8 @@ public class CheckoutBean  {
 	@ManagedProperty("#{carrinhoBean}")
 	CarrinhoBean carrinhoBean;
 
-	@ManagedProperty("#{freteBean}")
-	FreteBean freteBean;
+	@ManagedProperty("#{freteValues}")
+	FreteValues freteValues;
 
 
 	@PostConstruct
@@ -88,15 +80,16 @@ public class CheckoutBean  {
 
 
 	private void calcularValorBoleto() {
-		valorBoleto = Calculos.calcularValorBoleto(valor, freteBean.getValorFreteEscolhido());
+		valorBoleto = Calculos.calcularValorBoleto(carrinhoBean.getCarrinho().getValorTotal(), freteValues.getValorFreteEscolhido());
 	}
 
 
 	private void calcularValorCC() {
 		valorCC = carrinho.getValorTotal();
-		valorCC = valorCC + freteBean.getValorFreteEscolhido();
+		valorCC = valorCC + freteValues.getValorFreteEscolhido();
 
 	}
+
 
 
 	public String gerarPedidoBoleto(){
@@ -200,6 +193,15 @@ public class CheckoutBean  {
 
 	public void setItemDao(GenericDao<Item> itemDao) {
 		this.itemDao = itemDao;
+	}
+
+	public FreteValues getFreteValues() {
+		return freteValues;
+	}
+
+
+	public void setFreteValues(FreteValues freteValues) {
+		this.freteValues = freteValues;
 	}
 
 

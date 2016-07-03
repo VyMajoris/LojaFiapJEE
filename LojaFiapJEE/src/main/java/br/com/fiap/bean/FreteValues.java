@@ -25,6 +25,29 @@ public class FreteValues {
 	private String sedexChecked;
 	private String sedex10Checked;
 	private String pacChecked;
+	private String sedexLabelChecked;
+	private String sedex10LabelChecked;
+	private String pacLabelChecked;
+
+
+	public String getSedexLabelChecked() {
+		return sedexLabelChecked;
+	}
+	public void setSedexLabelChecked(String sedexLabelChecked) {
+		this.sedexLabelChecked = sedexLabelChecked;
+	}
+	public String getSedex10LabelChecked() {
+		return sedex10LabelChecked;
+	}
+	public void setSedex10LabelChecked(String sedex10LabelChecked) {
+		this.sedex10LabelChecked = sedex10LabelChecked;
+	}
+	public String getPacLabelChecked() {
+		return pacLabelChecked;
+	}
+	public void setPacLabelChecked(String pacLabelChecked) {
+		this.pacLabelChecked = pacLabelChecked;
+	}
 	private String freteChecked ="";
 	private boolean freteOk = false;
 
