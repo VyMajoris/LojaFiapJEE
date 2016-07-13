@@ -6,7 +6,9 @@
 	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core" xmlns:pe="http://primefaces.org/ui/extensions" xmlns:pa="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions">
 
-<h:head></h:head>
+<h:head>
+	<h:outputScript library="js" name="carrinho.js" />
+</h:head>
 <h:body>
 	<ui:composition template="/template/template.xhtml">
 		<ui:define name="content">
@@ -32,89 +34,12 @@
 	background: url('../resources/img/pagamento2.jpg') center/cover;
 }
 </style>
-			<script>
-/* <![CDATA[ */ 
-$(document).ready(function() {
 
-            	 $('input[type=radio][name=frete]').change(function() {
-
-                	 
-            	        if (this.value == 'SEDEX') {
-            	     
-            	        	
-            	        	updateFreteEscolhido([{name:'frete', value:40010}])
-            	       
-            	        }else if (this.value == 'SEDEX10') {
-            	     
-            	        	
-            	        	updateFreteEscolhido([{name:'frete', value:40215}])
-            	       
-            	        }else if(this.value == 'PAC'){
-            	     
-            	        	updateFreteEscolhido([{name:'frete', value:41106}])
-            	 
-                	        }
-            	    });
-            	 $('#idRua').keyup(function() {
-
-            		 console.log( $(this))
-            		  console.log( $(this).parent())
-                	 if( $(this).val().length  == 0){
-                		 $(this).parent().removeClass('is-dirty')
-                		 console.log("isdirty ")
-                	 }
-         	    });
-            	 
-            	 
-            	 
-            	 
-            	 
-            	 
-
-    $(".cep").inputmask('99999-999');
-    $(".cep").keyup(function() {
-        var string = this.value,
-            substring = "_";
-        if (string.indexOf(substring) == -1) {
-            app_key = 'PGfWjOmrFPac9yHZD6cWaTSxLPioaUle';
-            app_secret = '8aOC02s1W1DOCt2P1Jgsq6oWJT574tU16E9s7w8kOvHucGPk';
-            $.getJSON("https://webmaniabr.com/api/1/cep/" + this.value + "/?app_key=" + app_key + "&app_secret=" + app_secret, function(data) {
-                
-            	  $("#idEstado").parent().addClass('is-dirty'); 
-                  $("#idCidade").parent().addClass('is-dirty'); 
-                  $("#idRua").parent().addClass('is-dirty'); 
-                  $("#idBairro").parent().addClass('is-dirty'); 
-                  $("#idCep").parent().addClass('is-dirty');
-
-                  console.log(data);
-                  console.log(data.endereco);
-                  $("#idEstado").val(converterEstados(data.uf));
-                  $("#idCidade").val(data.cidade);
-                  $("#idRua").val(data.endereco);
-                  $("#idBairro").val(data.bairro);
-                  $("#idCep").val(data.cep);
-
-                  if(data.uf!=""){
-                     
-                  updateCEPFrete([{name:'cep', value:data.cep} ])
-             
-                  
-                  }
-
-            });
-        }
-    });
-    
-    
-    
-
-});
- /* ]]> */
- </script>
 			<h:form>
 
 				<p:remoteCommand update="@(.updateFrete)" name="updateFreteEscolhido" actionListener="#{freteBean.updateFreteEscolhido()}" style="display: none;" />
 				<p:remoteCommand update="@(.updateFrete)" name="updateCEPFrete" actionListener="#{freteBean.updateCEPFrete()}" style="display: none;" />
+				<p:remoteCommand update="listCarrinho" name="updateCarrinho" actionListener="#{carrinhoBean.alterarQuantidade}" style="display: none;" />
 				<p:remoteCommand name="onload" action="#{freteBean.checkChecked}" autoRun="true" />
 			</h:form>
 			<f:metadata>
@@ -122,11 +47,7 @@ $(document).ready(function() {
 				<f:viewAction action="#{carrinhoBean.veriricarProdutosEstoque}" />
 				<f:viewAction action="#{freteBean.checkCep}" />
 
-
-
 			</f:metadata>
-
-
 
 
 			<div class="demo-blog__posts produto-container">
@@ -134,7 +55,7 @@ $(document).ready(function() {
 				<section style="width: 100%;" class="section--center mdl-grid mdl-cell--strech mdl-grid--no-spacing ">
 					<div style="width: 100%;" class="mdl-grid mdl-cell mdl-cell--12-col">
 						<p:outputPanel style="width:100%" id="listCarrinho">
-							<h:form style="width:100%">
+							<h:form id="carrinhoForm" style="width:100%">
 								<div style="width: 100%" class="demo-card-wide mdl-card mdl-cell--12-col mdl-shadow--2dp mdl-cell--middle">
 									<div class="mdl-card__title carrinho ">
 										<div style="padding: 0px;" class="mdl-grid carrinho-top">
@@ -148,7 +69,7 @@ $(document).ready(function() {
 									</div>
 									<div style="margin: 0" class=" mdl-grid mdl-grid--no-spacing">
 
-										<ui:repeat value="#{carrinhoBean.itemCarrinhoKeySetList}" var="key">
+										<ui:repeat value="#{carrinhoBean.itemCarrinhoKeySetList}" var="key" varStatus="loop">
 
 											<div class="mdl-grid mdl-cell--12-col carrinho-item-full-container">
 												<div style="margin-bottom: 0; margin-top: 0" class="section__circle-container mdl-cell my-cell--1-col">
@@ -159,45 +80,62 @@ $(document).ready(function() {
 												</div>
 												<div
 													class="section__text mdl-grid mdl-cell--top mdl-cell--stretch mdl-cell mdl-cell--10-col-desktop mdl-cell--6-col-tablet mdl-cell--3-col-phone carrinho-item carrinho-item-container">
-													<div class=" mdl-grid mdl-cell--top carrinho-item-container mdl-cell--12-col">
-														<h5 style="margin: 0px 0px 8px 0px;" class="mdl-cell--middle  mdl-cell mdl-cell--8-col mdl-cell--5-col-tablet  mdl-cell--12-col-phone ">#{carrinhoBean.carrinho.itemCarrinhoMap[key].produto.nome}</h5>
+													<div style="width: 100%" class=" mdl-grid mdl-cell--top carrinho-item-container mdl-cell--12-col">
+														<h5 style="padding: 0px 0px 0px 16px; margin: 0px 0px 8px 0px;"
+															class="mdl-cell--middle  mdl-cell mdl-cell--8-col mdl-cell--5-col-tablet  mdl-cell--12-col-phone ">#{carrinhoBean.carrinho.itemCarrinhoMap[key].produto.nome}</h5>
 														<div class="mdl-layout-spacer"></div>
-														<div style="padding: 0; margin: 0px 0px 8px 0px;"
-															class="mdl-cell mdl-grid mdl-cell--12-col-phone mdl-cell--3-col-desktop my-cell--4-col-tablet ">
-															<div class="mdl-layout-spacer mdl-cell--hide-phone"></div>
+														<div
+															class="mdl-cell mdl-cell--4-col-desktop mdl-cell--3-col-tablet mdl-cell--middle mdl-cell--12-col-phone carrinho-item-container carrinho-item-precototal">
+
+															<h5 class="preco-total  ">Preço Total: #{carrinhoBean.carrinho.itemCarrinhoMap[key].valor}</h5>
+															<h5 class="preco-total  ">Preço Unit.: #{carrinhoBean.carrinho.itemCarrinhoMap[key].produto.valor} a
+																#{carrinhoBean.carrinho.itemCarrinhoMap[key].quantidade}</h5>
+														</div>
+
+													</div>
 
 
+													<div style="width: 100%" class="mdl-grid mdl-cell  mdl-cell--12-col carrinho-item-container">
 
 
-															<h:commandLink class="mdl-cell--middle" immediate="true" action="#{carrinhoBean.removeItem(key)}">
-																<h5 style="width: 73px;"
-																	class="carrinho-item-nome mdl-cell mdl-cell--middle  mdl-cell--2-col mdl-cell--2-col-phone carrinho-item-container ">Remover</h5>
+														<div style="padding: 0 15px 0 0; margin: 0" class="mdl-cell mdl-cell--2-col   mdl-cell--1-col-phone mdl-cell--middle">
+
+
+															<h:commandLink immediate="true" action="#{carrinhoBean.removeItem(key)}" value="Remover" class="mdl-button">
 																<p:ajax render="listCarrinho" />
 															</h:commandLink>
 
 
-															<div class="mdl-layout-spacer "></div>
-															<h5 style="width: 34px"
-																class="carrinho-item-nome mdl-cell mdl-cell--middle  mdl-cell--1-col mdl-cell--1-col-phone carrinho-item-container">Qtd.</h5>
-															<h:inputText style="text-align: center; width:  16px" pa:min="1"
-																class="mdl-textfield__input  carrinho-item-nome mdl-cell mdl-cell--middle  mdl-cell--2-col mdl-cell--2-col-phone carrinho-item-container"
-																type="text" id="produtoQtd#{item.value.produto.id}" />
-
 														</div>
 
-													</div>
-													<div class="mdl-grid carrinho-item-container mdl-cell--bottom mdl-cell--12-col">
 
-														<div class="mdl-cell mdl-cell--4-col-desktop mdl-cell--4-col-tablet mdl-cell--12-col-phone carrinho-item-container">
-															<h5 class="preco-unitario">Preço Unitário: #{carrinhoBean.carrinho.itemCarrinhoMap[key].produto.valor}</h5>
-														</div>
 														<div class="mdl-layout-spacer"></div>
-														<div
-															class="mdl-cell mdl-cell--4-col-desktop mdl-cell--4-col-tablet mdl-cell--top mdl-cell--12-col carrinho-item-container carrinho-item-precototal">
-															<div class="mdl-layout-spacer"></div>
-															<h5 class="preco-total">Preço Total: #{carrinhoBean.carrinho.itemCarrinhoMap[key].valor}</h5>
+														<div style="padding: 0; margin: 0; margin-right: 20px; margin-left: 10px"
+															class="mdl-cell mdl-cell--2-col mdl-cell--1-col-phone mdl-cell--middle">
+
+
+
+															<h:commandLink immediate="true"
+																onclick="updateCarrinho([{name:'produtoId',value:#{carrinhoBean.carrinho.itemCarrinhoMap[key].produto.id} },{name:'qtd',value:$('##{key}').val() },  ]);"
+																value="Alterar" class="mdl-button">
+																<p:ajax render="listCarrinho" />
+															</h:commandLink>
+
+
 														</div>
+
+														<div style="padding: 0; margin: 0; margin-left: 20px" class="mdl-grid mdl-cell mdl-cell--1-col  mdl-cell--middle">
+
+															<div style="width: 100%; padding: 0px;" class="mdl-textfield mdl-js-textfield">
+																<h:inputText pa:id="#{key}" value="#{carrinhoBean.carrinho.itemCarrinhoMap[key].quantidade}" pa:placeholder="Qtd."
+																	class="mdl-textfield__input qtd" type="text" />
+
+															</div>
+
+														</div>
+
 													</div>
+
 												</div>
 											</div>
 
@@ -214,7 +152,7 @@ $(document).ready(function() {
 												</h:commandLink>
 
 
-												<h:commandLink class="mdl-button" value="Checkout" action="#{carrinhoBean.verificarPedido()}" />
+												<h:commandLink class="mdl-button" value="Checkout" action="#{carrinhoBean.checkout()}" />
 											</div>
 										</h:panelGroup>
 										<h:panelGroup layout="block" rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()==0}">
@@ -276,7 +214,8 @@ $(document).ready(function() {
 
 										<form class="mdl-cell mdl-cell--2-col" action="#">
 											<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
-												<h:inputText value="#{clienteBean.cliente.endereco.bairro}" class="mdl-textfield__input card-input bairro endereco" type="text" id="idBairro" />
+												<h:inputText value="#{clienteBean.cliente.endereco.bairro}" class="mdl-textfield__input card-input bairro endereco" type="text"
+													id="idBairro" />
 												<label class="mdl-textfield__label" for="sample3">Baírro</label>
 											</div>
 										</form>

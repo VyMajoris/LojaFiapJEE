@@ -33,6 +33,7 @@ public class ClienteBean {
 	private String emailVerified;
 	//@ManagedProperty("#{param.token}")
 	private String token;
+	private String photoUrl;
 
 	@PreDestroy
 	public void preDestroy(){
@@ -74,14 +75,17 @@ public class ClienteBean {
 			cliente = new Cliente();
 			cliente.setNome(displayName);
 			cliente.setEmail(email);
+			cliente.setPhotoUrl(photoUrl);
 			cliente.setId(uid);
 			clienteDao.adicionar(cliente);
 
+
 		}else{
-			System.out.println("c");
-			if (!email.equals(cliente.getEmail()) || !displayName.equals(cliente.getNome()) ) {
+			//Verifica se dados da conta do google foram atualziados desde o ultimo login
+			if (!email.equals(cliente.getEmail()) || !displayName.equals(cliente.getNome())  || photoUrl.equals(cliente.getPhotoUrl())) {
 				cliente.setEmail(email);
 				cliente.setNome(displayName);
+				cliente.setPhotoUrl(photoUrl);
 				clienteDao.update(cliente);
 			}
 		}
@@ -118,9 +122,11 @@ public class ClienteBean {
 		uid = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("uid");
 		email = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("email");
 		displayName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("displayName");
+		photoUrl = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("photoUrl");
+		System.out.println("PHOTO URL"+photoUrl);
 		providerData = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("providerData");
 		emailVerified = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("emailVerified");
-		token = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("token");
+		token= FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("token");
 	}
 
 
@@ -130,6 +136,8 @@ public class ClienteBean {
 	}
 	public void atualizarCliente(){
 		clienteDao.update(cliente);
+
+		System.out.println("CPF LENGHT:  "+cliente.getCpf().length());
 	}
 
 
@@ -145,6 +153,46 @@ public class ClienteBean {
 	}
 	public void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
+	}
+
+
+	public String getPhotoUrl() {
+		return photoUrl;
+	}
+
+
+	public void setPhotoUrl(String photoUrl) {
+		this.photoUrl = photoUrl;
+	}
+
+
+	public String getEmailVerified() {
+		return emailVerified;
+	}
+
+
+	public void setEmailVerified(String emailVerified) {
+		this.emailVerified = emailVerified;
+	}
+
+
+	public String getToken() {
+		return token;
+	}
+
+
+	public void setToken(String token) {
+		this.token = token;
+	}
+
+
+	public String getProviderData() {
+		return providerData;
+	}
+
+
+	public void setProviderData(String providerData) {
+		this.providerData = providerData;
 	}
 
 

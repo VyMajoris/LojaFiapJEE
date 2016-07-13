@@ -9,6 +9,7 @@ public class ItemCarrinho {
 	private Produto produto;
 
 	private  int quantidade;
+	private  int quantidadeAlteracao;
 
 	private  Double valor;
 
@@ -43,6 +44,16 @@ public class ItemCarrinho {
 
 	public void setValor(Double valor) {
 		this.valor = valor;
+	}
+
+
+	public int getQuantidadeAlteracao() {
+		return quantidadeAlteracao;
+	}
+
+
+	public void setQuantidadeAlteracao(int quantidadeAlteracao) {
+		this.quantidadeAlteracao = quantidadeAlteracao;
 	}
 
 

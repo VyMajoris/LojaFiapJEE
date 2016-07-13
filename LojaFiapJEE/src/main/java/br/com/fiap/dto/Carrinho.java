@@ -16,7 +16,11 @@ public class Carrinho {
 
 
 	public void putItemCarrinho(Long idProduto, int qtd, Produto produto){
+		System.out.println("carrinho put: "+ qtd);
 		getItemCarrinhoMap().put(idProduto, new ItemCarrinho(produto, qtd));
+
+		System.out.println("carrinho item quantidade: ++++++ "+ getItemCarrinhoMap().get(idProduto).getQuantidade());
+
 		updateCarrinho();
 
 

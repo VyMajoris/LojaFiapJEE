@@ -1,6 +1,5 @@
 package br.com.fiap.bean;
 
-import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
@@ -118,13 +117,6 @@ public class FreteBean {
 			}else{
 				freteValues.setFreteEscolhido("Insira um CEP válido");
 				freteValues.setFreteOk(false);
-			}
-		}else{
-			try {
-				FacesContext.getCurrentInstance().getExternalContext().redirect("../index/newIndex.xhtml");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 		}
 

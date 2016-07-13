@@ -13,8 +13,10 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-@Entity
 
+
+//Sem cache
+@Entity
 @NamedQuery(name="ProdutoDirect.findAll", query="SELECT p FROM Produto p")
 @Table(name="Produto")
 public class ProdutoDirect implements Serializable {

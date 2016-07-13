@@ -2,6 +2,7 @@ package br.com.fiap.bean;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -11,6 +12,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
 import br.com.fiap.business.Calculos;
+import br.com.fiap.business.Cartao;
 import br.com.fiap.dao.GenericDao;
 import br.com.fiap.dto.Carrinho;
 import br.com.fiap.dto.ItemCarrinho;
@@ -22,16 +24,9 @@ import br.com.fiap.entity.Produto;
 @RequestScoped
 public class CheckoutBean  {
 
+	private Cartao cartao;
 
 
-	public CarrinhoBean getCarrinhoBean() {
-		return carrinhoBean;
-	}
-
-
-	public void setCarrinhoBean(CarrinhoBean carrinhoBean) {
-		this.carrinhoBean = carrinhoBean;
-	}
 
 	HttpSession session;
 	Carrinho carrinho;
@@ -74,6 +69,7 @@ public class CheckoutBean  {
 		pedidoDao = new GenericDao<>(Pedido.class);
 		calcularValorBoleto();
 		calcularValorCC();
+		cartao = new Cartao();
 
 
 	}
@@ -96,19 +92,24 @@ public class CheckoutBean  {
 
 		ArrayList<Produto> listProdutosSemEstoque = estoqueBean.validaEstoque(new ArrayList<>(carrinho.getItemCarrinhoMap().values()));
 
-		if (!listProdutosSemEstoque.isEmpty()) {
+		if (listProdutosSemEstoque.isEmpty()) {
+
 			estoqueBean.descontarEstoque(new ArrayList<>(carrinho.getItemCarrinhoMap().values()));
 			Pedido pedido = new Pedido();
 			pedido.setData(new Date());
+			pedido.setTotal(valorBoleto);
+			pedido.setTipo(0);
+			pedidoDao.adicionar(pedido);
 			for (ItemCarrinho ic : carrinho.getItemCarrinhoMap().values()) {
 				Item item = new Item(pedido,ic.getProduto(),ic.getQuantidade(),ic.getValor());
 				itemDao.adicionar(item);
 				pedido.getItens().add(item);
 			}
-			pedido.setTotal(valorBoleto);
-			pedido.setTipo(0);
-			pedidoDao.adicionar(pedido);
+			pedidoDao.update(pedido);
+
+
 		}else{
+
 			//sem estoque em um dos produtos
 			carrinhoBean.setListProdutosSemEstoque(listProdutosSemEstoque);
 			return "/carrinho/carrinho.xhtml?faces-redirect=true";
@@ -119,9 +120,62 @@ public class CheckoutBean  {
 
 	}
 
-	public void gerarPedidoCartao(){
+	public String gerarPedidoCartao(){
+
+		validaCartao();
+
+		ArrayList<Produto> listProdutosSemEstoque = estoqueBean.validaEstoque(new ArrayList<>(carrinho.getItemCarrinhoMap().values()));
 
 
+		if (listProdutosSemEstoque.isEmpty()) {
+
+			estoqueBean.descontarEstoque(new ArrayList<>(carrinho.getItemCarrinhoMap().values()));
+			Pedido pedido = new Pedido();
+			pedido.setData(new Date());
+			pedido.setTotal(valorBoleto);
+			pedido.setTipo(0);
+			pedidoDao.adicionar(pedido);
+			for (ItemCarrinho ic : carrinho.getItemCarrinhoMap().values()) {
+				Item item = new Item(pedido,ic.getProduto(),ic.getQuantidade(),ic.getValor());
+				itemDao.adicionar(item);
+				pedido.getItens().add(item);
+			}
+			pedidoDao.update(pedido);
+
+
+		}else{
+
+			//sem estoque em um dos produtos
+			carrinhoBean.setListProdutosSemEstoque(listProdutosSemEstoque);
+			return "/carrinho/carrinho.xhtml?faces-redirect=true";
+
+		}
+		return null;
+
+
+	}
+
+
+	private void validaCartao() {
+
+		FacesContext context = FacesContext.getCurrentInstance();
+		Map<String,String> params = context.getExternalContext().getRequestParameterMap();
+		cartao.setCcv(params.get("ccv"));
+		cartao.setNome(params.get("nome"));
+		cartao.setDtValidade(params.get("dtValidade"));
+		cartao.setNumCartao(params.get("numCartao"));
+
+		System.out.println(" PARAM: ");
+		for (String el : params.values()) {
+			System.out.println("PARAM>: "+el);
+		}
+
+
+		System.out.println("INFOS CARTÃO: ");
+		System.out.println(cartao.getCcv());
+		System.out.println(cartao.getNome());
+		System.out.println(cartao.getNumCartao());
+		System.out.println(cartao.getDtValidade());
 
 	}
 
@@ -205,6 +259,24 @@ public class CheckoutBean  {
 	}
 
 
+	public Cartao getCartao() {
+		return cartao;
+	}
+
+
+	public void setCartao(Cartao cartao) {
+		this.cartao = cartao;
+	}
+
+
+	public CarrinhoBean getCarrinhoBean() {
+		return carrinhoBean;
+	}
+
+
+	public void setCarrinhoBean(CarrinhoBean carrinhoBean) {
+		this.carrinhoBean = carrinhoBean;
+	}
 
 
 

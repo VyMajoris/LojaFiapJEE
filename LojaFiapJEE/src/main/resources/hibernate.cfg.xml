@@ -24,6 +24,7 @@
 		<mapping class="br.com.fiap.entity.Endereco" />
 		<mapping class="br.com.fiap.entity.Cliente" />
 		<mapping class="br.com.fiap.entity.Produto" />
+		<mapping class="br.com.fiap.entity.ProdutoDirect" />
 		<mapping class="br.com.fiap.entity.Pedido" />
 		<mapping class="br.com.fiap.entity.Item" />
 	</session-factory>

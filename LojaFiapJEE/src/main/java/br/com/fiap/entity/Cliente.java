@@ -2,21 +2,14 @@ package br.com.fiap.entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
-import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.QueryHint;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -47,15 +40,24 @@ public class Cliente implements Serializable {
 	@Cascade({CascadeType.ALL})
 	private Endereco endereco;
 
+	@Column(name="VALID")
+	private boolean valid;
 
 
 
 	@Column(name="CPF")
 	private String cpf;
+
+
 	@Column(name="NOME")
 	private String nome;
+
 	@Column(name="TELEFONE")
 	private String telefone;
+
+	@Column(name="photoUrl")
+	private String photoUrl;
+
 	@Column(name="DT_NASCIMENTO")
 	@Temporal(TemporalType.DATE)
 	private Date dtNascimento;
@@ -119,5 +121,21 @@ public class Cliente implements Serializable {
 		this.dtNascimento = dtNascimento;
 	}
 
+
+	public String getPhotoUrl() {
+		return photoUrl;
+	}
+
+	public void setPhotoUrl(String photoUrl) {
+		this.photoUrl = photoUrl;
+	}
+
+	public boolean isValid() {
+		return valid;
+	}
+
+	public void setValid(boolean valid) {
+		this.valid = valid;
+	}
 
 }
