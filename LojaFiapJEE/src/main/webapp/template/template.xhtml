@@ -263,8 +263,11 @@
 				<h:graphicImage styleClass="demo-avatar user-info" url="#{clienteBean.cliente.photoUrl}" rendered="#{clienteBean.cliente.photoUrl != null}" />
 
 				<div class="demo-avatar-dropdown">
-					<span style="line-height: 2;"><h:outputText styleClass="user-info" rendered="#{clienteBean.cliente.email != null}" value="#{clienteBean.cliente.email}" />
-						<h:outputText styleClass="user-info" rendered="#{clienteBean.cliente.email == null}" value="Faça o Login!" /> </span>
+					<span style="line-height: 2;">
+						<h:outputText styleClass="user-info" rendered="#{clienteBean.cliente.email != null}" value="#{clienteBean.cliente.email}" />
+						<h:outputText styleClass="user-info" rendered="#{clienteBean.cliente.email == null}" value="Faça o Login!" /> 
+						<h:outputText styleClass="user-info" rendered="#{clienteBean.cliente.nome != null}" value="#{clienteBean.cliente.nome}" /> 
+					</span>
 					<div class="mdl-layout-spacer"></div>
 
 				</div>

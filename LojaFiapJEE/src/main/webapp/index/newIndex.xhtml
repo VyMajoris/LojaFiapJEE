@@ -32,7 +32,7 @@
 
 			<p:outputPanel id="listPanel" class="demo-blog__posts mdl-grid" autoUpdate="true">
 				<ui:repeat id="listaProduto" var="produto" value="#{listaProdutoBean.listProduto}">
-
+<ui:fragment rendered="#{produto.estoque > 0 }">
 					<div class="mdl-card  mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--12-col-phone mdl-shadow--4dp">
 						<h:form>
 							<div onclick="openProduto#{produto.id}" style="background: url('../resources/img/cafe.jpg') center/cover;"
@@ -44,7 +44,7 @@
 							<div class="mdl-card__supporting-text meta mdl-color-text--grey-600 mdl-grid ">
 
 								<div class=" mdl-cell mdl-cell--3-col mdl-cell--12-col-tablet mdl-cell--12-col-phone ">
-									<strong>R$ #{produto.valor}</strong> <span>2 days ago</span>
+									<strong>R$ #{produto.valor}</strong> <small>#{produto.estoque} unid. em estq.</small>
 								</div>
 								<div class="  mdl-cell mdl-cell--8-col mdl-cell--12-col-tablet mdl-cell--12-col-phone  ">
 									<strong>Descrição</strong> <span>#{produto.descricao}</span>
@@ -59,7 +59,6 @@
 										 <f:param name="idProduto" value="#{produto.id}" />
 								</h:link>
 
-
 								<h:commandLink immediate="true" action="#{carrinhoBean.putItem(produto.id,1,false)}" value="Adicionar ao Carrinho" class="mdl-button">
 									<p:ajax render="carrinho" /></h:commandLink>
 								
@@ -68,6 +67,8 @@
 	<p:remoteCommand name="openProduto#{produto.id}" action="#{produtoBean}" />
 						</h:form>
 					</div>
+					
+					</ui:fragment>
 				
 				</ui:repeat>
 
@@ -76,20 +77,7 @@
 										Editar
 										 <f:param name="idCurso" value="#{cur.id}" />
 				</h:link>
-
-
-
-
-
-
-
-
 			</p:outputPanel>
-
-
-
-
-
 
 		</ui:define>
 

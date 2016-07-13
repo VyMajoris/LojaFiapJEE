@@ -49,7 +49,8 @@ public class Teste {
 
 		for (int j = 0; j < i; j++) {
 			Produto produto = new Produto();
-			produto.setDataPublicacao(new Date());
+			
+			
 			produto.setDescricao("Descrição "+j);
 			produto.setEstoque(j);
 			produto.setNome("nome "+j);

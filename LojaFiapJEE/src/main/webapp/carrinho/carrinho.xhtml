@@ -168,11 +168,7 @@
 					</div>
 
 
-
-
-
-
-					<p:outputPanel rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()>0}" style="width:100%">
+					<p:outputPanel rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()>0 and  clienteBean.cliente.valid == true}" style="width:100%">
 						<div style="width: 100%; margin: 0" class="mdl-grid mdl-cell mdl-cell--12-col">
 							<p:outputPanel style="width:100%" id="endereco">
 								<div style="margin-top: 16px; width: 100%" class=" demo-card-wide mdl-card mdl-cell--12-col mdl-shadow--2dp">

@@ -42,9 +42,7 @@ public class ProdutoDirect implements Serializable {
 	@Column(name="ESTOQUE")
 	private int estoque;
 
-	@Column(name="DATA")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date dataPublicacao;
+
 
 	@Column(name="VALOR")
 	private double valor;
@@ -77,13 +75,6 @@ public class ProdutoDirect implements Serializable {
 		this.descricao = descricao;
 	}
 
-	public Date getDataPublicacao() {
-		return dataPublicacao;
-	}
-
-	public void setDataPublicacao(Date dataPublicacao) {
-		this.dataPublicacao = dataPublicacao;
-	}
 
 	public double getValor() {
 		return valor;
