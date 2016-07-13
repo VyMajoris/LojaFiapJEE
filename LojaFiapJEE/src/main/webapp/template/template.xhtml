@@ -200,7 +200,7 @@
 <body>
 
 	<h:form>
-		<p:remoteCommand name="login" actionListener="#{clienteBean.login()}" style="display: none;" />
+		<p:remoteCommand update="@(.user-info)" name="login" actionListener="#{clienteBean.login()}" style="display: none;" />
 	</h:form>
 
 
@@ -254,18 +254,21 @@
 
 		<div class="demo-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50" aria-hidden="false">
 			<header class="demo-drawer-header">
-
-				<h:panelGroup layout="block" rendered="#{clienteBean.cliente.photoUrl == null }">
+			
+		
+<p:outputPanel styleClass="user-info">
+				<h:panelGroup  styleClass="user-info"  rendered="#{clienteBean.cliente.photoUrl == null }">
 					<i style="font-size: 48px" class="mdl-color-text--blue-grey-400 material-icons" role="presentation">account_circle</i>
 				</h:panelGroup>
-				<h:graphicImage styleClass="demo-avatar" url="#{clienteBean.cliente.photoUrl}" rendered="#{clienteBean.cliente.photoUrl != null}" />
+				<h:graphicImage styleClass="demo-avatar user-info" url="#{clienteBean.cliente.photoUrl}" rendered="#{clienteBean.cliente.photoUrl != null}" />
 
 				<div class="demo-avatar-dropdown">
-					<span style="line-height: 2;"><h:outputText rendered="#{clienteBean.cliente.email != null}" value="#{clienteBean.cliente.email}" />
-						<h:outputText rendered="#{clienteBean.cliente.email == null}" value="Faça o Login!" /> </span>
+					<span style="line-height: 2;"><h:outputText styleClass="user-info" rendered="#{clienteBean.cliente.email != null}" value="#{clienteBean.cliente.email}" />
+						<h:outputText styleClass="user-info" rendered="#{clienteBean.cliente.email == null}" value="Faça o Login!" /> </span>
 					<div class="mdl-layout-spacer"></div>
 
 				</div>
+				</p:outputPanel>
 			</header>
 			<nav class="demo-navigation mdl-navigation mdl-color--blue-grey-800"><a class="mdl-navigation__link" href=""><i
 					class="mdl-color-text--blue-grey-400 material-icons" role="presentation">home</i>Produtos</a></nav>

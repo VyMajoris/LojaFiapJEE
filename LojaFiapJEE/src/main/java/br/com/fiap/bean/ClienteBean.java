@@ -122,7 +122,7 @@ public class ClienteBean {
 		uid = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("uid");
 		email = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("email");
 		displayName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("displayName");
-		photoUrl = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("photoUrl");
+		photoUrl = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("photoURL");
 		System.out.println("PHOTO URL"+photoUrl);
 		providerData = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("providerData");
 		emailVerified = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("emailVerified");
