@@ -1,9 +1,12 @@
 package br.com.fiap.bean;
 
+import java.io.IOException;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
@@ -79,7 +82,6 @@ public class ClienteBean {
 			cliente.setId(uid);
 			clienteDao.adicionar(cliente);
 
-
 		}else{
 			//Verifica se dados da conta do google foram atualziados desde o ultimo login
 			if (!email.equals(cliente.getEmail()) || !displayName.equals(cliente.getNome())  || photoUrl.equals(cliente.getPhotoUrl())) {
@@ -91,7 +93,6 @@ public class ClienteBean {
 		}
 
 		session.setAttribute("cliente", cliente);
-
 
 		if(cliente.getCpf() == null  || cliente.getDtNascimento() == null || cliente.getTelefone() == null){
 			pedirUpdate();
@@ -111,6 +112,23 @@ public class ClienteBean {
 			pedirUpdate();
 		}
 
+	}
+
+	public void logout(){
+		System.out.println("LOGOUT");
+
+		System.out.println(FacesContext.getCurrentInstance().getExternalContext().getSessionMap().values());
+		session.invalidate();
+
+		ExternalContext ec = FacesContext.getCurrentInstance()
+		        .getExternalContext();
+		try {
+		    ec.redirect(ec.getRequestContextPath()
+		            + "/faces/index/newIndex.xhtml");
+		} catch (IOException e) {
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		}
 	}
 
 

@@ -33,6 +33,12 @@
 	color: #fff;
 	background: url('../resources/img/pagamento2.jpg') center/cover;
 }
+
+.cadastro-card {
+	color: #fff;
+	background: url('../resources/img/dados-pessoais.jpg') center/cover;
+	background-position: 50% 52%;
+}
 </style>
 
 			<h:form>
@@ -157,7 +163,11 @@
 										</h:panelGroup>
 										<h:panelGroup layout="block" rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()==0}">
 
-											<h2>Nenhum item no carrinho</h2>
+												<div class=" mdl-grid  ">
+								<div class="mdl-cell mdl-cell--12-col mdl-cell--stretch">
+									<h5 class="" style="text-align: center;font-weight: 400;">Carrinho vazio</h5>
+								</div>
+							</div>
 										</h:panelGroup>
 
 
@@ -168,7 +178,7 @@
 					</div>
 
 
-					<p:outputPanel rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()>0 and  clienteBean.cliente.valid == true}" style="width:100%">
+					<p:outputPanel  rendered="#{carrinhoBean.itemCarrinhoKeySetList.size() > 0 and  clienteBean.cliente.valid == true}" style="width:100%">
 						<div style="width: 100%; margin: 0" class="mdl-grid mdl-cell mdl-cell--12-col">
 							<p:outputPanel style="width:100%" id="endereco">
 								<div style="margin-top: 16px; width: 100%" class=" demo-card-wide mdl-card mdl-cell--12-col mdl-shadow--2dp">
@@ -346,6 +356,24 @@
 						</div>
 
 
+					</p:outputPanel>
+					<p:outputPanel styleClass="mdl-grid mdl-cell mdl-cell--12-col" rendered="#{clienteBean.cliente.valid != true}" style="width:100%">
+						<div style="margin-top: 16px; width: 100%" class=" demo-card-wide mdl-card mdl-cell--12-col mdl-shadow--2dp">
+							<div class="mdl-card__title cadastro-card ">
+								<div style="padding: 0px;" class="mdl-grid carrinho-top">
+									<div class="mdl-cell--12-col ">
+										<h4 class="mdl-card__title-text carrinho-titulo">Cadastro</h4>
+									</div>
+								</div>
+							</div>
+
+							<div class=" mdl-grid  ">
+								<div class="mdl-cell mdl-cell--12-col mdl-cell--stretch">
+									<h5 class="" style="text-align: center;font-weight: 400;">Você deve completar o seu cadastro para concluir uma compra!</h5>
+								</div>
+							</div>
+
+						</div>
 					</p:outputPanel>
 
 				</section>

@@ -130,7 +130,9 @@
                     // [END signin]
                 } else {
                     // [START signout]
+                    console.log("sign out")
                     firebase.auth().signOut();
+                    logout();
                     // [END signout]
                 }
                 // [START_EXCLUDE]
@@ -201,6 +203,7 @@
 
 	<h:form>
 		<p:remoteCommand update="@(.user-info)" name="login" actionListener="#{clienteBean.login()}" style="display: none;" />
+		<p:remoteCommand update="@(.user-info)" name="logout" actionListener="#{clienteBean.logout()}" style="display: none;" />
 	</h:form>
 
 
@@ -253,7 +256,7 @@
 
 
 		<div class="demo-drawer mdl-layout__drawer mdl-color--blue-grey-900 mdl-color-text--blue-grey-50" aria-hidden="false">
-			<header class="demo-drawer-header">
+			<header style="cursor: pointer;" class="demo-drawer-header">
 			
 		
 <p:outputPanel styleClass="user-info">
@@ -265,7 +268,7 @@
 				<div class="demo-avatar-dropdown">
 					<span style="line-height: 2;">
 						<h:outputText styleClass="user-info" rendered="#{clienteBean.cliente.email != null}" value="#{clienteBean.cliente.email}" />
-						<h:outputText styleClass="user-info" rendered="#{clienteBean.cliente.email == null}" value="Faça o Login!" /> 
+						<h:outputText styleClass="user-info" rendered="#{clienteBean.cliente.email == null}" value="Faça o Login!" /> <br></br> 
 						<h:outputText styleClass="user-info" rendered="#{clienteBean.cliente.nome != null}" value="#{clienteBean.cliente.nome}" /> 
 					</span>
 					<div class="mdl-layout-spacer"></div>
