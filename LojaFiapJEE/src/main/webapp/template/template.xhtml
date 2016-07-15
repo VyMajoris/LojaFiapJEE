@@ -207,7 +207,7 @@
 	</h:form>
 
 
-	<dialog class="custom-dialog">
+	<dialog id="arrumarCadastroDialog" class="custom-dialog">
 		<h4 class="mdl-dialog__title">Completar Cadastro?</h4>
 		<div class="mdl-dialog__content">
 			<p>Seu perfil ainda não está completo. Deseja completar-lo agora?</p>
@@ -221,8 +221,7 @@
 	</dialog>
 
 	<script>
-            var dialog = document.querySelector('dialog');
-    
+            var dialog = $("#arrumarCadastroDialog");
             if (! dialog.showModal) {
                 dialogPolyfill.registerDialog(dialog);
             }

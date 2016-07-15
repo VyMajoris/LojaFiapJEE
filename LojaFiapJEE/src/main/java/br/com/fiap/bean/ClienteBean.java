@@ -85,6 +85,7 @@ public class ClienteBean {
 		}else{
 			//Verifica se dados da conta do google foram atualziados desde o ultimo login
 			if (!email.equals(cliente.getEmail()) || !displayName.equals(cliente.getNome())  || photoUrl.equals(cliente.getPhotoUrl())) {
+				System.out.println("//Verifica se dados da conta do google foram atualziados desde o ultimo login");
 				cliente.setEmail(email);
 				cliente.setNome(displayName);
 				cliente.setPhotoUrl(photoUrl);
@@ -95,10 +96,11 @@ public class ClienteBean {
 		session.setAttribute("cliente", cliente);
 
 		if(cliente.getCpf() == null  || cliente.getDtNascimento() == null || cliente.getTelefone() == null){
+			System.out.println("//cliente.getCpf() == null");
 			pedirUpdate();
 		}else if(cliente.getEndereco() == null){
 
-			System.out.println("d");
+			System.out.println("daaaaaaaaaaaasd");
 			pedirUpdate();
 		}else if(cliente.getEndereco().getBairro() == null ||
 				cliente.getEndereco().getCep() == null ||
@@ -108,7 +110,8 @@ public class ClienteBean {
 				cliente.getEndereco().getNumero() == null ||
 				cliente.getEndereco().getPais() == null ||
 				cliente.getEndereco().getRua() == null){
-			System.out.println("f");
+			cliente.setValid(false);
+			System.out.println("ff3f3f3f3f3");
 			pedirUpdate();
 		}
 
@@ -133,7 +136,7 @@ public class ClienteBean {
 
 
 	public void pedirUpdate(){
-		RequestContext.getCurrentInstance().execute("dialog.showModal();");
+		RequestContext.getCurrentInstance().execute("arrumarCadastroDialog.showModal();");
 	}
 
 	private void getRequestParams() {
@@ -141,7 +144,7 @@ public class ClienteBean {
 		email = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("email");
 		displayName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("displayName");
 		photoUrl = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("photoURL");
-		System.out.println("PHOTO URL"+photoUrl);
+
 		providerData = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("providerData");
 		emailVerified = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("emailVerified");
 		token= FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("token");

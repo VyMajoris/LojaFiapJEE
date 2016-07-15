@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core" xmlns:jsf="http://xmlns.jcp.org/jsf/" xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core" xmlns:pa="http://xmlns.jcp.org/jsf/passthrough">
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core" xmlns:pe="http://primefaces.org/ui/extensions" xmlns:pa="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions">
+
 
 <h:head>
 
@@ -47,39 +49,87 @@
 	color: #fff;
 }
 </style>
-			<script type="text/javascript">
-					$(document).ready(function() {
-						
-						$(".date").inputmask('dd/mm/yyyy');
-						$(".tel").inputmask('9999-99999');
-						$(".cpf").inputmask('999.999.999-99');
-						
-					});
-				</script>
-			<script>/* <![CDATA[ */ $(document).ready(function() {
-	$(".cep").inputmask('99999-999');
-	$(".cep").keyup(function() {
-		var string = this.value, substring = "_";
-		if(string.indexOf(substring)== -1){
-			app_key = 'PGfWjOmrFPac9yHZD6cWaTSxLPioaUle';
-			app_secret= '8aOC02s1W1DOCt2P1Jgsq6oWJT574tU16E9s7w8kOvHucGPk';
-			$.getJSON( "https://webmaniabr.com/api/1/cep/"+this.value+"/?app_key="+app_key+"&app_secret="+app_secret, function( data ) {
-				
-				login([{name:'data', value:data}
-						  ]);
-				
-				
+			<script>/* <![CDATA[ */ 
+			$(document).ready(function() {
+				console.log("aaaa")
+				$(".dtNascimento").inputmask("d/m/y", {
+					"placeholder": "dd/mm/yyyy",
+					"showMaskOnHover": false
 				});
-			}
-		});
-	
-}); /* ]]> */</script>
-			<h:form>
-				<h:commandLink action="#{clienteBean.atualizarCliente}" value="Salvar Alterações" id="confirmar-cadastro"
-					class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-color--accent mdl-color-text--accent-contrast mdl-badge mdl-badge--overlap"
-					data-badge="1" />
+				$(".dtNascimento").keyup(function() {
+					$(this).parent().addClass('is-dirty');
+					if(this.value == "") {
+						$(this).parent().removeClass('is-dirty');
+						$(this).parent().removeClass('is-invalid');
+					}
+				})
+				$(".tel").inputmask("(99) 9999-99999", {
+					"placeholder": "(DD) ####-#####",
+					"showMaskOnHover": false
+				});
+				$(".tel").keyup(function() {
+					$(".tel").parent().addClass('is-dirty');
+					if(this.value == "") {
+						$(this).parent().removeClass('is-dirty');
+						$(this).parent().removeClass('is-invalid');
+					}
+				})
+				$(".cpf").inputmask("999.999.999-99", {
+					"placeholder": "###.###.###-##",
+					"showMaskOnHover": false
+				});
+				$(".cpf").keyup(function() {
+					$(".cpf").parent().addClass('is-dirty');
+					if(this.value == "") {
+						$(this).parent().removeClass('is-dirty');
+						$(this).parent().removeClass('is-invalid');
+					}
+				})
+				$(".cep").inputmask("99999-999", {
+					"placeholder": "#####-###",
+					"showMaskOnHover": false
+				});
+				$(".cep").keyup(function() {
+					$("#idCep").parent().addClass('is-dirty');
+					if(this.value == "") {
+						$(this).parent().removeClass('is-dirty');
+						$(this).parent().removeClass('is-invalid');
+					}
+					var string = this.value,
+					substring = "_";
+					if(string.indexOf(substring) == -1 && string != "") {
+						app_key = 'PGfWjOmrFPac9yHZD6cWaTSxLPioaUle';
+						app_secret = '8aOC02s1W1DOCt2P1Jgsq6oWJT574tU16E9s7w8kOvHucGPk';
+						$.getJSON("https://webmaniabr.com/api/1/cep/" + this.value + "/?app_key=" + app_key + "&app_secret=" + app_secret, function(data) {
+							if(data.uf != "") {
+								$("#idEstado").parent().addClass('is-dirty');
+								$("#idCidade").parent().addClass('is-dirty');
+								$("#idRua").parent().addClass('is-dirty');
+								$("#idBairro").parent().addClass('is-dirty');
+								$("#idEstado").val(converterEstados(data.uf));
+								$("#idCidade").val(data.cidade);
+								$("#idRua").val(data.endereco);
+								$("#idBairro").val(data.bairro);
+								$("#idCep").val(data.cep);
+							}
+						});
+					}
+				});
+			});
+			           /* ]]> */</script>
+
+			<h:form prependId="false">
+
 
 				<div class="demo-blog__posts mdl-grid ">
+
+					<div class="mdl-cell mdl-cell--12-col">
+						<h:commandButton value="Salvar Alterações" action="#{clienteBean.atualizarCliente}" style="float:right"  class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent"/>		</div>
+
+
+
+
+
 
 					<div style="width: 100%" class="demo-card-wide mdl-card mdl-cell--12-col mdl-shadow--2dp ">
 						<div class="mdl-card__title dados_pessoais">
@@ -88,24 +138,28 @@
 						<div class="demo-blog__posts ">
 							<div style="width: 100%;" class="mdl-grid">
 								<div class="mdl-cell mdl-cell--12-col mdl-cell mdl-cell--12-col-phone mdl-cell mdl-cell--12-col-tablet">
-									<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
+									<div id="nomeDiv" class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
 										<h:inputText disabled="true" class="mdl-textfield__input card-input" type="text" value="#{clienteBean.cliente.nome}" id="nome" />
+										<div style="max-width: 252px !important;" class="mdl-tooltip mdl-tooltip--large  mdl-tooltip--bottom" for="nomeDiv">Para mudar o seu
+											nome você deve atualizar o mesmo na sua conta Google.</div>
 										<label class="mdl-textfield__label" for="nome">Nome Completo</label>
+
 									</div>
 								</div>
 								<div class="mdl-cell mdl-cell--6-col mdl-cell mdl-cell--12-col-phone mdl-cell mdl-cell--4-col-tablet">
 									<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
-										<h:inputText class="mdl-textfield__input card-input cpf" type="text" value="#{clienteBean.cliente.cpf}" id="cpf" />
+										<h:inputText pa:required="true" id="cpf" class="mdl-textfield__input card-input cpf" type="text" value="#{clienteBean.cliente.cpf}" />
 										<label class="mdl-textfield__label" for="cpf">CPF</label>
 									</div>
 								</div>
 
 								<div class="mdl-cell mdl-cell--6-col mdl-cell mdl-cell--12-col-phone mdl-cell mdl-cell--4-col-tablet">
 									<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
-										<h:inputText class="mdl-textfield__input card-input date" type="text" value="#{clienteBean.cliente.dtNascimento}" id="dtNascimento">
+										<h:inputText pa:required="true"  class="mdl-textfield__input card-input dtNascimento" type="text" value="#{clienteBean.cliente.dtNascimento}" id="dtNascimento">
 											<f:convertDateTime pattern="dd/MM/yyyy" />
 										</h:inputText>
 										<label class="mdl-textfield__label" for="dtNascimento">Data de Nascimento</label>
+										<span class="mdl-textfield__error">Este campo deve ser preenchido</span>
 									</div>
 								</div>
 							</div>
@@ -121,14 +175,17 @@
 						<div class="demo-blog__posts ">
 							<div style="width: 100%;" class="mdl-grid">
 								<div class="mdl-cell mdl-cell--6-col mdl-cell mdl-cell--12-col-phone mdl-cell mdl-cell--4-col-tablet">
-									<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
-										<h:inputText disabled="true" class="mdl-textfield__input card-input" type="text" value="#{clienteBean.cliente.email}" id="email" />
+									<div id="emailDiv" class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
+										<h:inputText pa:required="true"  disabled="true" class="mdl-textfield__input card-input" type="text" value="#{clienteBean.cliente.email}" id="idEmail" />
 										<label class="mdl-textfield__label" for="email">E-mail</label>
+
 									</div>
+									<div style="max-width: 252px !important;" class="mdl-tooltip mdl-tooltip--large  mdl-tooltip--bottom" for="emailDiv">Para mudar o seu
+										email você deve atualizar o mesmo na sua conta Google.</div>
 								</div>
 								<div class="mdl-cell mdl-cell--6-col mdl-cell mdl-cell--12-col-phone mdl-cell mdl-cell--4-col-tablet">
 									<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
-										<h:inputText class="mdl-textfield__input card-input tel" type="text" value="#{clienteBean.cliente.telefone}" id="tel" />
+										<h:inputText pa:required="true"  class="mdl-textfield__input card-input tel" type="text" value="#{clienteBean.cliente.telefone}" id="idTel" />
 										<label class="mdl-textfield__label" for="tel">Telefone</label>
 									</div>
 								</div>
@@ -144,52 +201,54 @@
 						<div class="demo-blog__posts ">
 							<div style="width: 100%;" class="mdl-grid">
 								<div class="mdl-cell mdl-cell--4-col">
-									<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
-										<h:inputText class="mdl-textfield__input card-input" type="text" value="#{clienteBean.cliente.endereco.pais}" id="pais" />
+									<div id="paisDiv" class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
+										<h:inputText class="mdl-textfield__input card-input" type="text" value="Brasil" disabled="true" id="idPais" />
 										<label class="mdl-textfield__label" for="pais">País</label>
+										<div style="max-width: 252px !important;" class="mdl-tooltip mdl-tooltip--large  mdl-tooltip--bottom" for="paisDiv">Por enquanto só
+											damos suporte ao Brasil.</div>
 									</div>
 								</div>
 								<div class="mdl-cell mdl-cell--4-col">
 									<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
-										<h:inputText class="mdl-textfield__input card-input" type="text" value="#{clienteBean.cliente.endereco.estado}" id="estado" />
+										<h:inputText pa:required="true"  class="mdl-textfield__input card-input" type="text" value="#{clienteBean.cliente.endereco.estado}" id="idEstado" />
 										<label class="mdl-textfield__label" for="estado">Estado</label>
 									</div>
 								</div>
 								<div class="mdl-cell mdl-cell--4-col">
 									<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
-										<h:inputText class="mdl-textfield__input card-input" type="text" value="#{clienteBean.cliente.endereco.cidade}" id="cidade" />
+										<h:inputText pa:required="true"  class="mdl-textfield__input card-input" type="text" value="#{clienteBean.cliente.endereco.cidade}" id="idCidade" />
 										<label class="mdl-textfield__label" for="cidade">Cídade</label>
 									</div>
 								</div>
 								<div class="mdl-cell mdl-cell--2-col">
-									<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
-										<h:inputText class="mdl-textfield__input card-input" type="text" value="#{clienteBean.cliente.endereco.cep}" id="cep" />
-										<label class="mdl-textfield__label" for="cep">CEP</label>
+									<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input cepDiv">
+										<input required="true"  class="mdl-textfield__input cep" value="#{clienteBean.cliente.endereco.cep}" type="text" pattern="\d{5}-?\d{3}" id="idCep" /> <label
+											class="mdl-textfield__label " for="idCep">CEP</label> <span class="mdl-textfield__error">#####-###</span>
 									</div>
 								</div>
 
 
 								<div class="mdl-cell mdl-cell--2-col">
 									<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
-										<h:inputText class="mdl-textfield__input card-input" type="text" value="#{clienteBean.cliente.endereco.bairro}" id="bairro" />
+										<h:inputText pa:required="true"  class="mdl-textfield__input card-input" type="text" value="#{clienteBean.cliente.endereco.bairro}" id="idBairro" />
 										<label class="mdl-textfield__label" for="bairro">Baírro</label>
 									</div>
 								</div>
 								<div class="mdl-cell mdl-cell--4-col">
 									<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
-										<h:inputText class="mdl-textfield__input card-input" type="text" value="#{clienteBean.cliente.endereco.rua}" id="rua" />
+										<h:inputText pa:required="true"  class="mdl-textfield__input card-input" type="text" value="#{clienteBean.cliente.endereco.rua}" id="idRua" />
 										<label class="mdl-textfield__label" for="rua">Rua</label>
 									</div>
 								</div>
 								<div class="mdl-cell mdl-cell--2-col">
 									<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
-										<h:inputText class="mdl-textfield__input card-input" type="text" value="#{clienteBean.cliente.endereco.numero}" id="numero" />
+										<h:inputText pa:required="true"  class="mdl-textfield__input card-input" type="text" value="#{clienteBean.cliente.endereco.numero}" id="idNumero" />
 										<label class="mdl-textfield__label" for="numero">Número</label>
 									</div>
 								</div>
 								<div class="mdl-cell mdl-cell--2-col">
 									<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label card-input ">
-										<h:inputText class="mdl-textfield__input card-input" type="text" value="#{clienteBean.cliente.endereco.complemento}" id="complemento" />
+										<h:inputText  class="mdl-textfield__input card-input" type="text" value="#{clienteBean.cliente.endereco.complemento}" id="idComplemento" />
 										<label class="mdl-textfield__label" for="complemento">Complemento</label>
 									</div>
 								</div>
