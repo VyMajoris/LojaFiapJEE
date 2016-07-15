@@ -21,6 +21,26 @@ import br.com.fiap.entity.Endereco;
 public class ClienteBean {
 	Cliente clienteTemp;
 	Cliente cliente;
+	public String getEmail() {
+		return email;
+	}
+
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+	public String getDisplayName() {
+		return displayName;
+	}
+
+
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
+	}
+
+
 	HttpSession session;
 	private GenericDao<Cliente> clienteDao;
 	Endereco endereco;
