@@ -28,16 +28,19 @@ $(document).ready(function() {
 
 	$('input[type=radio][name=frete]').change(function() {
 		if(this.value == 'SEDEX') {
+			console.log("SEDEX ESCO")
 			updateFreteEscolhido([{
 				name: 'frete',
 				value: 40010
 			}])
 		} else if(this.value == 'SEDEX10') {
+			console.log("10 ESCO")
 			updateFreteEscolhido([{
 				name: 'frete',
 				value: 40215
 			}])
 		} else if(this.value == 'PAC') {
+			console.log("PAC ESCO")
 			updateFreteEscolhido([{
 				name: 'frete',
 				value: 41106
@@ -47,7 +50,7 @@ $(document).ready(function() {
 
 	
 	$("input").blur(function(){
-		console.log("BLURRR"+$(this).val())
+	
 		if($(this).attr('required')!=null && $(this).val()==""){
 			$(this).parent().addClass('is-invalid');
 		}

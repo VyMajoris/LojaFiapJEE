@@ -67,14 +67,12 @@ public class FreteBean {
 	private String cep;
 	CServico freteSedex;
 
-
 	CServico freteSedex10;
 	CServico fretePac;
 	private String sedexChecked ;
 	private String sedex10Checked;
 	private String pacChecked;
 	private String freteChecked ="";
-
 
 
 	@PostConstruct
@@ -84,9 +82,6 @@ public class FreteBean {
 		sedexChecked = "";
 		sedex10Checked = "";
 		pacChecked = "";
-
-
-
 
 
 	}
@@ -120,30 +115,22 @@ public class FreteBean {
 			}
 		}
 
-
-
 	}
 
 	public void checkChecked() throws ParseException {
 		switch (freteValues.getFreteChecked()) {
 		case "sedex":
 
-			System.out.println("==CHCKED SEDEX");
-
-
 			freteValues.setFreteEscolhido("R$"+freteValues.getFreteSedex().getValor());
 			freteValues.setValorFreteEscolhido(format.parse(freteValues.getFreteSedex().getValor()).doubleValue());
 
-
 			break;
 		case "sedex10":
-			System.out.println("==CHCKED SEDEX10");
 			freteValues.setFreteEscolhido("R$"+freteValues.getFreteSedex10().getValor());
 			freteValues.setValorFreteEscolhido(format.parse(freteValues.getFreteSedex10().getValor()).doubleValue());
 
 			break;
 		case "pac":
-			System.out.println("==CHCKED pac");
 			freteValues.setFreteEscolhido("R$"+freteValues.getFretePac().getValor());
 			freteValues.setValorFreteEscolhido(format.parse(freteValues.getFretePac().getValor()).doubleValue());
 
@@ -155,13 +142,14 @@ public class FreteBean {
 	}
 
 	private void updateFreteValues(String cep) throws ParseException {
-		System.out.println("AAAAA");
+
 		freteValues.setFreteSedex(CepRestClient.consultar(sedexCod, cep).getServicos().getCServico());
-		System.out.println("bbbbb");
+		System.out.println(freteValues.getFreteSedex().getErro());
+
 		freteValues.setFreteSedex10(CepRestClient.consultar(sedex10Cod, cep).getServicos().getCServico());
-		System.out.println("cccc");
+
 		freteValues.setFretePac(CepRestClient.consultar(pacCod, cep).getServicos().getCServico());
-		System.out.println("dddd");
+
 
 
 
@@ -180,15 +168,8 @@ public class FreteBean {
 		}
 
 
-		System.out.println("UPDATE FRETEEEE : "+freteId);
-
 		switch (freteId) {
 		case sedexCod:
-
-
-
-
-
 			freteValues.setFreteEscolhido("R$"+freteValues.getFreteSedex().getValor());
 			freteValues.setValorFreteEscolhido( format.parse(freteValues.getFreteSedex().getValor()).doubleValue());
 			freteValues.setFreteOk(true);
@@ -199,12 +180,9 @@ public class FreteBean {
 			freteValues.setPacLabelChecked("");
 			freteValues.setPacChecked("");
 			freteValues.setFreteChecked("sedex");
-
-
 			break;
+
 		case sedex10Cod:
-
-
 			freteValues.setFreteEscolhido("R$"+freteValues.getFreteSedex10().getValor());
 			freteValues.setValorFreteEscolhido( format.parse(freteValues.getFreteSedex10().getValor()).doubleValue());
 			freteValues.setFreteOk(true);
@@ -215,9 +193,8 @@ public class FreteBean {
 			freteValues.setSedexChecked("");
 			freteValues.setPacChecked("");
 			freteValues.setFreteChecked("sedex10");
-
-
 			break;
+
 		case pacCod:
 			freteValues.setFreteEscolhido("R$"+freteValues.getFretePac().getValor());
 			freteValues.setValorFreteEscolhido( format.parse(freteValues.getFretePac().getValor()).doubleValue());
@@ -229,8 +206,6 @@ public class FreteBean {
 			freteValues.setSedexChecked("");
 			freteValues.setPacChecked("checked");
 			freteValues.setFreteChecked("pac");
-
-
 			break;
 
 		default:
@@ -239,7 +214,6 @@ public class FreteBean {
 			break;
 
 		}
-
 
 	}
 
@@ -250,9 +224,7 @@ public class FreteBean {
 			updateFreteValues(cep);
 		}
 
-
 	}
-
 
 
 	public Cliente getCliente() {
