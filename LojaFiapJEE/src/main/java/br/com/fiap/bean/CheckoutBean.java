@@ -59,6 +59,19 @@ public class CheckoutBean  {
 	@ManagedProperty("#{freteValues}")
 	FreteValues freteValues;
 
+	@ManagedProperty("#{clienteBean}")
+	ClienteBean clienteBean;
+
+
+	public ClienteBean getClienteBean() {
+		return clienteBean;
+	}
+
+
+	public void setClienteBean(ClienteBean clienteBean) {
+		this.clienteBean = clienteBean;
+	}
+
 
 	@PostConstruct
 	public void init(){
@@ -91,30 +104,39 @@ public class CheckoutBean  {
 	public String gerarPedidoBoleto(){
 
 		ArrayList<Produto> listProdutosSemEstoque = estoqueBean.validaEstoque(new ArrayList<>(carrinho.getItemCarrinhoMap().values()));
+		Cliente cliente = clienteBean.getCliente();
+		if(cliente != null){
 
-		if (listProdutosSemEstoque.isEmpty()) {
+			if (listProdutosSemEstoque.isEmpty()) {
 
-			estoqueBean.descontarEstoque(new ArrayList<>(carrinho.getItemCarrinhoMap().values()));
-			Pedido pedido = new Pedido();
-			pedido.setData(new Date());
-			pedido.setTotal(valorBoleto);
-			pedido.setTipo(0);
-			pedidoDao.adicionar(pedido);
-			for (ItemCarrinho ic : carrinho.getItemCarrinhoMap().values()) {
-				Item item = new Item(pedido,ic.getProduto(),ic.getQuantidade(),ic.getValor());
-				itemDao.adicionar(item);
-				pedido.getItens().add(item);
+				estoqueBean.descontarEstoque(new ArrayList<>(carrinho.getItemCarrinhoMap().values()));
+				Pedido pedido = new Pedido();
+				pedido.setData(new Date());
+				pedido.setTotal(valorBoleto);
+				pedido.setTipo(0);
+				pedido.setCliente(cliente);
+				pedidoDao.adicionar(pedido);
+				pedido.setCliente((Cliente) session.getAttribute("cliente"));
+				for (ItemCarrinho ic : carrinho.getItemCarrinhoMap().values()) {
+					Item item = new Item(pedido,ic.getProduto(),ic.getQuantidade(),ic.getValor());
+					itemDao.adicionar(item);
+					pedido.getItens().add(item);
+				}
+				pedidoDao.update(pedido);
+
+
+			}else{
+
+				//sem estoque em um dos produtos
+				carrinhoBean.setListProdutosSemEstoque(listProdutosSemEstoque);
+				return "/carrinho/carrinho.xhtml?faces-redirect=true";
+
 			}
-			pedidoDao.update(pedido);
-
-
 		}else{
-
-			//sem estoque em um dos produtos
-			carrinhoBean.setListProdutosSemEstoque(listProdutosSemEstoque);
-			return "/carrinho/carrinho.xhtml?faces-redirect=true";
-
+			//modal erro sistema
+			System.out.println("sem sessão");
 		}
+
 		return null;
 
 

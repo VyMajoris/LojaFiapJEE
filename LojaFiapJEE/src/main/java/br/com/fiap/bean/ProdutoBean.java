@@ -1,5 +1,8 @@
 package br.com.fiap.bean;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -14,6 +17,7 @@ public class ProdutoBean {
 	private Long idProduto;
 	private Produto produto;
 	private GenericDao<Produto> produtoDao = new GenericDao<>(Produto.class);
+	private List<Produto> listProduto = new ArrayList<>();
 
 	@PostConstruct
 	public void init(){
@@ -24,6 +28,8 @@ public class ProdutoBean {
 	public void carregarProduto(){
 		produto = produtoDao.buscarById(idProduto);
 	}
+
+
 
 	public Long getIdProduto() {
 		return idProduto;
@@ -39,6 +45,14 @@ public class ProdutoBean {
 
 	public void setProduto(Produto produto) {
 		this.produto = produto;
+	}
+
+	public List<Produto> getListProduto() {
+		return listProduto;
+	}
+
+	public void setListProduto(List<Produto> listProduto) {
+		this.listProduto = listProduto;
 	}
 
 }

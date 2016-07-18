@@ -27,9 +27,11 @@ public class CarrinhoBean {
 	GenericDao<Produto> produtoDao;
 	HttpSession session;
 
+	GenericDao<Cliente> clienteDao = new GenericDao<>(Cliente.class);
 
 
-
+	@ManagedProperty("#{clienteBean}")
+	ClienteBean clienteBean;
 
 
 	@ManagedProperty("#{freteValues}")
@@ -68,9 +70,20 @@ public class CarrinhoBean {
 
 	}
 
+
+
 	public String checkout(){
 
-		Cliente cliente = (Cliente) session.getAttribute("cliente") ;
+		Cliente cliente = (Cliente) session.getAttribute("cliente");
+
+		if (!cliente.getEndereco().equals(clienteDao.buscarById(cliente.getId()).getEndereco())) {
+			//MODAL CONFIRM END CHANGES
+			System.out.println("EEEEEEEEENNNNNNNDDDDDEEEEEERRRRREEEEEÇOOOO");
+		}
+		if (cliente.getEndereco().equals(clienteDao.buscarById(cliente.getId()).getEndereco())) {
+			//MODAL CONFIRM END CHANGES
+			System.out.println("ENDEREÇO");
+		}
 
 		if (cliente.isValid() ) {
 			return "/checkout/checkout.xhtml?faces-redirect=true";
@@ -80,11 +93,23 @@ public class CarrinhoBean {
 		}
 
 
-
-
-
 	}
 
+	public GenericDao<Produto> getProdutoDao() {
+		return produtoDao;
+	}
+
+	public void setProdutoDao(GenericDao<Produto> produtoDao) {
+		this.produtoDao = produtoDao;
+	}
+
+	public ClienteBean getClienteBean() {
+		return clienteBean;
+	}
+
+	public void setClienteBean(ClienteBean clienteBean) {
+		this.clienteBean = clienteBean;
+	}
 
 	public void veriricarProdutosEstoque(){
 		if (listProdutosSemEstoque.size()>0) {
@@ -144,16 +169,12 @@ public class CarrinhoBean {
 		itemCarrinhoKeySetList.clear();
 		carrinho.updateCarrinho();
 		updateSession(carrinho);
-		Ajax.update("listCarrinho");
-		Ajax.update("carrinho");
+		//Ajax.update("listCarrinho");
+		//Ajax.update("carrinho");
+		//Ajax.update("endereco");
 	}
 
 	public String putItem( Long produtoId, int qtd, boolean abrirCarrinho){
-
-		System.out.println("putItem: "+produtoId);
-		System.out.println("putItem: "+qtd);
-		System.out.println("putItem: "+abrirCarrinho);
-
 
 
 
@@ -168,9 +189,6 @@ public class CarrinhoBean {
 			System.out.println("ESATOQUE: "+produto.getEstoque());
 		}
 		updateSession(carrinho);
-		Ajax.update("carrinho");
-		Ajax.update("listCarrinho");
-
 
 		if (abrirCarrinho) {
 			return "/carrinho/carrinho.xhtml?faces-redirect=true";
@@ -180,6 +198,10 @@ public class CarrinhoBean {
 
 
 	public  void alterarQuantidade(){
+		Ajax.update("carrinho");
+		Ajax.update("listCarrinho");
+		Ajax.update("endFrete");
+
 		FacesContext context = FacesContext.getCurrentInstance();
 		Map<String,String> params = context.getExternalContext().getRequestParameterMap();
 
@@ -199,6 +221,11 @@ public class CarrinhoBean {
 		updateSession(carrinho);
 		Ajax.update("listCarrinho");
 		Ajax.update("carrinho");
+		if (itemCarrinhoKeySetList.isEmpty()) {
+			Ajax.update("endFrete");
+		}
+
+
 	}
 	public boolean hasEstoque(Produto produto, int qtd){
 		return produto.getEstoque() >= qtd;

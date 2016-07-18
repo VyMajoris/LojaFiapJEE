@@ -2,16 +2,18 @@ package br.com.fiap.dao;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
 
 
 public class GenericDao<T> implements Dao<T> {
 
-	private final Class<T> classe;
+	private  Class<T> classe;
 
-	protected SessionFactory sessionFactory;
+
 	Transaction trns = null;
 
 	public GenericDao(Class<T> classe) {
@@ -20,6 +22,7 @@ public class GenericDao<T> implements Dao<T> {
 
 	@Override
 	public void adicionar(T entidade) {
+
 		Session session = HibernateUtil.getSessionFactory().openSession();
 
 		try {
@@ -65,6 +68,7 @@ public class GenericDao<T> implements Dao<T> {
 		}
 		return entidade;
 	}
+	@Override
 	public T buscarById(String id) {
 		T entidade;
 		Session session = HibernateUtil.getSessionFactory().openSession();
@@ -77,7 +81,7 @@ public class GenericDao<T> implements Dao<T> {
 		}
 		return entidade;
 	}
-
+	@Override
 	public  void deletarById(Long id) {
 		T entidade = null;
 		Transaction trns = null;
@@ -104,6 +108,7 @@ public class GenericDao<T> implements Dao<T> {
 			session.close();
 		}
 	}
+	@Override
 	public  void deletarById(String id) {
 		T entidade = null;
 		Transaction trns = null;
@@ -131,7 +136,39 @@ public class GenericDao<T> implements Dao<T> {
 		}
 	}
 
+	@Override
+	public List<T> pesquisar( String value, String prop){
+		Transaction trns = null;
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		Criteria query = session.createCriteria(classe);
+		List<T> list = null;
+		try {
+			trns = session.beginTransaction();
+			query = session.createCriteria(classe);
+			query.add(Restrictions.like(prop, value, MatchMode.ANYWHERE));
+			System.out.println("QUERY::: "+query.toString());
+			session.getTransaction().commit();
 
+
+			 list = query.list();
+			 for (T t : list) {
+				t.toString();
+			}
+		} catch (RuntimeException e) {
+			if (trns != null) {
+				trns.rollback();
+			}
+			e.printStackTrace();
+
+		} finally {
+			session.flush();
+			session.close();
+		}
+		return list;
+
+	}
+
+	@Override
 	public void update(T entidade){
 		Transaction trns = null;
 		Session session = HibernateUtil.getSessionFactory().openSession();

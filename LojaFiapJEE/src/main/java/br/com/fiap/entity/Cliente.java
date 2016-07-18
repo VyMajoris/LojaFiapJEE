@@ -20,6 +20,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
+
 @Entity
 @Cache(usage=CacheConcurrencyStrategy.TRANSACTIONAL, region="cliente")
 
@@ -38,7 +39,7 @@ public class Cliente implements Serializable {
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ENDERECO_ID")
 	@Cascade({CascadeType.ALL})
-	private Endereco endereco;
+	private Endereco endereco = new Endereco();
 
 	@Column(name="VALID")
 	private boolean valid;

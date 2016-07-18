@@ -1,37 +1,24 @@
-<?xml version='1.0' encoding='UTF-8' ?>
-<!DOCTYPE html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core" xmlns:jsf="http://xmlns.jcp.org/jsf/" xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core" xmlns:pe="http://primefaces.org/ui/extensions" xmlns:pa="http://xmlns.jcp.org/jsf/passthrough"
 	xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions">
 
-<h:head>
-
-
-</h:head>
+<h:head></h:head>
 <h:body>
 	<ui:composition template="/template/template.xhtml">
 		<ui:define name="content">
+			<f:metadata>
+				<f:viewParam name="query" value="#{listaProdutoBean.searchValue}" />
+				<f:event type="preRenderView" listener="#{listaProdutoBean.pesquisarProdutos}" />
+			</f:metadata>
 
 
-			<div style='align-items: center; justify-content: center;' class="intro_container  mdl-typography--text-center">
-				<div class="mdl-cell mdl-cell--12-col">
-					<span id="display_name" class="logo_intro">Bem vindo, Visitante!</span>
-				</div>
-				<div class="mdl-cell mdl-cell--12-col">
-
-
-					<img class="logo" src="https://jhipster.github.io/img/logo-jhipster-drink-coffee.png" />
-				</div>
-				<div class="mdl-cell mdl-cell--12-col">
-					<span class="logo_intro">Veja nossas ofertas!</span>
-
-
-				</div>
-			</div>
 
 			<p:outputPanel id="listPanel" class="demo-blog__posts mdl-grid" autoUpdate="true">
-				<ui:repeat id="listaProduto" var="produto" value="#{listaProdutoBean.listProduto}">
+			<div class="mdl-cell mdl-cell--12-col "><h6 class="query-title">Pesquisando por:  #{listaProdutoBean.searchValue}</h6></div>
+				
+				<ui:repeat id="listaProduto" var="produto" value="#{listaProdutoBean.listProdutoQuery}">
 					<ui:fragment rendered="#{produto.estoque > 0 }">
 						<div class="mdl-card  mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--12-col-phone mdl-shadow--4dp">
 							<h:form>
@@ -76,10 +63,10 @@
 
 			</p:outputPanel>
 
+
 		</ui:define>
 
 
 	</ui:composition>
-
 </h:body>
 </html>

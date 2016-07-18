@@ -2058,3 +2058,8 @@ paper-input-container {
 .carrinho-item-image-container {
 	margin: 0 !important;
 }
+.query-title{
+	 font-family: 'Pacifico', cursive !important; 
+    font-size: 3em;
+    color: rgb(255, 171, 64);
+}

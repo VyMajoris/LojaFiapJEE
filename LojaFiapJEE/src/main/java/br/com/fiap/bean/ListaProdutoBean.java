@@ -1,5 +1,6 @@
 package br.com.fiap.bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -18,30 +19,30 @@ import br.com.fiap.entity.Produto;
 public class ListaProdutoBean {
 
 
+	private String searchValue;
+
+
 
 	HttpSession session;
 	GenericDao<Produto> produtoDao;
 	private List<Produto> listProduto;
+	private List<Produto> listProdutoQuery = new ArrayList<>();
 	private LazyDataModel<Produto> listProdutoLazy;
 
-	int first = 0;
-	int pageSize = 10;
 
 	@PostConstruct
 	public void init(){
-		System.out.println("testesoigmnso");
+		System.out.println("LIST PRODUTOS");
 		session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
 		produtoDao = new GenericDao<>(Produto.class);
 		listProduto = produtoDao.listar();
-		System.out.println("PRODUTOS");
 	}
 
-	public ListaProdutoBean() {
-		System.out.println("PRODUTO333S");
-		// TODO Auto-generated constructor stub
+	public String pesquisarProdutos(){
+		listProdutoQuery = produtoDao.pesquisar(searchValue, "nome");
+		return "/produto/produto-query.xhtml?faces-redirect=true";
 
 	}
-
 
 
 	public HttpSession getSession() {
@@ -76,20 +77,21 @@ public class ListaProdutoBean {
 		this.listProdutoLazy = listProdutoLazy;
 	}
 
-	public int getFirst() {
-		return first;
+
+	public String getSearchValue() {
+		return searchValue;
 	}
 
-	public void setFirst(int first) {
-		this.first = first;
+	public void setSearchValue(String searchValue) {
+		this.searchValue = searchValue;
 	}
 
-	public int getPageSize() {
-		return pageSize;
+	public List<Produto> getListProdutoQuery() {
+		return listProdutoQuery;
 	}
 
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
+	public void setListProdutoQuery(List<Produto> listProdutoQuery) {
+		this.listProdutoQuery = listProdutoQuery;
 	}
 
 

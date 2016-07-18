@@ -47,9 +47,11 @@
 									<div style="padding: 0px;" class="mdl-grid carrinho-top">
 										<div class="mdl-cell--12-col ">
 											<h4 class=" mdl-card__title-text carrinho-titulo">Boleto</h4>
-
-
-											<h4 class=" mdl-card__title-text carrinho-total">R$ #{checkoutBean.valorBoleto}</h4>
+											<h4 class=" mdl-card__title-text carrinho-total">
+												<h:outputText value="#{checkoutBean.valorBoleto}">
+													<f:convertNumber type="currency" locale="pt_BR"  />
+												</h:outputText> 
+											</h4>
 										</div>
 									</div>
 								</div>
@@ -64,10 +66,15 @@
 											qualquer Banco ou Casa Lotérica em qualquer lugar do Brasil, sem necessidade de confirmação do pagamento. Além disso, é a forma de
 											pagamento que recebe o maior desconto para cliente final sob o valor total da compra. </span>
 										<hr></hr>
-										<span class="total-boleto">O total a pagar de sua compra é de <span class="total-boleto preco">R$ #{checkoutBean.valorCC}.</span> Por
-											este método de pagamento, será <span class="total-boleto preco">R$#{checkoutBean.valorBoleto}</span>
+										<span class="total-boleto">O total de sua compra é de <span class="total-boleto preco"><h:outputText styleClass="total-boleto preco" value="#{checkoutBean.valorCC}">
+													<f:convertNumber type="currency" locale="pt_BR"  />
+											</h:outputText></span> Por este método de pagamento, será <span class="total-boleto preco"></span>
+										<h:outputText styleClass="total-boleto preco" value="#{checkoutBean.valorBoleto}">
+													<f:convertNumber type="currency" locale="pt_BR"  />
+											</h:outputText>
 										</span>
 									</div>
+
 
 								</div>
 
@@ -88,7 +95,9 @@
 									<div style="padding: 0px;" class="mdl-grid carrinho-top">
 										<div class="mdl-cell--12-col ">
 											<h4 class=" mdl-card__title-text carrinho-titulo">Cartão</h4>
-											<h4 class=" mdl-card__title-text carrinho-total">R$ #{checkoutBean.valorCC}</h4>
+											<h4 class=" mdl-card__title-text carrinho-total"><h:outputText value="#{checkoutBean.valorCC}">
+														<f:convertNumber type="currency" locale="pt_BR"  />
+												</h:outputText></h4>
 										</div>
 									</div>
 								</div>
@@ -123,12 +132,12 @@
 
 								<div style="text-align: right;" class="mdl-card__actions">
 
-									<a onClick="pagarComCartao([ {name: 'numCartao',value: $('input[name=numCartao]').val()},
-					                {name: 'ccv', value: $('input[name = ccv]').val() },
+									<a
+										onClick="pagarComCartao([ {name: 'numCartao',value: $('input[name=numCartao]').val()}, {name: 'ccv', value: $('input[name = ccv]').val() },
 					                {name:'dtValidade ',value:$('input[name = dtValidade]').val() },
 					                {name:'nome ',value:$('input[name = nome]').val() },
-					               ]);" 
-					               class="mdl-button"> Pagar com Cartão</a>
+					               ]);"
+										class="mdl-button"> Pagar com Cartão</a>
 								</div>
 							</div>
 						</h:form>
