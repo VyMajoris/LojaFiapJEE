@@ -213,17 +213,17 @@
 
 	<h:form>
 		<p:remoteCommand id="p1" rendered="#{view.viewId == '/carrinho/carrinho.xhtml'}" oncomplete="componentHandler.upgradeAllRegistered(); checkCep()"
-			update="@(.user-info) carrinhoForm:endereco  carrinhoForm:frete   carrinhoForm:cadastro  " name="login" actionListener="#{clienteBean.login()}" style="display: none;" />
-			
-		<p:remoteCommand id="p2" rendered="#{view.viewId != '/carrinho/carrinho.xhtml'}" oncomplete="componentHandler.upgradeAllRegistered(); checkCep()"
+			update="@(.user-info) carrinhoForm:endereco  carrinhoForm:frete   carrinhoForm:cadastro  " name="login" actionListener="#{clienteBean.login()}"
+			style="display: none;" />
+
+		<p:remoteCommand id="p2" rendered="#{view.viewId != '/carrinho/carrinho.xhtml'}" oncomplete="componentHandler.upgradeAllRegistered();"
 			update="@(.user-info)" name="login" actionListener="#{clienteBean.login()}" style="display: none;" />
 
 		<p:remoteCommand id="p3" update="@(.user-info)" name="logout" actionListener="#{clienteBean.logout()}" style="display: none;" />
 
-		<p:remoteCommand id="p4" rendered="#{view.viewId == '/carrinho/carrinho.xhtml'}" update="carrinhoForm:listCarrinho carrinhoForm:frete " name="checkCep"
-			oncomplete="componentHandler.upgradeAllRegistered();" actionListener="#{freteBean.checkCep()}" style="display: none;" />
-			
-				<p:remoteCommand id="p5" name="submitProdutoQuery" actionListener="#{listaProdutoBean.pesquisarProdutos()}" style="display: none;" />
+
+
+		<p:remoteCommand id="p5" name="submitProdutoQuery" actionListener="#{listaProdutoBean.pesquisarProdutos()}" style="display: none;" />
 
 	</h:form>
 
@@ -240,15 +240,64 @@
 
 	</div>
 	</dialog>
+	<dialog id="confirmarNovoEnderecoDialog" class="custom-dialog">
+	<h4 class="mdl-dialog__title">Novo Endereço?</h4>
+	<div class="mdl-dialog__content">
+		<h:outputText rendered="#{carrinhoBean.itemCarrinhoKeySetList.size() gt 0 and clienteBean.cliente.valid == true}">
+			<p>Você está usando um endereço diferente.</p>
+			<p>Ao prosseguir você estará alterando o seu endereço e enviando este pedido para este novo endereço.</p>
+		</h:outputText>
+		<h:outputText rendered="#{carrinhoBean.itemCarrinhoKeySetList.size() le 0 and clienteBean.cliente.valid != true}">Houve um erro com o seu carrinho. Verifique.</h:outputText>
+	</div>
+	<div class="mdl-dialog__actions">
+		<h:commandLink rendered="#{carrinhoBean.itemCarrinhoKeySetList.size() gt 0 and clienteBean.cliente.valid == true}" class="mdl-button"
+			value="Checkout" action="#{carrinhoBean.checkoutModal()}" />
+		<button type="button" class="mdl-button close">Fechar</button>
+
+	</div>
+	</dialog>
+
+	<dialog id="erroCheckoutDialog" class="custom-dialog">
+	<h4 class="mdl-dialog__title">Um erro ocorreu</h4>
+	<div class="mdl-dialog__content">
+
+
+		<p>Um erro ocorreu.</p>
+
+	</div>
+	<div class="mdl-dialog__actions">
+
+		<button type="button" class="mdl-button close">uh k</button>
+
+	</div>
+	</dialog>
 
 	<script>
-            var dialog = $("#arrumarCadastroDialog");
-            if (! dialog.showModal) {
-                dialogPolyfill.registerDialog(dialog);
+            var dialogCad = $("#arrumarCadastroDialog");
+            if (! dialogCad.showModal) {
+                dialogPolyfill.registerDialog(dialogCad);
             }
  
-            dialog.querySelector('.close').addEventListener('click', function() {
-                dialog.close();
+            dialogCad.querySelector('.close').addEventListener('click', function() {
+            	dialogCad.close();
+            });
+            
+            var dialogEnd = $("#confirmarNovoEnderecoDialog");
+            if (! dialogEnd.showModal) {
+                dialogPolyfill.registerDialog(dialogEnd);
+            }
+ 
+            dialogEnd.querySelector('.close').addEventListener('click', function() {
+            	dialogEnd.close();
+            });
+            
+            var dialogErro = $("#confirmarNovoEnderecoDialog");
+            if (! dialogEnd.showModal) {
+                dialogPolyfill.registerDialog(dialogEnd);
+            }
+ 
+            dialogEnd.querySelector('.close').addEventListener('click', function() {
+            	dialogEnd.close();
             });
         </script>
 	<div class="demo-blog demo-layout-transparent mdl-layout mdl-js-layout ">

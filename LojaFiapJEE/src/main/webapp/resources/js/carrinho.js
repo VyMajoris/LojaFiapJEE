@@ -1,7 +1,36 @@
 
 
 
+
 $(document).ready(function() {
+
+	
+	 $('input[type=radio][name=frete]').on('change', function(){
+		 
+		 
+			console.log('RADDDDDDDDDIO')
+			if(this.value == 'SEDEX') {
+				console.log("SEDEX ESCO")
+				updateFreteEscolhido([{
+					name: 'frete',
+					value: 40010
+				}])
+			} else if(this.value == 'SEDEX10') {
+				console.log("10 ESCO")
+				updateFreteEscolhido([{
+					name: 'frete',
+					value: 40215
+				}])
+			} else if(this.value == 'PAC') {
+				console.log("PAC ESCO")
+				updateFreteEscolhido([{
+					name: 'frete',
+					value: 41106
+				}])
+			}
+		 
+	 })
+
 	
 
 	
@@ -25,35 +54,21 @@ $(document).ready(function() {
 	})
 
 
-
-	$('input[type=radio][name=frete]').change(function() {
-		if(this.value == 'SEDEX') {
-			console.log("SEDEX ESCO")
-			updateFreteEscolhido([{
-				name: 'frete',
-				value: 40010
-			}])
-		} else if(this.value == 'SEDEX10') {
-			console.log("10 ESCO")
-			updateFreteEscolhido([{
-				name: 'frete',
-				value: 40215
-			}])
-		} else if(this.value == 'PAC') {
-			console.log("PAC ESCO")
-			updateFreteEscolhido([{
-				name: 'frete',
-				value: 41106
-			}])
-		}
-	});
-
 	
 	$("input").blur(function(){
 	
 		if($(this).attr('required')!=null && $(this).val()==""){
 			$(this).parent().addClass('is-invalid');
 		}
+		
+		if($(this).val()!= ""){
+			console.log("blur 1")
+			$(this).parent().addClass('is-dirty');
+		}else if($(this).val() == ""){
+			console.log("blur 2")
+			$(this).parent().removeClass('is-dirty');
+		}
+		
 	})
 	
 
@@ -61,10 +76,13 @@ $(document).ready(function() {
 		"placeholder": "#####-###",
 		"showMaskOnHover": false
 	});
+	 
+	 
 	
 	$(".cep").keyup(function() {
-		$("#idCep").parent().addClass('is-dirty');
-		console.log($(this).val().indexOf("#") )
+		console.log(" CEPPPP")
+		$(".cep").parent().addClass('is-dirty');
+		console.log("bbbbbb"+$(".cep").parent())
 	
 		
 		if($(this).val().indexOf("#")  == -1 && $(this).val() != "") {

@@ -144,17 +144,28 @@ public class FreteBean {
 	private void updateFreteValues(String cep) throws ParseException {
 
 		freteValues.setFreteSedex(CepRestClient.consultar(sedexCod, cep).getServicos().getCServico());
-		System.out.println(freteValues.getFreteSedex().getErro());
+		System.out.println("ERRO: "+freteValues.getFreteSedex().getErro());
+
 
 		freteValues.setFreteSedex10(CepRestClient.consultar(sedex10Cod, cep).getServicos().getCServico());
+		System.out.println("ERRO: "+freteValues.getFreteSedex10().getErro());
+
+
 
 		freteValues.setFretePac(CepRestClient.consultar(pacCod, cep).getServicos().getCServico());
+		System.out.println("ERRO: "+freteValues.getFretePac().getErro());
+
+
+		if(freteValues.getFreteSedex().getErro() != "0"){
+			freteId = "40010";
+
+		}
+
+
+			updateFreteEscolhido();
 
 
 
-
-
-		updateFreteEscolhido();
 	}
 
 
@@ -164,12 +175,14 @@ public class FreteBean {
 		String freteTemp = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("frete");
 
 		if (freteTemp != null) {
-			freteId = freteTemp;
+			this.freteId = freteTemp;
 		}
 
 
-		switch (freteId) {
+
+		switch (this.freteId) {
 		case sedexCod:
+			System.out.println("SEDEX COD");
 			freteValues.setFreteEscolhido("R$"+freteValues.getFreteSedex().getValor());
 			freteValues.setValorFreteEscolhido( format.parse(freteValues.getFreteSedex().getValor()).doubleValue());
 			freteValues.setFreteOk(true);
@@ -183,6 +196,7 @@ public class FreteBean {
 			break;
 
 		case sedex10Cod:
+			System.out.println("SEDEX sedex10Cod");
 			freteValues.setFreteEscolhido("R$"+freteValues.getFreteSedex10().getValor());
 			freteValues.setValorFreteEscolhido( format.parse(freteValues.getFreteSedex10().getValor()).doubleValue());
 			freteValues.setFreteOk(true);
@@ -196,6 +210,7 @@ public class FreteBean {
 			break;
 
 		case pacCod:
+			System.out.println("SEDEX pacCod");
 			freteValues.setFreteEscolhido("R$"+freteValues.getFretePac().getValor());
 			freteValues.setValorFreteEscolhido( format.parse(freteValues.getFretePac().getValor()).doubleValue());
 			freteValues.setFreteOk(true);

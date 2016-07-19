@@ -12,6 +12,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
 import org.omnifaces.util.Ajax;
+import org.primefaces.context.RequestContext;
 
 import br.com.fiap.business.Calculos;
 import br.com.fiap.dao.GenericDao;
@@ -72,28 +73,49 @@ public class CarrinhoBean {
 
 
 
-	public String checkout(){
+	public void checkout(){
 
 		Cliente cliente = (Cliente) session.getAttribute("cliente");
 
-		if (!cliente.getEndereco().equals(clienteDao.buscarById(cliente.getId()).getEndereco())) {
-			//MODAL CONFIRM END CHANGES
-			System.out.println("EEEEEEEEENNNNNNNDDDDDEEEEEERRRRREEEEEÇOOOO");
-		}
-		if (cliente.getEndereco().equals(clienteDao.buscarById(cliente.getId()).getEndereco())) {
-			//MODAL CONFIRM END CHANGES
-			System.out.println("ENDEREÇO");
+		if (clienteBean.validaCliente()) {
+
+
+			//novo endereço
+			if (!cliente.getEndereco().equals(clienteDao.buscarById(cliente.getId()).getEndereco())) {
+
+				RequestContext.getCurrentInstance().execute("confirmarNovoEnderecoDialog.showModal();");
+				System.out.println("ENDEREÇO");
+
 		}
 
-		if (cliente.isValid() ) {
-			return "/checkout/checkout.xhtml?faces-redirect=true";
+			}
+			//same endereço
+			if (cliente.getEndereco().equals(clienteDao.buscarById(cliente.getId()).getEndereco())) {
+				//MODAL CONFIRM END CHANGES
+				if (cliente.isValid() ) {
+					// "/checkout/checkout.xhtml?faces-redirect=true";
+				}else{
+					//show modal cadastro invalidol
+
+
+
+
+			}
 		}else{
-			//show modal cadastro invalidol
-			return null;
+			RequestContext.getCurrentInstance().execute("erroCheckoutDialog.showModal();");
+
 		}
+
+
+
 
 
 	}
+	public String checkoutModal(){
+		return qtdItens;
+
+	}
+
 
 	public GenericDao<Produto> getProdutoDao() {
 		return produtoDao;
