@@ -26,8 +26,6 @@ public class CheckoutBean  {
 
 	private Cartao cartao;
 
-
-
 	HttpSession session;
 	Carrinho carrinho;
 	private Double valor;
@@ -83,8 +81,6 @@ public class CheckoutBean  {
 		calcularValorBoleto();
 		calcularValorCC();
 		cartao = new Cartao();
-
-
 	}
 
 
@@ -96,9 +92,7 @@ public class CheckoutBean  {
 	private void calcularValorCC() {
 		valorCC = carrinho.getValorTotal();
 		valorCC = valorCC + freteValues.getValorFreteEscolhido();
-
 	}
-
 
 
 	public String gerarPedidoBoleto(){

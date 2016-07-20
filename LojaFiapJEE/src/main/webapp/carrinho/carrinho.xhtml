@@ -50,15 +50,20 @@
 					name="updateCEPFrete" actionListener="#{freteBean.updateCEPFrete()}" style="display: none" />
 				<p:remoteCommand update="carrinhoForm:listCarrinho" name="updateCarrinho" actionListener="#{carrinhoBean.alterarQuantidade}"
 					style="display: none;" />
-				<p:remoteCommand name="onload" action="#{freteBean.checkChecked}" autoRun="true" />
+				<p:remoteCommand name="onload" action="#{freteBean.checkChecked}" />
+				
+				
+			
+				<p:remoteCommand name="checkCep" action="#{freteBean.checkCep}"  />
 			</h:form>
 			<f:metadata>
 
 				<f:viewAction action="#{carrinhoBean.veriricarProdutosEstoque}" />
 				<f:viewAction action="#{freteBean.checkCep}" />
+				
+				
 
 			</f:metadata>
-
 
 			<div class="demo-blog__posts produto-container">
 
@@ -144,10 +149,13 @@
 											<p:ajax update="carrinhoForm:listCarrinho" />
 											<p:ajax update=":carrinho" />
 											<p:ajax update="endereco" />
-											<p:ajax update="carrinhoForm:frete" />
+											<p:ajax  update="carrinhoForm:frete" />
 										</h:commandLink>
-										<h:commandLink rendered="#{carrinhoBean.itemCarrinhoKeySetList.size() > 0 and clienteBean.cliente.valid == true}" class="mdl-button"
-											value="Checkout" action="#{carrinhoBean.checkout()}" />
+										<h:commandLink actionListener="#{carrinhoBean.validarCheckout}" rendered="#{carrinhoBean.itemCarrinhoKeySetList.size() > 0 and clienteBean.cliente.valid == true}" class="mdl-button"
+											   value="Checkout">
+											  <f:ajax execute="@form" render="@none" /></h:commandLink>
+											
+											
 									</div>
 								</h:panelGroup>
 								<h:panelGroup layout="block" rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()==0}">

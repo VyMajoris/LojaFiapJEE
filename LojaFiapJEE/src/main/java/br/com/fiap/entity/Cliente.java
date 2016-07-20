@@ -10,22 +10,18 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
-import javax.persistence.QueryHint;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 
 @Entity
-@Cache(usage=CacheConcurrencyStrategy.TRANSACTIONAL, region="cliente")
 
-@NamedQuery(name="Cliente.findAll", query="SELECT c FROM Cliente c", hints =
-{ @QueryHint(name = "org.hibernate.cacheable", value = "true") })
+
+@NamedQuery(name="Cliente.findAll", query="SELECT c FROM Cliente c")
 @Table(name="Cliente")
 public class Cliente implements Serializable {
 

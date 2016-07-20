@@ -9,5 +9,14 @@
     <welcome-file>default.htm</welcome-file>
     <welcome-file>default.jsp</welcome-file>
   </welcome-file-list>
-
+<session-config>
+        <cookie-config>
+            <!-- Prevents session cookie from being read by clientside scripts -->
+            <http-only>true</http-only>
+            <!-- Prevents the session cookie from being transmitted on HTTP -->
+            <!-- secure>true</secure-->
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode>
+      
+    </session-config>
 </web-app>

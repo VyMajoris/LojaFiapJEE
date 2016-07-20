@@ -15,6 +15,9 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.Ordering;
+
 
 @Entity
 @Cache(usage=CacheConcurrencyStrategy.TRANSACTIONAL, region="endereco")
@@ -23,6 +26,21 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 { @QueryHint(name = "org.hibernate.cacheable", value = "true") })
 @Table(name="Endereco")
 public class Endereco {
+
+	public int compareTo(Endereco that) {
+	     return ComparisonChain.start()
+	         .compare(this.id, that.getId())
+	         .compare(this.pais, that.getPais())
+	         .compare(this.estado, that.getEstado())
+	         .compare(this.cidade, that.getCidade())
+	         .compare(this.cep, that.getCep())
+	         .compare(this.bairro, that.getBairro())
+	         .compare(this.numero, that.getNumero())
+	         .compare(this.complemento, that.getComplemento())
+	         .compare(this.rua, that.getRua())
+	         .compare(this.estado, that.estado, Ordering.natural().nullsLast())
+	         .result();
+	   }
 
 	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="ID_ENDERECO")

@@ -12,6 +12,8 @@ import javax.servlet.http.HttpSession;
 
 import org.primefaces.context.RequestContext;
 
+import com.google.common.base.Strings;
+
 import br.com.fiap.dao.GenericDao;
 import br.com.fiap.entity.Cliente;
 import br.com.fiap.entity.Endereco;
@@ -93,7 +95,6 @@ public class ClienteBean {
 			// ultimo login
 			if (!email.equals(cliente.getEmail()) || !displayName.equals(cliente.getNome())
 					|| photoUrl.equals(cliente.getPhotoUrl())) {
-				System.out.println("//Verifica se dados da conta do google foram atualziados desde o ultimo login");
 				cliente.setEmail(email);
 				cliente.setNome(displayName);
 				cliente.setPhotoUrl(photoUrl);
@@ -103,21 +104,20 @@ public class ClienteBean {
 
 		session.setAttribute("cliente", cliente);
 
-		if (!validaCliente()) {
-
-			System.out.println("ENDEREÇO FAIL");
-			pedirUpdate();
-		}
 
 	}
 
 	public boolean validaCliente() {
-		boolean valid = false;
-		if (cliente.getEndereco().getBairro() == null || cliente.getEndereco().getCep() == null
-				|| cliente.getEndereco().getCidade() == null || cliente.getEndereco().getComplemento() == null
-				|| cliente.getEndereco().getEstado() == null || cliente.getEndereco().getNumero() == null
-				|| cliente.getEndereco().getRua() == null || cliente.getCpf() == null
-				|| cliente.getDtNascimento() == null || cliente.getEmail() == null || cliente.getTelefone() == null) {
+
+
+
+
+		boolean valid;
+		if (
+				Strings.isNullOrEmpty(cliente.getEndereco().getBairro()) || Strings.isNullOrEmpty( cliente.getEndereco().getCep())
+				|| Strings.isNullOrEmpty(cliente.getEndereco().getCidade()) || Strings.isNullOrEmpty(cliente.getEndereco().getEstado()) || Strings.isNullOrEmpty(cliente.getEndereco().getNumero())
+				|| Strings.isNullOrEmpty(cliente.getEndereco().getRua())|| Strings.isNullOrEmpty( cliente.getCpf())
+				|| cliente.getDtNascimento() == null || Strings.isNullOrEmpty(cliente.getEmail()) || Strings.isNullOrEmpty(cliente.getTelefone())) {
 
 			valid = false;
 			if (cliente.isValid() != valid) {
@@ -133,14 +133,13 @@ public class ClienteBean {
 		}
 
 
+
 		return valid;
 
 	}
 
 	public void logout() {
-		System.out.println("LOGOUT");
 
-		System.out.println(FacesContext.getCurrentInstance().getExternalContext().getSessionMap().values());
 		session.invalidate();
 
 		ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
@@ -153,7 +152,19 @@ public class ClienteBean {
 	}
 
 	public void pedirUpdate() {
-		RequestContext.getCurrentInstance().execute("arrumarCadastroDialog.showModal();");
+		System.out.println("pedirUpdate");
+
+		if (cliente !=null) {
+			System.out.println("pedirUpdate 1");
+
+			if (validaCliente() == false) {
+				System.out.println("pedirUpdate 2 ");
+				RequestContext.getCurrentInstance().execute("arrumarCadastroDialog.showModal();");
+
+			}
+		}
+
+
 	}
 
 	private void getRequestParams() {

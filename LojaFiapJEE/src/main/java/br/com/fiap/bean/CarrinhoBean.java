@@ -1,6 +1,7 @@
 package br.com.fiap.bean;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -18,6 +19,7 @@ import br.com.fiap.business.Calculos;
 import br.com.fiap.dao.GenericDao;
 import br.com.fiap.dto.Carrinho;
 import br.com.fiap.entity.Cliente;
+import br.com.fiap.entity.Endereco;
 import br.com.fiap.entity.Produto;
 
 
@@ -73,46 +75,71 @@ public class CarrinhoBean {
 
 
 
-	public void checkout(){
+	public void validarCheckout(){
+		Endereco enderecoSessionTemp;
+		Endereco enderecoBancoTemp;
+		enderecoSessionTemp = clienteBean.getCliente().getEndereco();
+		enderecoSessionTemp.setCliente(null);
+		enderecoBancoTemp =  clienteDao.buscarById(clienteBean.getCliente().getId()).getEndereco();
+		enderecoBancoTemp.setCliente(null);
+		if (clienteBean!=null) {
+			if (clienteBean.getCliente() != null) {
 
-		Cliente cliente = (Cliente) session.getAttribute("cliente");
+				if (clienteBean.validaCliente()) {
 
-		if (clienteBean.validaCliente()) {
+					if (enderecoBancoTemp.compareTo(enderecoSessionTemp) != 0) {
+						//novo endereço
+						RequestContext.getCurrentInstance().execute("confirmarNovoEnderecoDialog.showModal();");
+						System.out.println("new ENDEREÇO");
 
 
-			//novo endereço
-			if (!cliente.getEndereco().equals(clienteDao.buscarById(cliente.getId()).getEndereco())) {
+						return;
+					}else if (enderecoBancoTemp.compareTo(enderecoSessionTemp) == 0) {
+						//mesmo endereço
+						System.out.println(" //mesmo endereço");
+						try {
+							FacesContext.getCurrentInstance().getExternalContext().redirect("../checkout/checkout.xhtml");
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						return;
 
-				RequestContext.getCurrentInstance().execute("confirmarNovoEnderecoDialog.showModal();");
-				System.out.println("ENDEREÇO");
+					}else{
+						System.out.println("erroCheckoutDialog");
+						RequestContext.getCurrentInstance().execute("erroCheckoutDialog.showModal();");
+						return;
 
-		}
-
-			}
-			//same endereço
-			if (cliente.getEndereco().equals(clienteDao.buscarById(cliente.getId()).getEndereco())) {
-				//MODAL CONFIRM END CHANGES
-				if (cliente.isValid() ) {
-					// "/checkout/checkout.xhtml?faces-redirect=true";
+					}
 				}else{
 					//show modal cadastro invalidol
+					RequestContext.getCurrentInstance().execute("erroCadastroDialog.showModal();");
+					return;
+				}
 
-
-
-
+			}else{
+				System.out.println("erroCheckoutDialog");
+				RequestContext.getCurrentInstance().execute("erroCheckoutDialog.showModal();");
+				return;
 			}
+
+
 		}else{
+			System.out.println("erroCheckoutDialog");
 			RequestContext.getCurrentInstance().execute("erroCheckoutDialog.showModal();");
 
 		}
 
-
-
-
+		enderecoBancoTemp = null;
+		enderecoSessionTemp = null;
 
 	}
-	public String checkoutModal(){
-		return qtdItens;
+
+	public String continuarCheckoutNovoEnd(){
+
+		clienteDao.update(clienteBean.getCliente());
+
+		return "/checkout/checkout.xhtml?faces-redirect=true";
 
 	}
 

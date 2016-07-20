@@ -3,6 +3,7 @@
 
 
 $(document).ready(function() {
+	
 
 	
 	 $('input[type=radio][name=frete]').on('change', function(){

@@ -26,6 +26,10 @@ body::before {
 	text-align: right;
 }
 
+.gold-cc-cvc-input-0 iron-icon.gold-cc-cvc-input {
+    margin-left: 2px !important;
+}
+
 @media ( max-width : 479px) {
 	.carrinho-item-precototal {
 		text-align: left;

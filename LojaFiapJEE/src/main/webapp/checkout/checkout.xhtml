@@ -39,121 +39,119 @@
 
 			<div class="demo-blog__posts produto-container">
 
-				<section style="width: 100%;" class="section--center mdl-grid mdl-cell--strech mdl-grid--no-spacing ">
-					<div style="width: 100%;" class="mdl-grid mdl-cell mdl-cell--12-col">
-						<h:form>
-							<div style="width: 100%" class="demo-card-wide mdl-card mdl-cell--12-col mdl-shadow--2dp mdl-cell--middle">
-								<div class="mdl-card__title boleto ">
-									<div style="padding: 0px;" class="mdl-grid carrinho-top">
-										<div class="mdl-cell--12-col ">
-											<h4 class=" mdl-card__title-text carrinho-titulo">Boleto</h4>
-											<h4 class=" mdl-card__title-text carrinho-total">
-												<h:outputText value="#{checkoutBean.valorBoleto}">
-													<f:convertNumber type="currency" locale="pt_BR"  />
-												</h:outputText> 
-											</h4>
-										</div>
-									</div>
-								</div>
-								<div class="mdl-card__supporting-text mdl-grid pagamento-container my-full-width">
-									<div class="mdl-cell mdl-cell--2-col mdl-cell--hide-phone mdl-cell--hide-tablet mdl-cell--1-col-tablet boleto-icon-container">
-										<i class="fa fa-barcode " aria-hidden="true"></i>
-									</div>
-									<div class="mdl-cell  mdl-cell--10-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone mdl-cell--7-col-tablet">
-										<h5 class="titulo-boleto">Ganhe até 15% de desconto, válido para todo o Brasil!</h5>
-
-										<span class="texto-boleto">Este é o método mais prático para quem deseja pagar à vista. Você poderá efetuar o pagamento do boleto em
-											qualquer Banco ou Casa Lotérica em qualquer lugar do Brasil, sem necessidade de confirmação do pagamento. Além disso, é a forma de
-											pagamento que recebe o maior desconto para cliente final sob o valor total da compra. </span>
-										<hr></hr>
-										<span class="total-boleto">O total de sua compra é de <span class="total-boleto preco"><h:outputText styleClass="total-boleto preco" value="#{checkoutBean.valorCC}">
-													<f:convertNumber type="currency" locale="pt_BR"  />
-											</h:outputText></span> Por este método de pagamento, será <span class="total-boleto preco"></span>
-										<h:outputText styleClass="total-boleto preco" value="#{checkoutBean.valorBoleto}">
-													<f:convertNumber type="currency" locale="pt_BR"  />
-											</h:outputText>
-										</span>
-									</div>
 
 
-								</div>
 
-								<div style="text-align: right;" class="mdl-card__actions">
-
-									<h:commandLink action="#{checkoutBean.gerarPedidoBoleto()}" value="Pagar com Boleto" class="mdl-button" />
-
-
-								</div>
+				<div style="margin: 15px 0 0 0" class="demo-card-wide mdl-card mdl-cell--12-col mdl-shadow--2dp mdl-cell--middle">
+					<div class="mdl-card__title boleto ">
+						<div style="padding: 0px;" class="mdl-grid carrinho-top">
+							<div class="mdl-cell--12-col ">
+								<h4 class=" mdl-card__title-text carrinho-titulo">Boleto</h4>
+								<h4 class=" mdl-card__title-text carrinho-total">
+									<h:outputText value="#{checkoutBean.valorBoleto}">
+										<f:convertNumber type="currency" locale="pt_BR" />
+									</h:outputText>
+								</h4>
 							</div>
-						</h:form>
+						</div>
+					</div>
+					<div class="mdl-card__supporting-text mdl-grid pagamento-container my-full-width">
+						<div class="mdl-cell mdl-cell--2-col mdl-cell--hide-phone mdl-cell--hide-tablet mdl-cell--1-col-tablet boleto-icon-container">
+							<i class="fa fa-barcode " aria-hidden="true"></i>
+						</div>
+						<div class="mdl-cell  mdl-cell--10-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone mdl-cell--7-col-tablet">
+							<h5 class="titulo-boleto">Ganhe até 15% de desconto, válido para todo o Brasil!</h5>
+
+							<span class="texto-boleto">Este é o método mais prático para quem deseja pagar à vista. Você poderá efetuar o pagamento do boleto em
+								qualquer Banco ou Casa Lotérica em qualquer lugar do Brasil, sem necessidade de confirmação do pagamento. Além disso, é a forma de pagamento
+								que recebe o maior desconto para cliente final sob o valor total da compra. </span>
+							<hr></hr>
+							<span class="total-boleto">O total de sua compra é de <span class="total-boleto preco"><h:outputText
+										styleClass="total-boleto preco" value="#{checkoutBean.valorCC}">
+										<f:convertNumber type="currency" locale="pt_BR" />
+									</h:outputText></span> Por este método de pagamento, será <span class="total-boleto preco"></span> <h:outputText styleClass="total-boleto preco"
+									value="#{checkoutBean.valorBoleto}">
+									<f:convertNumber type="currency" locale="pt_BR" />
+								</h:outputText>
+							</span>
+						</div>
+
+
 					</div>
 
-					<div style="width: 100%;" class="mdl-grid mdl-cell mdl-cell--12-col">
+					<div style="text-align: right;" class="mdl-card__actions">
 						<h:form>
-							<div style="width: 100%" class="demo-card-wide mdl-card mdl-cell--12-col mdl-shadow--2dp mdl-cell--middle">
-								<div class="mdl-card__title cartao">
-									<div style="padding: 0px;" class="mdl-grid carrinho-top">
-										<div class="mdl-cell--12-col ">
-											<h4 class=" mdl-card__title-text carrinho-titulo">Cartão</h4>
-											<h4 class=" mdl-card__title-text carrinho-total"><h:outputText value="#{checkoutBean.valorCC}">
-														<f:convertNumber type="currency" locale="pt_BR"  />
-												</h:outputText></h4>
-										</div>
-									</div>
+							<h:commandLink action="#{checkoutBean.gerarPedidoBoleto()}" value="Pagar com Boleto" class="mdl-button" />
+						</h:form>
+
+					</div>
+				</div>
+
+
+
+
+				<div style="margin: 15px 0 15px 0" class="demo-card-wide mdl-card mdl-cell--12-col mdl-shadow--2dp mdl-cell--middle">
+					<div class="mdl-card__title cartao">
+						<div style="padding: 0px;" class="mdl-grid carrinho-top">
+							<div class="mdl-cell--12-col ">
+								<h4 class=" mdl-card__title-text carrinho-titulo">Cartão</h4>
+								<h4 class=" mdl-card__title-text carrinho-total">
+									<h:outputText value="#{checkoutBean.valorCC}">
+										<f:convertNumber type="currency" locale="pt_BR" />
+									</h:outputText>
+								</h4>
+							</div>
+						</div>
+					</div>
+					<div class="mdl-card__supporting-text mdl-grid pagamento-container my-full-width">
+						<div class="mdl-cell mdl-cell--2-col mdl-cell--hide-phone  mdl-cell--hide-tablet mdl-cell--1-col-tablet boleto-icon-container">
+							<i class="fa fa-credit-card-alt" aria-hidden="true"></i>
+						</div>
+						<div class="mdl-cell  mdl-cell--10-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone mdl-cell--7-col-tablet">
+							<h5 class="titulo-boleto">Até 5x sem juros!</h5>
+
+
+							<h:form style="padding: 0px;" class="mdl-grid">
+								<div class="mdl-cell mdl-cell--4-col mdl-cell--3-col-tablet  mdl-cell--3-col-phone small-phone-font">
+									<gold-cc-input name="numCartao" class="card-input" required="true" auto-validate="true" label="Número do cartão" />
 								</div>
-								<div class="mdl-card__supporting-text mdl-grid pagamento-container my-full-width">
-									<div class="mdl-cell mdl-cell--2-col mdl-cell--hide-phone  mdl-cell--hide-tablet mdl-cell--1-col-tablet boleto-icon-container">
-										<i class="fa fa-credit-card-alt" aria-hidden="true"></i>
-									</div>
-									<div class="mdl-cell  mdl-cell--10-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone mdl-cell--7-col-tablet">
-										<h5 class="titulo-boleto">Até 10x sem juros!</h5>
-
-										<div style="padding: 0px;" class="mdl-grid">
-											<div class="mdl-cell mdl-cell--4-col mdl-cell--3-col-tablet  mdl-cell--3-col-phone small-phone-font">
-												<gold-cc-input name="numCartao" class="card-input" required="true" auto-validate="true" label="Número do cartão" />
-											</div>
-											<div class="mdl-cell mdl-cell--2-col  mdl-cell--2-col-tablet mdl-cell--1-col-phone small-phone-font">
-												<gold-cc-cvc-input name="ccv" required="true" auto-validate="true" label="CCV"></gold-cc-cvc-input>
-											</div>
-											<div class="mdl-cell mdl-cell--6-col mdl-cell--3-col-tablet mdl-cell--12-col-phone small-phone-font phone-full-width  ">
-												<paper-input name="dtValidade" label="Data de validade(mm/aa)"></paper-input>
-											</div>
-											<div class="mdl-cell mdl-cell--12-col mdl-cell--12-col-tablet mdl-cell--12-col-phone small-phone-font phone-full-width ">
-												<paper-input name="nome" label="Nome(Como escrito no cartão)"></paper-input>
-											</div>
-
-
-
-										</div>
-
-									</div>
-
+								<div class="mdl-cell mdl-cell--2-col  mdl-cell--2-col-tablet mdl-cell--1-col-phone small-phone-font">
+									<gold-cc-cvc-input name="ccv" required="true" auto-validate="true" label="CCV"></gold-cc-cvc-input>
+								</div>
+								<div class="mdl-cell mdl-cell--6-col mdl-cell--3-col-tablet mdl-cell--12-col-phone small-phone-font phone-full-width  ">
+									<paper-input name="dtValidade" label="Data de validade(mm/aa)"></paper-input>
+								</div>
+								<div class="mdl-cell mdl-cell--6-col mdl-cell--12-col-tablet mdl-cell--12-col-phone small-phone-font phone-full-width ">
+									<paper-input name="nome" label="Nome(Como escrito no cartão)"></paper-input>
+								</div>
+								<div class="mdl-cell mdl-cell--6-col mdl-cell--12-col-tablet mdl-cell--12-col-phone small-phone-font phone-full-width ">
+									<paper-dropdown-menu label="Your favourite pastry"> <paper-listbox class="dropdown-content"> <paper-item>Croissant</paper-item>
+									<paper-item>Donut</paper-item> <paper-item>Financier</paper-item> <paper-item>Madeleine</paper-item> </paper-listbox> </paper-dropdown-menu>
 								</div>
 
-								<div style="text-align: right;" class="mdl-card__actions">
+							</h:form>
 
-									<a
-										onClick="pagarComCartao([ {name: 'numCartao',value: $('input[name=numCartao]').val()}, {name: 'ccv', value: $('input[name = ccv]').val() },
+
+
+						</div>
+
+					</div>
+
+					<div style="text-align: right;" class="mdl-card__actions">
+
+						<a
+							onClick="pagarComCartao([ {name: 'numCartao',value: $('input[name=numCartao]').val()}, {name: 'ccv', value: $('input[name = ccv]').val() },
 					                {name:'dtValidade ',value:$('input[name = dtValidade]').val() },
 					                {name:'nome ',value:$('input[name = nome]').val() },
 					               ]);"
-										class="mdl-button"> Pagar com Cartão</a>
-								</div>
-							</div>
-						</h:form>
+							class="mdl-button"> Pagar com Cartão</a>
 					</div>
-
-
-
-
-				</section>
-
-
-
-
-
+				</div>
 
 			</div>
+
+
+
 
 
 		</ui:define>
