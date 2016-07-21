@@ -35,6 +35,7 @@
 </style>
 			<h:form>
 				<p:remoteCommand action="#{checkoutBean.gerarPedidoCartao}" name="pagarComCartao" style="display: none;" />
+					<p:remoteCommand id="p3" update="@(.cartao-info)" name="alterarParcelaJS" actionListener="#{checkoutBean.alterarParecelasCartao()}" style="display: none;" />
 			</h:form>
 
 			<div class="demo-blog__posts produto-container">
@@ -90,7 +91,7 @@
 
 
 
-				<div style="margin: 15px 0 15px 0" class="demo-card-wide mdl-card mdl-cell--12-col mdl-shadow--2dp mdl-cell--middle">
+				<div style="margin: 15px 0 15px 0; overflow: visible;" class="demo-card-wide mdl-card mdl-cell--12-col mdl-shadow--2dp mdl-cell--middle">
 					<div class="mdl-card__title cartao">
 						<div style="padding: 0px;" class="mdl-grid carrinho-top">
 							<div class="mdl-cell--12-col ">
@@ -103,11 +104,11 @@
 							</div>
 						</div>
 					</div>
-					<div class="mdl-card__supporting-text mdl-grid pagamento-container my-full-width">
+					<div style="overflow: visible;" class="mdl-card__supporting-text mdl-grid pagamento-container my-full-width">
 						<div class="mdl-cell mdl-cell--2-col mdl-cell--hide-phone  mdl-cell--hide-tablet mdl-cell--1-col-tablet boleto-icon-container">
 							<i class="fa fa-credit-card-alt" aria-hidden="true"></i>
 						</div>
-						<div class="mdl-cell  mdl-cell--10-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone mdl-cell--7-col-tablet">
+						<div style="overflow: visible;" class="mdl-cell  mdl-cell--10-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone mdl-cell--7-col-tablet">
 							<h5 class="titulo-boleto">Até 5x sem juros!</h5>
 
 
@@ -124,9 +125,24 @@
 								<div class="mdl-cell mdl-cell--6-col mdl-cell--12-col-tablet mdl-cell--12-col-phone small-phone-font phone-full-width ">
 									<paper-input name="nome" label="Nome(Como escrito no cartão)"></paper-input>
 								</div>
-								<div class="mdl-cell mdl-cell--6-col mdl-cell--12-col-tablet mdl-cell--12-col-phone small-phone-font phone-full-width ">
-									<paper-dropdown-menu label="Your favourite pastry"> <paper-listbox class="dropdown-content"> <paper-item>Croissant</paper-item>
-									<paper-item>Donut</paper-item> <paper-item>Financier</paper-item> <paper-item>Madeleine</paper-item> </paper-listbox> </paper-dropdown-menu>
+
+
+								<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select">
+									<input style="height: 32px; border-bottom: 1px solid rgb(121, 121, 121);" class="mdl-textfield__input" value="1x" type="text"
+										id="parcela" readonly="true" tabIndex="-1" /> <label class="mdl-textfield__label" for="parcela">Parcela</label>
+									<ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu" for="parcela">
+										<li class="mdl-menu__item">1x</li>
+										<li class="mdl-menu__item">2x</li>
+										<li class="mdl-menu__item">3x</li>
+										<li class="mdl-menu__item">4x</li>
+										<li class="mdl-menu__item">5x</li>
+										<li class="mdl-menu__item">6x</li>
+										<li class="mdl-menu__item">7x</li>
+										<li class="mdl-menu__item">8x</li>
+										<li class="mdl-menu__item">9x</li>
+										<li class="mdl-menu__item">10x</li>
+
+									</ul>
 								</div>
 
 							</h:form>
@@ -150,7 +166,19 @@
 
 			</div>
 
+			<script>
+			
+		    $(document).ready(function() {
+		    	console.log('AAAAAAAAA BLAKC READY YEAH!')
+		    	$('li').on("click",function() {    
+		    		   alterarParcelaJS([{name:'parecelamento',value:$(this).text()}])
+		    		});
+				
+			});   
 
+			
+			
+			</script>
 
 
 

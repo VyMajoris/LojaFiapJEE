@@ -136,6 +136,17 @@ public class CheckoutBean  {
 
 	}
 
+	public void alterarParecelasCartao(){
+		FacesContext context = FacesContext.getCurrentInstance();
+		Map<String,String> params = context.getExternalContext().getRequestParameterMap();
+
+
+		System.out.println("PARCELA::: "+	params.get("parecelamento") );
+
+
+
+	}
+
 	public String gerarPedidoCartao(){
 
 		validaCartao();
