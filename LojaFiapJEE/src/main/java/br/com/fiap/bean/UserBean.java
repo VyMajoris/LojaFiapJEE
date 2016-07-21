@@ -25,6 +25,8 @@ public class UserBean{
 		color2Value.put("Color3 - Blue", "Blue");
 	}
 
+	
+	//dblab
 	public Map<String,Object> getFavColor2Value() {
 		return color2Value;
 	}

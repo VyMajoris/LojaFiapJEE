@@ -60,6 +60,8 @@ public class CheckoutBean  {
 	@ManagedProperty("#{clienteBean}")
 	ClienteBean clienteBean;
 
+	private String parcela;
+
 
 	public ClienteBean getClienteBean() {
 		return clienteBean;
@@ -122,7 +124,14 @@ public class CheckoutBean  {
 			}else{
 
 				//sem estoque em um dos produtos
+				//parameter
 				carrinhoBean.setListProdutosSemEstoque(listProdutosSemEstoque);
+				String listProdutosSemEstoqueParameter;
+				for (Produto produto : listProdutosSemEstoque) {
+					
+					//?idProduto=
+					listProdutosSemEstoqueParameter. ?idProduto=
+				}
 				return "/carrinho/carrinho.xhtml?faces-redirect=true";
 
 			}
@@ -139,9 +148,9 @@ public class CheckoutBean  {
 	public void alterarParecelasCartao(){
 		FacesContext context = FacesContext.getCurrentInstance();
 		Map<String,String> params = context.getExternalContext().getRequestParameterMap();
+		parcela = params.get("parecelamento");
 
 
-		System.out.println("PARCELA::: "+	params.get("parecelamento") );
 
 
 
@@ -149,61 +158,61 @@ public class CheckoutBean  {
 
 	public String gerarPedidoCartao(){
 
-		validaCartao();
+		 if (validaCartao()) {
+				ArrayList<Produto> listProdutosSemEstoque = estoqueBean.validaEstoque(new ArrayList<>(carrinho.getItemCarrinhoMap().values()));
 
-		ArrayList<Produto> listProdutosSemEstoque = estoqueBean.validaEstoque(new ArrayList<>(carrinho.getItemCarrinhoMap().values()));
+				if (listProdutosSemEstoque.isEmpty()) {
 
-
-		if (listProdutosSemEstoque.isEmpty()) {
-
-			estoqueBean.descontarEstoque(new ArrayList<>(carrinho.getItemCarrinhoMap().values()));
-			Pedido pedido = new Pedido();
-			pedido.setData(new Date());
-			pedido.setTotal(valorBoleto);
-			pedido.setTipo(0);
-			pedidoDao.adicionar(pedido);
-			for (ItemCarrinho ic : carrinho.getItemCarrinhoMap().values()) {
-				Item item = new Item(pedido,ic.getProduto(),ic.getQuantidade(),ic.getValor());
-				itemDao.adicionar(item);
-				pedido.getItens().add(item);
-			}
-			pedidoDao.update(pedido);
+					estoqueBean.descontarEstoque(new ArrayList<>(carrinho.getItemCarrinhoMap().values()));
+					Pedido pedido = new Pedido();
+					pedido.setData(new Date());
+					pedido.setTotal(valorBoleto);
+					pedido.setTipo(0);
+					pedidoDao.adicionar(pedido);
+					for (ItemCarrinho ic : carrinho.getItemCarrinhoMap().values()) {
+						Item item = new Item(pedido,ic.getProduto(),ic.getQuantidade(),ic.getValor());
+						itemDao.adicionar(item);
+						pedido.getItens().add(item);
+					}
+					pedidoDao.update(pedido);
 
 
-		}else{
+				}else{
 
-			//sem estoque em um dos produtos
-			carrinhoBean.setListProdutosSemEstoque(listProdutosSemEstoque);
-			return "/carrinho/carrinho.xhtml?faces-redirect=true";
+					//sem estoque em um dos produtos
+					// coloca paramter
+					carrinhoBean.setListProdutosSemEstoque(listProdutosSemEstoque);
+					return "/carrinho/carrinho.xhtml?faces-redirect=true";
 
-		}
+				}
+			 
+		 }else{
+			 //modal erro cartao
+			 
+		 }
+
+
+	
+		
 		return null;
 
 
 	}
 
 
-	private void validaCartao() {
-
+	private boolean validaCartao() {
 		FacesContext context = FacesContext.getCurrentInstance();
 		Map<String,String> params = context.getExternalContext().getRequestParameterMap();
 		cartao.setCcv(params.get("ccv"));
 		cartao.setNome(params.get("nome"));
 		cartao.setDtValidade(params.get("dtValidade"));
 		cartao.setNumCartao(params.get("numCartao"));
-
-		System.out.println(" PARAM: ");
-		for (String el : params.values()) {
-			System.out.println("PARAM>: "+el);
+		
+		if (cartao.getCcv() != null || cartao.getNome() != null || cartao.getDtValidade() != null || cartao.getNumCartao() != null  || parcela != null) {
+			return false;
+		}else{
+			return true;
 		}
-
-
-		System.out.println("INFOS CARTÃO: ");
-		System.out.println(cartao.getCcv());
-		System.out.println(cartao.getNome());
-		System.out.println(cartao.getNumCartao());
-		System.out.println(cartao.getDtValidade());
-
 	}
 
 

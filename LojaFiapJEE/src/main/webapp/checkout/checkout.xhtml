@@ -131,16 +131,17 @@
 									<input style="height: 32px; border-bottom: 1px solid rgb(121, 121, 121);" class="mdl-textfield__input" value="1x" type="text"
 										id="parcela" readonly="true" tabIndex="-1" /> <label class="mdl-textfield__label" for="parcela">Parcela</label>
 									<ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu" for="parcela">
-										<li class="mdl-menu__item">1x</li>
-										<li class="mdl-menu__item">2x</li>
-										<li class="mdl-menu__item">3x</li>
-										<li class="mdl-menu__item">4x</li>
-										<li class="mdl-menu__item">5x</li>
-										<li class="mdl-menu__item">6x</li>
-										<li class="mdl-menu__item">7x</li>
-										<li class="mdl-menu__item">8x</li>
-										<li class="mdl-menu__item">9x</li>
-										<li class="mdl-menu__item">10x</li>
+									
+										<li data-value="1" class="mdl-menu__item">1x</li>
+										<li data-value="2" class="mdl-menu__item">2x</li>
+										<li data-value="3" class="mdl-menu__item">3x</li>
+										<li data-value="4" class="mdl-menu__item">4x</li>
+										<li data-value="5" class="mdl-menu__item">5x</li>
+										<li data-value="6" class="mdl-menu__item">6x</li>
+										<li data-value="7" class="mdl-menu__item">7x</li>
+										<li data-value="8" class="mdl-menu__item">8x</li>
+										<li data-value="9" class="mdl-menu__item">9x</li>
+										<li data-value="10" class="mdl-menu__item">10x</li>
 
 									</ul>
 								</div>
@@ -171,7 +172,7 @@
 		    $(document).ready(function() {
 		    	console.log('AAAAAAAAA BLAKC READY YEAH!')
 		    	$('li').on("click",function() {    
-		    		   alterarParcelaJS([{name:'parecelamento',value:$(this).text()}])
+		    		   alterarParcelaJS([{name:'parecelamento',value:$(this).attr('data-value')}])
 		    		});
 				
 			});   

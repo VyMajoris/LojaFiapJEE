@@ -49,6 +49,7 @@ public class EstoqueBean {
 			System.out.println("PEDIDO QTD  "+item.getQuantidade());
 			if (estoque < item.getQuantidade()) {
 				listProdutosSemEstoque.add(item.getProduto());
+				
 			}
 		}
 		return listProdutosSemEstoque;
