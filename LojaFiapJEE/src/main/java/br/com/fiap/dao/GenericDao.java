@@ -143,11 +143,15 @@ public class GenericDao<T> implements Dao<T> {
 		Criteria query = session.createCriteria(classe);
 		List<T> list = null;
 		try {
-			trns = session.beginTransaction();
+			trns = session.getTransaction();
+			trns.begin();
 			query = session.createCriteria(classe);
 			query.add(Restrictions.like(prop, value, MatchMode.ANYWHERE));
 			System.out.println("QUERY::: "+query.toString());
-			session.getTransaction().commit();
+
+			if (!trns.wasCommitted()) {
+				trns.commit();
+			}
 
 
 			 list = query.list();

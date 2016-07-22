@@ -12,7 +12,6 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
-import org.omnifaces.util.Ajax;
 import org.primefaces.context.RequestContext;
 
 import br.com.fiap.business.Calculos;
@@ -62,8 +61,7 @@ public class CarrinhoBean {
 
 	private String qtdItens;
 	private Double valorBoleto;
-	private Double valorCC;
-	private Double valorParcela;
+
 
 	@PostConstruct
 	public void init() {
@@ -176,24 +174,12 @@ public class CarrinhoBean {
 		this.valorBoleto = valorBoleto;
 	}
 
-	public Double getValorCC() {
-		return valorCC;
-	}
-
-	public void setValorCC(Double valorCC) {
-		this.valorCC = valorCC;
-	}
 
 	public void calcularValor() {
 
 		valorBoleto =  Calculos.calcularValorBoleto(carrinho.getValorTotal(), freteValues.getValorFreteEscolhido());
-		valorParcela =  Calculos.calcularParcelasSemJurosCartao(carrinho.getValorTotal(), freteValues.getValorFreteEscolhido(), CARRINHO_MAX_PARCELAS);
-		valorCC =    Calculos.calcularValorCartao(carrinho.getValorTotal(), freteValues.getValorFreteEscolhido());
 
-		System.out.println("CALC VALOR: getValorFreteEscolhido "+  freteValues.getValorFreteEscolhido());
-		System.out.println("CALC VALOR: BOLETO "+  valorBoleto);
-		System.out.println("CALC VALOR: valorParcela "+  valorParcela);
-		System.out.println("CALC VALOR: valorCC "+  valorCC);
+
 
 	}
 
@@ -247,16 +233,12 @@ public class CarrinhoBean {
 
 
 	public  void alterarQuantidade(){
-		Ajax.update("carrinho");
-		Ajax.update("listCarrinho");
-		Ajax.update("endFrete");
 
 		FacesContext context = FacesContext.getCurrentInstance();
 		Map<String,String> params = context.getExternalContext().getRequestParameterMap();
 
 
-		System.out.println("ALETARA + "+params.get("produtoId"));
-		System.out.println("ALETARA + "+params.get("qtd"));
+
 		putItem(Long.parseLong(params.get("produtoId")), Integer.parseInt(params.get("qtd"))  ,false);
 
 
@@ -264,14 +246,20 @@ public class CarrinhoBean {
 
 	public void removeItem(Long idProduto){
 
-		System.out.println("AJAX");
+
+		System.out.println("REMOVING: "+idProduto);
+
+		System.out.println("LIST BEFORE: "+itemCarrinhoKeySetList.size());
 		carrinho.removeItemCarrinho(idProduto);
+		itemCarrinhoKeySetList.clear();
+
+
 		itemCarrinhoKeySetList = new ArrayList<>(carrinho.getItemCarrinhoMap().keySet());
 		updateSession(carrinho);
-		Ajax.update("listCarrinho");
-		Ajax.update("carrinho");
+		System.out.println("LIST AFTERZ: "+itemCarrinhoKeySetList.size());
+
 		if (itemCarrinhoKeySetList.isEmpty()) {
-			Ajax.update("endFrete");
+
 		}
 
 
@@ -306,14 +294,6 @@ public class CarrinhoBean {
 
 	public void setItemCarrinhoKeySetList(ArrayList<Long> itemCarrinhoKeySetList) {
 		this.itemCarrinhoKeySetList = itemCarrinhoKeySetList;
-	}
-
-	public Double getValorParcela() {
-		return valorParcela;
-	}
-
-	public void setValorParcela(Double valorParcela) {
-		this.valorParcela = valorParcela;
 	}
 
 

@@ -1,16 +1,16 @@
 package br.com.fiap.teste;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Random;
 
 import javax.faces.context.FacesContext;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.stat.Statistics;
+import org.joda.time.DateTime;
 
 import br.com.fiap.dao.GenericDao;
 import br.com.fiap.dao.HibernateUtil;
-import br.com.fiap.dto.Carrinho;
-import br.com.fiap.dto.ItemCarrinho;
 import br.com.fiap.entity.Cliente;
 import br.com.fiap.entity.Endereco;
 import br.com.fiap.entity.Item;
@@ -40,22 +40,49 @@ public class Teste {
 
 		//test3();
 
-		fillData(100);
+		fillData(25, new String[]{"Categoria A","abstract"});
+		fillData(25,  new String[]{"Categoria B","business"});
+		fillData(25, new String[]{"Categoria C","cats"});
+		fillData(25,  new String[]{"Categoria D","technics"});
+
+
 
 	}
 
 
-	public static void fillData(int i){
+	static ArrayList<String> imgList = new ArrayList<>();
+	static int imgCount = 0;
+
+
+	static String randomString(final int length) {
+		char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+		StringBuilder sb = new StringBuilder();
+		Random random = new Random();
+		for (int i = 0; i < 5; i++) {
+		    char c = chars[random.nextInt(chars.length)];
+		    sb.append(c);
+		}
+	    return sb.toString();
+	}
+
+	public static void fillData(int i, String[] strings){
+
+
 
 		for (int j = 0; j < i; j++) {
+			imgCount++;
 			Produto produto = new Produto();
-			
-			
-			produto.setDescricao("Descrição "+j);
+			produto.setDescricao(strings[0]  +" - "+ randomString(20) );
 			produto.setEstoque(j);
-			produto.setNome("nome "+j);
-			produto.setUrl_imagem("url_imagem "+j);
+			produto.setNome("Produto "+ randomString(5) +" #"+j);
+			produto.setUrl_imagem("https://unsplash.it/800/600?image="+imgCount);
 			produto.setValor(100+j);
+			produto.setCategoria(strings[0]);
+
+
+
+			produto.setDataAdded( new DateTime(2016, 6, j+1, 0, 0).toDate());
+
 			produtodao.adicionar(produto);
 		}
 

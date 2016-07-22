@@ -14,11 +14,6 @@ public class Calculos {
 		return valorBoleto;
 	}
 
-	public static Double calcularParcelasSemJurosCartao(Double valorTotal, Double valorFreteEscolhido, int vezes) {
-		return  (valorTotal + valorFreteEscolhido)/vezes;
-	}
-	public static Double calcularValorCartao(Double valorTotal, Double valorFreteEscolhido) {
-		return valorTotal = valorTotal + valorFreteEscolhido;
-	}
+
 
 }

@@ -11,7 +11,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 	<meta name="description" content="A front-end template that helps you build fast, modern mobile web apps." />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
-	<title>Material Design Lite</title>
+	<title>Loja Hipster Genérica</title>
 
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&amp;lang=en" />
 	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet"
@@ -206,6 +206,17 @@
             			 window.location.href = '/LojaFiapJEE/faces/produto/produto-query.xhtml?query='+$(this).val();
             		    }
             	 })
+            	 
+            	 $('#userInfo').on("click",function() {    
+            		 window.location.href = '/LojaFiapJEE/faces/cadastro/cadastro.xhtml'
+		    		});
+            	 
+            	 
+            	 $('.cat-link').each(function(i, obj) {
+            		    //test
+            		    $(obj).attr('href','/LojaFiapJEE/faces/categoria/categoria.xhtml?query='+$(obj).attr('data-value'))
+            	 });
+            	 
 				
 			});
 
@@ -220,8 +231,8 @@
 	<h:form>
 
 
-		<p:remoteCommand id="p1" rendered="#{view.viewId != '/produto/produto.xhtml'}" oncomplete="window.location.href = '/LojaFiapJEE/faces#{view.viewId}'" name="login" actionListener="#{clienteBean.login()}"
-			style="display: none;" />
+		<p:remoteCommand id="p1" rendered="#{view.viewId != '/produto/produto.xhtml'}"
+			oncomplete="window.location.href = '/LojaFiapJEE/faces#{view.viewId}'" name="login" actionListener="#{clienteBean.login()}" style="display: none;" />
 
 		<p:remoteCommand id="p2" rendered="#{view.viewId == '/produto/produto.xhtml'}"
 			oncomplete="window.location.href = '/LojaFiapJEE/faces/produto/produto.xhtml?idProduto=#{produtoBean.idProduto}'" name="login"
@@ -250,24 +261,24 @@
 
 	</div>
 	</dialog>
-	
+
 	<dialog id="confirmarNovoEnderecoDialog" class="custom-dialog">
 	<h4 class="mdl-dialog__title">Novo Endereço?</h4>
 	<div class="mdl-dialog__content">
 
-		<h:panelGroup layout="block"  rendered="#{carrinhoBean.itemCarrinhoKeySetList.size() gt 0 and clienteBean.cliente.valid == true}">
-		
+		<h:panelGroup layout="block" rendered="#{carrinhoBean.itemCarrinhoKeySetList.size() gt 0 and clienteBean.cliente.valid == true}">
+
 			<p>Você está usando um endereço diferente.</p>
 			<p>Ao prosseguir você estará alterando o seu endereço e enviando este pedido para este novo endereço.</p>
-			
+
 		</h:panelGroup>
 		<h:outputText rendered="#{carrinhoBean.itemCarrinhoKeySetList.size() le 0 and clienteBean.cliente.valid != true}">Houve um erro com o seu carrinho. Verifique.</h:outputText>
 	</div>
 	<div class="mdl-dialog__actions">
-	<h:form>
-		<h:commandLink rendered="#{carrinhoBean.itemCarrinhoKeySetList.size() gt 0 and clienteBean.cliente.valid == true}" class="mdl-button"
-			value="Continuar" action="#{carrinhoBean.continuarCheckoutNovoEnd()}" />
-			</h:form>
+		<h:form>
+			<h:commandLink rendered="#{carrinhoBean.itemCarrinhoKeySetList.size() gt 0 and clienteBean.cliente.valid == true}" class="mdl-button"
+				value="Continuar" action="#{carrinhoBean.continuarCheckoutNovoEnd()}" />
+		</h:form>
 		<button type="button" class="mdl-button close">Fechar</button>
 
 	</div>
@@ -287,7 +298,7 @@
 
 	</div>
 	</dialog>
-	
+
 	<dialog id="erroCadastroDialog" class="custom-dialog">
 	<h4 class="mdl-dialog__title">Um erro ocorreu</h4>
 	<div class="mdl-dialog__content">
@@ -303,27 +314,13 @@
 
 	</div>
 	</dialog>
-		<dialog id="erroCartaoDialog" class="custom-dialog">
-	<h4 class="mdl-dialog__title">Um erro ocorreu</h4>
-	<div class="mdl-dialog__content">
 
-
-		<p>Ocorreu um erro no seu cartao.</p>
-		<p>Por favor verifique.</p>
-
-	</div>
-	<div class="mdl-dialog__actions">
-
-		<button type="button" class="mdl-button close">OK</button>
-
-	</div>
-	</dialog>
-			<dialog id="erroEstoqueDialog" class="custom-dialog">
+	<dialog id="erroEstoqueDialog" class="custom-dialog">
 	<h4 class="mdl-dialog__title">Sem Estoque!</h4>
 	<div class="mdl-dialog__content">
 
 
-		<p> Um ou mais itens do seu carrinho está sem estoque! </p>
+		<p>Um ou mais itens do seu carrinho está sem estoque!</p>
 		<!--  list sem estoque -->
 		<p>Por favor verifique.</p>
 
@@ -341,6 +338,7 @@
 	
 	
 	
+	//arrumar cadastro
 	 var dialogCad = document.querySelector('#arrumarCadastroDialog');
             if (!dialogCad.showModal) {
                 dialogPolyfill.registerDialog(dialogCad);
@@ -350,6 +348,7 @@
             	dialogCad.close();
             });
             
+            //confrimar novo end
             var dialogEnd = document.querySelector('#confirmarNovoEnderecoDialog');
             if (! dialogEnd.showModal) {
                 dialogPolyfill.registerDialog(dialogEnd);
@@ -359,6 +358,7 @@
             	dialogEnd.close();
             });
             
+            //checkout
             var dialogErroCheckout = document.querySelector('#erroCheckoutDialog');
             if (! dialogErroCheckout.showModal) {
                 dialogPolyfill.registerDialog(dialogErroCheckout);
@@ -369,6 +369,7 @@
             });
             
             
+            //cadastro
             var dialogErroCadastro = document.querySelector('#erroCadastroDialog');
             if (! dialogErroCadastro.showModal) {
                 dialogPolyfill.registerDialog(dialogErroCadastro);
@@ -376,6 +377,16 @@
  
             dialogErroCadastro.querySelector('.close').addEventListener('click', function() {
             	dialogErroCadastro.close();
+            });
+            
+            //estoque
+            var dialogErroEstoque = document.querySelector('#erroEstoqueDialog');
+            if (! dialogErroEstoque.showModal) {
+                dialogPolyfill.registerDialog(dialogErroEstoque);
+            }
+ 
+            dialogErroEstoque.querySelector('.close').addEventListener('click', function() {
+            	dialogErroEstoque.close();
             });
         </script>
 	<div class="demo-blog demo-layout-transparent mdl-layout mdl-js-layout ">
@@ -386,7 +397,9 @@
 			<div class="mdl-layout__header-row">
 
 				<!-- Title -->
-				<span style="font-family: 'Pacifico', cursive;" class="titulo mdl-layout-title ">Loja Hipster Genérica</span>
+
+				<span style="font-family: 'Pacifico', cursive; cursor: pointer" class="titulo mdl-layout-title "
+					onclick="window.location.href = '/LojaFiapJEE/faces/index/newIndex.xhtml'">Loja Hipster Genérica</span>
 				<!-- Add spacer, to align navigation to the right -->
 				<div class="mdl-layout-spacer"></div>
 				<!-- Navigation -->
@@ -423,7 +436,7 @@
 					</h:panelGroup>
 					<h:graphicImage styleClass="demo-avatar user-info" url="#{clienteBean.cliente.photoUrl}" rendered="#{clienteBean.cliente.photoUrl != null}" />
 
-					<div class="demo-avatar-dropdown">
+					<div id="userInfo" class="demo-avatar-dropdown">
 						<span style="line-height: 2;"> <h:outputText styleClass="user-info" rendered="#{clienteBean.cliente.email != null}"
 								value="#{clienteBean.cliente.email}" /> <h:outputText styleClass="user-info" rendered="#{clienteBean.cliente.email == null}"
 								value="Faça o Login!" /> <br></br> <h:outputText styleClass="user-info" rendered="#{clienteBean.cliente.nome != null}"
@@ -434,8 +447,13 @@
 					</div>
 				</p:outputPanel>
 			</header>
-			<nav class="demo-navigation mdl-navigation mdl-color--blue-grey-800"><a class="mdl-navigation__link" href=""><i
-					class="mdl-color-text--blue-grey-400 material-icons" role="presentation">home</i>Produtos</a></nav>
+			<nav class="demo-navigation mdl-navigation mdl-color--blue-grey-800">
+			  <a data-value="home" class="mdl-navigation__link home"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">home</i>Home</a> 
+			  <a data-value="Categoria A" class="mdl-navigation__link cat-link"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation"> </i>Categoria A</a> 
+			  <a data-value="Categoria B" class="mdl-navigation__link cat-link"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">home</i>Categoria B</a> 
+			  <a data-value="Categoria C" class="mdl-navigation__link cat-link"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">home</i>Categoria C</a> 
+			  <a data-value="Categoria D" class="mdl-navigation__link cat-link"><i class="mdl-color-text--blue-grey-400 material-icons" role="presentation">home</i>Categoria D</a>
+			</nav>
 		</div>
 
 		<main class="mdl-layout__content"> <ui:insert name="content">

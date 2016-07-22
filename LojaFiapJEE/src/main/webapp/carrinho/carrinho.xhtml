@@ -51,17 +51,17 @@
 				<p:remoteCommand update="carrinhoForm:listCarrinho" name="updateCarrinho" actionListener="#{carrinhoBean.alterarQuantidade}"
 					style="display: none;" />
 				<p:remoteCommand name="onload" action="#{freteBean.checkChecked}" />
-				
-				
-			
-				<p:remoteCommand name="checkCep" action="#{freteBean.checkCep}"  />
+
+
+
+				<p:remoteCommand name="checkCep" action="#{freteBean.checkCep}" />
 			</h:form>
 			<f:metadata>
 
 				<f:viewAction action="#{carrinhoBean.veriricarProdutosEstoque}" />
 				<f:viewAction action="#{freteBean.checkCep}" />
-				
-				
+
+
 
 			</f:metadata>
 
@@ -93,7 +93,8 @@
 									<div class="mdl-grid mdl-cell--12-col carrinho-item-full-container">
 										<div style="margin-bottom: 0; margin-top: 0" class="section__circle-container mdl-cell my-cell--1-col">
 											<div class="section__circle-container__circle ">
-												<div class="carrinho-item-image"></div>
+												<div style="background: url('#{carrinhoBean.carrinho.itemCarrinhoMap[key].produto.url_imagem}') 50%; background-size: 144%;"
+													class="carrinho-item-image"></div>
 											</div>
 										</div>
 										<div
@@ -105,18 +106,15 @@
 												<div
 													class="mdl-cell mdl-cell--4-col-desktop mdl-cell--3-col-tablet mdl-cell--middle mdl-cell--12-col-phone carrinho-item-container carrinho-item-precototal">
 													<h5 class="preco-total  ">Preço Total: #{carrinhoBean.carrinho.itemCarrinhoMap[key].valor}</h5>
-													<h5 class="preco-total  ">Preço Unit.: #{carrinhoBean.carrinho.itemCarrinhoMap[key].produto.valor} a
+													<h5 class="preco-total  ">Preço Unit.: #{carrinhoBean.carrinho.itemCarrinhoMap[key].produto.valor} 
 														#{carrinhoBean.carrinho.itemCarrinhoMap[key].quantidade}</h5>
 												</div>
 											</div>
 											<div style="width: 100%" class="mdl-grid mdl-cell  mdl-cell--12-col carrinho-item-container">
 												<div style="padding: 0 15px 0 0; margin: 0" class="mdl-cell mdl-cell--2-col   mdl-cell--1-col-phone mdl-cell--middle">
-													<h:commandLink immediate="true" action="#{carrinhoBean.removeItem(key)}" value="Remover" class="mdl-button">
-														<p:ajax update="carrinhoForm:listCarrinho" />
-														<p:ajax update="carrinhoForm:endereco" />
-														<p:ajax update="carrinhoForm:frete" />
-														<p:ajax update=":carrinho" />
-													</h:commandLink>
+													<p:commandLink ajax="carrinhoForm:listCarrinho carrinhoForm:endereco carrinhoForm:frete :carrinho" immediate="true" action="#{carrinhoBean.removeItem(key)}" value="Remover" class="mdl-button">
+											
+													</p:commandLink>
 												</div>
 												<div class="mdl-layout-spacer"></div>
 												<div style="padding: 0; margin: 0; margin-right: 20px; margin-left: 10px"
@@ -149,13 +147,14 @@
 											<p:ajax update="carrinhoForm:listCarrinho" />
 											<p:ajax update=":carrinho" />
 											<p:ajax update="endereco" />
-											<p:ajax  update="carrinhoForm:frete" />
+											<p:ajax update="carrinhoForm:frete" />
 										</h:commandLink>
-										<h:commandLink actionListener="#{carrinhoBean.validarCheckout}" rendered="#{carrinhoBean.itemCarrinhoKeySetList.size() > 0 and clienteBean.cliente.valid == true}" class="mdl-button"
-											   value="Checkout">
-											  <f:ajax execute="@form" render="@none" /></h:commandLink>
-											
-											
+										<h:commandLink actionListener="#{carrinhoBean.validarCheckout}"
+											rendered="#{carrinhoBean.itemCarrinhoKeySetList.size() > 0 and clienteBean.cliente.valid == true}" class="mdl-button" value="Checkout">
+											<f:ajax execute="@form" render="@none" />
+										</h:commandLink>
+
+
 									</div>
 								</h:panelGroup>
 								<h:panelGroup layout="block" rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()==0}">

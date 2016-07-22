@@ -35,7 +35,8 @@
 </style>
 			<h:form>
 				<p:remoteCommand action="#{checkoutBean.gerarPedidoCartao}" name="pagarComCartao" style="display: none;" />
-					<p:remoteCommand id="p3" update="@(.cartao-info)" name="alterarParcelaJS" actionListener="#{checkoutBean.alterarParecelasCartao()}" style="display: none;" />
+				<p:remoteCommand id="p3" update="@(.cartao-info)" name="alterarParcelaJS" actionListener="#{checkoutBean.alterarParecelasCartao()}"
+					style="display: none;" />
 			</h:form>
 
 			<div class="demo-blog__posts produto-container">
@@ -82,106 +83,13 @@
 
 					<div style="text-align: right;" class="mdl-card__actions">
 						<h:form>
-							<h:commandLink action="#{checkoutBean.gerarPedidoBoleto()}" value="Pagar com Boleto" class="mdl-button" />
+							<h:commandLink action="#{checkoutBean.gerarPedidoBoleto}" value="Pagar com Boleto" class="mdl-button" />
 						</h:form>
 
 					</div>
 				</div>
 
-
-
-
-				<div style="margin: 15px 0 15px 0; overflow: visible;" class="demo-card-wide mdl-card mdl-cell--12-col mdl-shadow--2dp mdl-cell--middle">
-					<div class="mdl-card__title cartao">
-						<div style="padding: 0px;" class="mdl-grid carrinho-top">
-							<div class="mdl-cell--12-col ">
-								<h4 class=" mdl-card__title-text carrinho-titulo">Cartão</h4>
-								<h4 class=" mdl-card__title-text carrinho-total">
-									<h:outputText value="#{checkoutBean.valorCC}">
-										<f:convertNumber type="currency" locale="pt_BR" />
-									</h:outputText>
-								</h4>
-							</div>
-						</div>
-					</div>
-					<div style="overflow: visible;" class="mdl-card__supporting-text mdl-grid pagamento-container my-full-width">
-						<div class="mdl-cell mdl-cell--2-col mdl-cell--hide-phone  mdl-cell--hide-tablet mdl-cell--1-col-tablet boleto-icon-container">
-							<i class="fa fa-credit-card-alt" aria-hidden="true"></i>
-						</div>
-						<div style="overflow: visible;" class="mdl-cell  mdl-cell--10-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone mdl-cell--7-col-tablet">
-							<h5 class="titulo-boleto">Até 5x sem juros!</h5>
-
-
-							<h:form style="padding: 0px;" class="mdl-grid">
-								<div class="mdl-cell mdl-cell--4-col mdl-cell--3-col-tablet  mdl-cell--3-col-phone small-phone-font">
-									<gold-cc-input name="numCartao" class="card-input" required="true" auto-validate="true" label="Número do cartão" />
-								</div>
-								<div class="mdl-cell mdl-cell--2-col  mdl-cell--2-col-tablet mdl-cell--1-col-phone small-phone-font">
-									<gold-cc-cvc-input name="ccv" required="true" auto-validate="true" label="CCV"></gold-cc-cvc-input>
-								</div>
-								<div class="mdl-cell mdl-cell--6-col mdl-cell--3-col-tablet mdl-cell--12-col-phone small-phone-font phone-full-width  ">
-									<paper-input name="dtValidade" label="Data de validade(mm/aa)"></paper-input>
-								</div>
-								<div class="mdl-cell mdl-cell--6-col mdl-cell--12-col-tablet mdl-cell--12-col-phone small-phone-font phone-full-width ">
-									<paper-input name="nome" label="Nome(Como escrito no cartão)"></paper-input>
-								</div>
-
-
-								<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label getmdl-select">
-									<input style="height: 32px; border-bottom: 1px solid rgb(121, 121, 121);" class="mdl-textfield__input" value="1x" type="text"
-										id="parcela" readonly="true" tabIndex="-1" /> <label class="mdl-textfield__label" for="parcela">Parcela</label>
-									<ul class="mdl-menu mdl-menu--bottom-left mdl-js-menu" for="parcela">
-									
-										<li data-value="1" class="mdl-menu__item">1x</li>
-										<li data-value="2" class="mdl-menu__item">2x</li>
-										<li data-value="3" class="mdl-menu__item">3x</li>
-										<li data-value="4" class="mdl-menu__item">4x</li>
-										<li data-value="5" class="mdl-menu__item">5x</li>
-										<li data-value="6" class="mdl-menu__item">6x</li>
-										<li data-value="7" class="mdl-menu__item">7x</li>
-										<li data-value="8" class="mdl-menu__item">8x</li>
-										<li data-value="9" class="mdl-menu__item">9x</li>
-										<li data-value="10" class="mdl-menu__item">10x</li>
-
-									</ul>
-								</div>
-
-							</h:form>
-
-
-
-						</div>
-
-					</div>
-
-					<div style="text-align: right;" class="mdl-card__actions">
-
-						<a
-							onClick="pagarComCartao([ {name: 'numCartao',value: $('input[name=numCartao]').val()}, {name: 'ccv', value: $('input[name = ccv]').val() },
-					                {name:'dtValidade ',value:$('input[name = dtValidade]').val() },
-					                {name:'nome ',value:$('input[name = nome]').val() },
-					               ]);"
-							class="mdl-button"> Pagar com Cartão</a>
-					</div>
-				</div>
-
 			</div>
-
-			<script>
-			
-		    $(document).ready(function() {
-		    	console.log('AAAAAAAAA BLAKC READY YEAH!')
-		    	$('li').on("click",function() {    
-		    		   alterarParcelaJS([{name:'parecelamento',value:$(this).attr('data-value')}])
-		    		});
-				
-			});   
-
-			
-			
-			</script>
-
-
 
 		</ui:define>
 

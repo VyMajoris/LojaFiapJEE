@@ -44,11 +44,34 @@ public class ProdutoDirect implements Serializable {
 
 
 
+	@Column(name="CATEGORIA")
+	private String categoria;
+
+	public String getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(String categoria) {
+		this.categoria = categoria;
+	}
+
 	@Column(name="VALOR")
 	private double valor;
 
 	@Column(name="URL_IMAGEM")
 	private String url_imagem;
+
+	@Column(name="DATA_ADDED")
+	@Temporal(TemporalType.DATE)
+	private Date dataAdded;
+
+	public Date getDataAdded() {
+		return dataAdded;
+	}
+
+	public void setDataAdded(Date dataAdded) {
+		this.dataAdded = dataAdded;
+	}
 
 
 	public Long getId() {

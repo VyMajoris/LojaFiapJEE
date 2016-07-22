@@ -2,7 +2,6 @@ package br.com.fiap.bean;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
@@ -11,8 +10,9 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
+import org.primefaces.context.RequestContext;
+
 import br.com.fiap.business.Calculos;
-import br.com.fiap.business.Cartao;
 import br.com.fiap.dao.GenericDao;
 import br.com.fiap.dto.Carrinho;
 import br.com.fiap.dto.ItemCarrinho;
@@ -24,7 +24,6 @@ import br.com.fiap.entity.Produto;
 @RequestScoped
 public class CheckoutBean  {
 
-	private Cartao cartao;
 
 	HttpSession session;
 	Carrinho carrinho;
@@ -60,7 +59,7 @@ public class CheckoutBean  {
 	@ManagedProperty("#{clienteBean}")
 	ClienteBean clienteBean;
 
-	private String parcela;
+	private String parcela = "1";
 
 
 	public ClienteBean getClienteBean() {
@@ -81,8 +80,7 @@ public class CheckoutBean  {
 		clienteDao = new GenericDao<>(Cliente.class);
 		pedidoDao = new GenericDao<>(Pedido.class);
 		calcularValorBoleto();
-		calcularValorCC();
-		cartao = new Cartao();
+
 	}
 
 
@@ -91,10 +89,6 @@ public class CheckoutBean  {
 	}
 
 
-	private void calcularValorCC() {
-		valorCC = carrinho.getValorTotal();
-		valorCC = valorCC + freteValues.getValorFreteEscolhido();
-	}
 
 
 	public String gerarPedidoBoleto(){
@@ -124,20 +118,15 @@ public class CheckoutBean  {
 			}else{
 
 				//sem estoque em um dos produtos
-				//parameter
 				carrinhoBean.setListProdutosSemEstoque(listProdutosSemEstoque);
-				String listProdutosSemEstoqueParameter;
-				for (Produto produto : listProdutosSemEstoque) {
-					
-					//?idProduto=
-					listProdutosSemEstoqueParameter. ?idProduto=
-				}
 				return "/carrinho/carrinho.xhtml?faces-redirect=true";
 
 			}
 		}else{
 			//modal erro sistema
 			System.out.println("sem sessão");
+			RequestContext.getCurrentInstance().execute("erroCheckoutDialog.showModal();");
+
 		}
 
 		return null;
@@ -145,75 +134,6 @@ public class CheckoutBean  {
 
 	}
 
-	public void alterarParecelasCartao(){
-		FacesContext context = FacesContext.getCurrentInstance();
-		Map<String,String> params = context.getExternalContext().getRequestParameterMap();
-		parcela = params.get("parecelamento");
-
-
-
-
-
-	}
-
-	public String gerarPedidoCartao(){
-
-		 if (validaCartao()) {
-				ArrayList<Produto> listProdutosSemEstoque = estoqueBean.validaEstoque(new ArrayList<>(carrinho.getItemCarrinhoMap().values()));
-
-				if (listProdutosSemEstoque.isEmpty()) {
-
-					estoqueBean.descontarEstoque(new ArrayList<>(carrinho.getItemCarrinhoMap().values()));
-					Pedido pedido = new Pedido();
-					pedido.setData(new Date());
-					pedido.setTotal(valorBoleto);
-					pedido.setTipo(0);
-					pedidoDao.adicionar(pedido);
-					for (ItemCarrinho ic : carrinho.getItemCarrinhoMap().values()) {
-						Item item = new Item(pedido,ic.getProduto(),ic.getQuantidade(),ic.getValor());
-						itemDao.adicionar(item);
-						pedido.getItens().add(item);
-					}
-					pedidoDao.update(pedido);
-
-
-				}else{
-
-					//sem estoque em um dos produtos
-					// coloca paramter
-					carrinhoBean.setListProdutosSemEstoque(listProdutosSemEstoque);
-					return "/carrinho/carrinho.xhtml?faces-redirect=true";
-
-				}
-			 
-		 }else{
-			 //modal erro cartao
-			 
-		 }
-
-
-	
-		
-		return null;
-
-
-	}
-
-
-	private boolean validaCartao() {
-		FacesContext context = FacesContext.getCurrentInstance();
-		Map<String,String> params = context.getExternalContext().getRequestParameterMap();
-		cartao.setCcv(params.get("ccv"));
-		cartao.setNome(params.get("nome"));
-		cartao.setDtValidade(params.get("dtValidade"));
-		cartao.setNumCartao(params.get("numCartao"));
-		
-		if (cartao.getCcv() != null || cartao.getNome() != null || cartao.getDtValidade() != null || cartao.getNumCartao() != null  || parcela != null) {
-			return false;
-		}else{
-			return true;
-		}
-	}
 
 
 	public EstoqueBean getEstoqueBean() {
@@ -295,14 +215,7 @@ public class CheckoutBean  {
 	}
 
 
-	public Cartao getCartao() {
-		return cartao;
-	}
 
-
-	public void setCartao(Cartao cartao) {
-		this.cartao = cartao;
-	}
 
 
 	public CarrinhoBean getCarrinhoBean() {

@@ -56,6 +56,7 @@ public class Pedido implements Serializable {
 	@Column(name="TOTAL")
 	private double total;
 
+
 	public Long getId() {
 		return id;
 	}

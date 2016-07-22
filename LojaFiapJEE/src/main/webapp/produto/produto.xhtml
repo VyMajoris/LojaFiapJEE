@@ -18,7 +18,7 @@
 
 			<div class="demo-blog__posts produto-container">
 				<div style="width: 100%" class=" mdl-grid  mdl-grid--no-spacing	mdl-shadow--2dp"> <header
-					class=" mdl-cell mdl-grid  mdl-cell--12-col mdl-cell-mdl-color--teal-100 mdl-color-text--white" style="background: url('../resources/img/cafe.jpg') center/cover; height: 200px;">
+					class=" mdl-cell mdl-grid  mdl-cell--12-col mdl-cell-mdl-color--teal-100 mdl-color-text--white" style="background: url('#{produtoBean.produto.url_imagem}') center/cover; height: 200px;">
 				<div  class=" mdl-cell mdl-cell--12-col mdl-cell--bottom  mdl-color-text--grey-50">
 					<h3 style="text-shadow: 0px 0px 19px rgba(0, 0, 0, 1); margin-bottom: 0;">#{produtoBean.produto.nome}</h3>
 				</div>
@@ -26,7 +26,7 @@
 				<div style="border-radius: 0px;" class="mdl-card mdl-cell mdl-cell--12-col">
 					<div style="display: block;" class="mdl-card__supporting-text">
 						<h4>Descrição</h4>
-						
+						<p>#{produtoBean.produto.descricao}</p>
 					</div>
 					<div style="text-align: right;" class="mdl-card__actions">
 						<h:form>

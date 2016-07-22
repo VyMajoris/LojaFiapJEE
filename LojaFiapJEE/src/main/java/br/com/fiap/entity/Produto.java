@@ -1,16 +1,13 @@
 package br.com.fiap.entity;
 
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.Date;
 
-import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.QueryHint;
 import javax.persistence.Table;
@@ -33,10 +30,10 @@ public class Produto implements Serializable {
 
 	@Column(name="NOME")
 	private String nome;
-	
+
 	@Column(name="DESCRICAO")
 	private String descricao;
-	
+
 	public int getEstoque() {
 		return estoque;
 	}
@@ -48,15 +45,22 @@ public class Produto implements Serializable {
 	@Column(name="ESTOQUE")
 	private int estoque;
 
-	
-	
+	@Column(name="CATEGORIA")
+	private String categoria;
+
+	@Column(name="DATA_ADDED")
+	@Temporal(TemporalType.DATE)
+	private Date dataAdded;
+
+
+
 	@Column(name="VALOR")
 	private double valor;
-	
+
 	@Column(name="URL_IMAGEM")
 	private String url_imagem;
-	
-	
+
+
 	public Long getId() {
 		return id;
 	}
@@ -98,6 +102,25 @@ public class Produto implements Serializable {
 	public void setUrl_imagem(String url_imagem) {
 		this.url_imagem = url_imagem;
 	}
+
+	public String getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(String categoria) {
+		this.categoria = categoria;
+	}
+
+	public Date getDataAdded() {
+		return dataAdded;
+	}
+
+	public void setDataAdded(Date dataAdded) {
+		this.dataAdded = dataAdded;
+	}
+
+
+
 
 
 
