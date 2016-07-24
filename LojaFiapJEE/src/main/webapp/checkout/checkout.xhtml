@@ -33,11 +33,7 @@
 	background: url('../resources/img/pagamento2.jpg') center/cover;
 }
 </style>
-			<h:form>
-				<p:remoteCommand action="#{checkoutBean.gerarPedidoCartao}" name="pagarComCartao" style="display: none;" />
-				<p:remoteCommand id="p3" update="@(.cartao-info)" name="alterarParcelaJS" actionListener="#{checkoutBean.alterarParecelasCartao()}"
-					style="display: none;" />
-			</h:form>
+
 
 			<div class="demo-blog__posts produto-container">
 
@@ -83,7 +79,9 @@
 
 					<div style="text-align: right;" class="mdl-card__actions">
 						<h:form>
-							<h:commandLink action="#{checkoutBean.gerarPedidoBoleto}" value="Pagar com Boleto" class="mdl-button" />
+							<h:commandLink  action="#{checkoutBean.gerarPedidoBoleto}" value="Pagar com Boleto" class="mdl-button" >
+							</h:commandLink>
+							
 						</h:form>
 
 					</div>

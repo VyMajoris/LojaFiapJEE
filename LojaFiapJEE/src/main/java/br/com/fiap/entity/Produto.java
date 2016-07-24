@@ -17,6 +17,7 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+
 @Entity
 @Cache(usage=CacheConcurrencyStrategy.READ_ONLY, region="produto")
 @NamedQuery(name="Produto.findAll", query="SELECT p FROM Produto p", hints =

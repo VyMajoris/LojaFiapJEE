@@ -16,16 +16,16 @@
 
 
 			<p:outputPanel id="listPanel" class="demo-blog__posts mdl-grid" autoUpdate="true">
-			<div class="mdl-cell mdl-cell--12-col "><h6 class="query-title">Mostrando produtos da categoria:  #{categoriaBean.searchValue}</h6></div>
+			<div class="mdl-cell mdl-cell--12-col "><h6 style="    line-height: 50px; text-shadow: 0px 0px 19px rgba(0, 0, 0, 1);" class="query-title">Mostrando produtos da categoria:  #{categoriaBean.searchValue}</h6></div>
 				
 				<ui:repeat id="listaProduto" var="produto" value="#{categoriaBean.listProdutoQuery}">
 					<ui:fragment rendered="#{produto.estoque > 0 }">
 						<div class="mdl-card  mdl-cell mdl-cell--6-col mdl-cell--4-col-tablet mdl-cell--12-col-phone mdl-shadow--4dp">
 							<h:form>
-								<div onclick="openProduto#{produto.id}" style="background: url('../resources/img/cafe.jpg') center/cover;"
+								<div onclick="openProduto#{produto.id}" style="background: url('#{produto.url_imagem}') center/cover;"
 									class="mdl-card__media mdl-color-text--grey-50">
 									<h3>
-										<a href="entry.html">#{produto.nome}</a>
+										<span style="text-shadow: 0px 0px 19px rgba(0, 0, 0, 1);" >#{produto.nome}</span>
 									</h3>
 								</div>
 								<div class="mdl-card__supporting-text meta mdl-color-text--grey-600 mdl-grid ">

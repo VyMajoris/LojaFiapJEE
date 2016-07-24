@@ -10,8 +10,19 @@
 
 </h:head>
 <h:body>
+
+
 	<ui:composition template="/template/template.xhtml">
 		<ui:define name="content">
+
+			<f:metadata>
+
+				<f:event type="preRenderView" listener="#{carrinhoBean.veriricarProdutosEstoque}" />
+				<f:viewAction action="#{carrinhoBean.veriricarProdutosEstoque}" />
+				<f:viewAction action="#{freteBean.checkCep}" />
+			</f:metadata>
+
+
 			<style>
 .carrinho {
 	color: #fff;
@@ -40,6 +51,20 @@
 	background-position: 50% 52%;
 }
 </style>
+		
+			<script>
+			
+			
+			 var dialogErroProdutosCacheEstoque = document.querySelector('#erroProdutosCacheEstoqueDialog');
+			   if (!dialogErroProdutosCacheEstoque.showModal) {
+			       dialogPolyfill.registerDialog(dialogErroProdutosCacheEstoque);
+			   }
+
+			   dialogErroProdutosCacheEstoque.querySelector('.close').addEventListener('click', function() {
+				   dialogErroProdutosCacheEstoque.close();
+			   });
+
+   </script>
 
 			<h:form>
 				<p:remoteCommand update="carrinhoForm:frete"
@@ -56,14 +81,7 @@
 
 				<p:remoteCommand name="checkCep" action="#{freteBean.checkCep}" />
 			</h:form>
-			<f:metadata>
 
-				<f:viewAction action="#{carrinhoBean.veriricarProdutosEstoque}" />
-				<f:viewAction action="#{freteBean.checkCep}" />
-
-
-
-			</f:metadata>
 
 			<div class="demo-blog__posts produto-container">
 
@@ -83,7 +101,11 @@
 									<div class="mdl-cell--12-col ">
 										<h4 class=" mdl-card__title-text carrinho-titulo">Meu Carrinho</h4>
 										<h4 class=" mdl-card__title-text carrinho-total">
-											<h:outputText rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()>0}" value="Total: R$#{carrinhoBean.carrinho.valorTotal}" />
+											Total:
+											<h:outputText rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()>0}" value="#{carrinhoBean.carrinho.valorTotal}">
+												<f:convertNumber type="currency" locale="pt_BR" />
+											</h:outputText>
+
 										</h4>
 									</div>
 								</div>
@@ -105,34 +127,51 @@
 												<div class="mdl-layout-spacer"></div>
 												<div
 													class="mdl-cell mdl-cell--4-col-desktop mdl-cell--3-col-tablet mdl-cell--middle mdl-cell--12-col-phone carrinho-item-container carrinho-item-precototal">
-													<h5 class="preco-total  ">Preço Total: #{carrinhoBean.carrinho.itemCarrinhoMap[key].valor}</h5>
-													<h5 class="preco-total  ">Preço Unit.: #{carrinhoBean.carrinho.itemCarrinhoMap[key].produto.valor} 
-														#{carrinhoBean.carrinho.itemCarrinhoMap[key].quantidade}</h5>
-												</div>
-											</div>
-											<div style="width: 100%" class="mdl-grid mdl-cell  mdl-cell--12-col carrinho-item-container">
-												<div style="padding: 0 15px 0 0; margin: 0" class="mdl-cell mdl-cell--2-col   mdl-cell--1-col-phone mdl-cell--middle">
-													<p:commandLink ajax="carrinhoForm:listCarrinho carrinhoForm:endereco carrinhoForm:frete :carrinho" immediate="true" action="#{carrinhoBean.removeItem(key)}" value="Remover" class="mdl-button">
-											
-													</p:commandLink>
-												</div>
-												<div class="mdl-layout-spacer"></div>
-												<div style="padding: 0; margin: 0; margin-right: 20px; margin-left: 10px"
-													class="mdl-cell mdl-cell--2-col mdl-cell--1-col-phone mdl-cell--middle">
-													<h:commandLink immediate="true"
-														onclick="updateCarrinho([{name:'produtoId',value:#{carrinhoBean.carrinho.itemCarrinhoMap[key].produto.id} },{name:'qtd',value:$('##{key}').val() },  ]);"
-														value="Atualizar " class="mdl-button">
-														<p:ajax render="listCarrinho" />
-													</h:commandLink>
+													<h5 class="preco-total  ">
+														Preço Total:
+														<h:outputText value="#{carrinhoBean.carrinho.itemCarrinhoMap[key].valor}">
+															<f:convertNumber type="currency" locale="pt_BR" />
+														</h:outputText>
+													</h5>
+													<h5 class="preco-total  ">
+														Preço Unit.:
+														<h:outputText value="#{carrinhoBean.carrinho.itemCarrinhoMap[key].produto.valor}">
+															<f:convertNumber type="currency" locale="pt_BR" />
+														</h:outputText>
+													</h5>
 
 												</div>
-												<div style="padding: 0; margin: 0; margin-left: 20px" class="mdl-grid mdl-cell mdl-cell--2-col  mdl-cell--middle">
-													<div class="mdl-layout-spacer"></div>
-													<div class="mdl-cell mdl-cell--4-col">
+											</div>
+											<div  style="width: 100%" class="mdl-grid mdl-cell  mdl-cell--12-col  carrinho-item-container">
+												<div   style="margin: 0" class="mdl-cell mdl-cell--2-col   mdl-cell--12-col-phone mdl-cell--middle">
+													<p:commandLink ajax="carrinhoForm:listCarrinho carrinhoForm:endereco carrinhoForm:frete :carrinho" immediate="true"
+														action="#{carrinhoBean.removeItem(key)}" value="Remover" class="mdl-button">
+
+													</p:commandLink>
+												</div>
+												<div class="mdl-layout-spacer mdl-cell--hide-phone"></div>
+												<div   style="margin: 0"
+													class="mdl-cell mdl-cell--2-col mdl-cell--12-col-phone mdl-cell--middle">
+													<p:commandLink immediate="true"
+														onclick="updateCarrinho([{name:'produtoId',value:#{carrinhoBean.carrinho.itemCarrinhoMap[key].produto.id} },{name:'qtd',value:$('##{key}').val() },  ]);"
+														value="Atualizar" class="mdl-button">
+														<p:ajax update="carrinhoForm:listCarrinho" />
+													</p:commandLink>
+
+												</div>
+												<div  style="margin: 0; padding: 0;" class="mdl-grid mdl-cell mdl-cell--4-col  mdl-cell--12-col-phone mdl-cell--middle">
+												<div class="mdl-layout-spacer"></div>
+													<div style="margin-top: 11px" class="mdl-cell mdl-cell--2-col-phone mdl-cell--3-col">
+													
+														<span>Estq: #{carrinhoBean.carrinho.itemCarrinhoMap[key].produto.estoque}</span>
+													</div>
+													
+													<div style="margin-right: 0;margin-top: 11px" class="mdl-cell mdl-cell--1-col-phone mdl-cell--2-col">
+													
 														<span>Qtd.</span>
 													</div>
-													<div style="padding: 0px;" class="mdl-cell mdl-cell--4-col mdl-textfield mdl-js-textfield">
-														<h:inputText pa:id="#{key}" value="#{carrinhoBean.carrinho.itemCarrinhoMap[key].quantidade}" pa:placeholder="Qtd."
+													<div style="padding: 0px; width: calc(15% - 16px)" class="mdl-cell mdl-cell--3-col l mdl-cell--1-col-phone mdl-textfield mdl-js-textfield">
+														<h:inputText pa:id="#{key}" style="text-align: center;" value="#{carrinhoBean.carrinho.itemCarrinhoMap[key].quantidade}" pa:placeholder="Qtd."
 															class="mdl-textfield__input qtd" type="text" />
 													</div>
 												</div>
@@ -260,7 +299,9 @@
 											<div class="mdl-cell--12-col ">
 												<h4 class=" mdl-card__title-text carrinho-titulo">Frete</h4>
 												<h4 class=" mdl-card__title-text carrinho-total">
-													<h:outputText styleClass="" id="valorFreteEscolhido" value="#{freteValues.freteEscolhido}" />
+													<h:outputText styleClass="" id="valorFreteEscolhido" value="#{freteValues.freteEscolhido}">
+														<f:convertNumber type="currency" locale="pt_BR" />
+													</h:outputText>
 												</h4>
 
 											</div>
@@ -288,7 +329,9 @@
 
 											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
 												<span><h:outputText styleClass="" id="valorSedex" value="R$#{freteValues.freteSedex.valor}"
-														rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()>0}" /></span>
+														rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()>0}">
+														<f:convertNumber type="currency" locale="pt_BR" />
+													</h:outputText></span>
 											</div>
 										</h:panelGroup>
 
@@ -308,7 +351,9 @@
 											<div class="mdl-layout-spacer"></div>
 											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
 												<span><h:outputText id="valorSedex10" value="R$#{freteValues.freteSedex10.valor}"
-														rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()>0}" /></span>
+														rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()>0}">
+														<f:convertNumber type="currency" locale="pt_BR" />
+													</h:outputText></span>
 											</div>
 										</h:panelGroup>
 
@@ -328,7 +373,9 @@
 											<div class="mdl-layout-spacer"></div>
 											<div class="mdl-cell mdl-cell--3-col mdl-cell--1-col-phone mdl-cell--2-col-tablet">
 												<span><h:outputText styleClass="" id="valorPac" value="R$#{freteValues.fretePac.valor}"
-														rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()>0}" /></span>
+														rendered="#{carrinhoBean.itemCarrinhoKeySetList.size()>0}">
+														<f:convertNumber type="currency" locale="pt_BR" />
+													</h:outputText> </span>
 											</div>
 										</h:panelGroup>
 

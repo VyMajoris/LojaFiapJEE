@@ -30,7 +30,6 @@ public class Endereco {
 	public int compareTo(Endereco that) {
 	     return ComparisonChain.start()
 	         .compare(this.id, that.getId())
-	         .compare(this.pais, that.getPais())
 	         .compare(this.estado, that.getEstado())
 	         .compare(this.cidade, that.getCidade())
 	         .compare(this.cep, that.getCep())

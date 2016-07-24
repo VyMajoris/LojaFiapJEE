@@ -59,7 +59,7 @@ public class ClienteBean {
 
 	@PreDestroy
 	public void preDestroy() {
-		System.out.println("ON DESTROY");
+
 		RequestContext.getCurrentInstance().execute("firebase.auth().signOut();");
 
 	}
@@ -80,9 +80,9 @@ public class ClienteBean {
 
 		cliente = clienteDao.buscarById(uid);
 
-		System.out.println("Login 1");
+
 		if (cliente == null) {
-			System.out.println("b");
+
 			cliente = new Cliente();
 			cliente.setNome(displayName);
 			cliente.setEmail(email);
@@ -94,7 +94,7 @@ public class ClienteBean {
 			// Verifica se dados da conta do google foram atualziados desde o
 			// ultimo login
 			if (!email.equals(cliente.getEmail()) || !displayName.equals(cliente.getNome())
-					|| photoUrl.equals(cliente.getPhotoUrl())) {
+					|| !photoUrl.equals(cliente.getPhotoUrl())) {
 				cliente.setEmail(email);
 				cliente.setNome(displayName);
 				cliente.setPhotoUrl(photoUrl);
@@ -152,13 +152,13 @@ public class ClienteBean {
 	}
 
 	public void pedirUpdate() {
-		System.out.println("pedirUpdate");
+
 
 		if (cliente !=null) {
-			System.out.println("pedirUpdate 1");
+
 
 			if (validaCliente() == false) {
-				System.out.println("pedirUpdate 2 ");
+
 				RequestContext.getCurrentInstance().execute("arrumarCadastroDialog.showModal();");
 
 			}
@@ -186,10 +186,7 @@ public class ClienteBean {
 	}
 
 	public void atualizarCliente() {
-
 		clienteDao.update(cliente);
-
-		System.out.println("CPF LENGHT:  " + cliente.getCpf().length());
 	}
 
 	public Cliente getCliente() {

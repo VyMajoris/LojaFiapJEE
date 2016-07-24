@@ -1,5 +1,6 @@
 package br.com.fiap.bean;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -19,7 +20,6 @@ import br.com.fiap.dto.ItemCarrinho;
 import br.com.fiap.entity.Cliente;
 import br.com.fiap.entity.Item;
 import br.com.fiap.entity.Pedido;
-import br.com.fiap.entity.Produto;
 @ManagedBean
 @RequestScoped
 public class CheckoutBean  {
@@ -59,7 +59,9 @@ public class CheckoutBean  {
 	@ManagedProperty("#{clienteBean}")
 	ClienteBean clienteBean;
 
-	private String parcela = "1";
+
+
+	Pedido pedido = null;
 
 
 	public ClienteBean getClienteBean() {
@@ -81,6 +83,8 @@ public class CheckoutBean  {
 		pedidoDao = new GenericDao<>(Pedido.class);
 		calcularValorBoleto();
 
+
+
 	}
 
 
@@ -91,49 +95,109 @@ public class CheckoutBean  {
 
 
 
-	public String gerarPedidoBoleto(){
+	public void gerarPedidoBoleto(){
 
-		ArrayList<Produto> listProdutosSemEstoque = estoqueBean.validaEstoque(new ArrayList<>(carrinho.getItemCarrinhoMap().values()));
-		Cliente cliente = clienteBean.getCliente();
-		if(cliente != null){
 
-			if (listProdutosSemEstoque.isEmpty()) {
 
-				estoqueBean.descontarEstoque(new ArrayList<>(carrinho.getItemCarrinhoMap().values()));
-				Pedido pedido = new Pedido();
-				pedido.setData(new Date());
-				pedido.setTotal(valorBoleto);
-				pedido.setTipo(0);
-				pedido.setCliente(cliente);
-				pedidoDao.adicionar(pedido);
-				pedido.setCliente((Cliente) session.getAttribute("cliente"));
-				for (ItemCarrinho ic : carrinho.getItemCarrinhoMap().values()) {
-					Item item = new Item(pedido,ic.getProduto(),ic.getQuantidade(),ic.getValor());
-					itemDao.adicionar(item);
-					pedido.getItens().add(item);
+
+		if (pedido == null ) {
+
+
+
+			Cliente cliente = clienteBean.getCliente();
+			if(cliente != null){
+
+
+				if (carrinho!=null) {
+
+					ArrayList<ItemCarrinho> listItensSemEstoque = estoqueBean.validaEstoque(new ArrayList<>(carrinho.getItemCarrinhoMap().values()));
+
+
+					if (listItensSemEstoque.isEmpty()) {
+
+
+						estoqueBean.descontarEstoque(new ArrayList<>(carrinho.getItemCarrinhoMap().values()));
+						pedido = new Pedido();
+						pedido.setData(new Date());
+						pedido.setTotal(valorBoleto);
+						pedido.setValorFrete(freteValues.getValorFreteEscolhido());
+
+						pedido.setCliente(cliente);
+						pedidoDao.adicionar(pedido);
+						pedido.setCliente((Cliente) session.getAttribute("cliente"));
+						for (ItemCarrinho ic : carrinho.getItemCarrinhoMap().values()) {
+							Item item = new Item(pedido,ic.getProduto(),ic.getQuantidade(),ic.getValor());
+							itemDao.adicionar(item);
+							pedido.getItens().add(item);
+						}
+						pedidoDao.update(pedido);
+						session.removeAttribute("carrinho");
+						carrinhoBean.removeAll();
+
+
+						try {
+							FacesContext.getCurrentInstance().getExternalContext().redirect("../checkout/pedido.xhtml?pedidoId="+pedido.getId());
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+
+					}else{
+
+
+						//sem estoque em um dos produtos
+						carrinhoBean.setListItensSemEstoque(listItensSemEstoque);
+						try {
+							FacesContext.getCurrentInstance().getExternalContext().redirect("../carrinho/carrinho.xhtml");
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+					}
+
+
+
+
+				}else{
+					try {
+						FacesContext.getCurrentInstance().getExternalContext().redirect("../index/newIndex.xhtml?faces-redirect=true");
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
 				}
-				pedidoDao.update(pedido);
-
-
 			}else{
 
-				//sem estoque em um dos produtos
-				carrinhoBean.setListProdutosSemEstoque(listProdutosSemEstoque);
-				return "/carrinho/carrinho.xhtml?faces-redirect=true";
+				//modal erro sistema
+				RequestContext.getCurrentInstance().execute("erroCheckoutDialog.showModal();");
+
 
 			}
 		}else{
-			//modal erro sistema
-			System.out.println("sem sessão");
-			RequestContext.getCurrentInstance().execute("erroCheckoutDialog.showModal();");
+
+			//show pedido
+			RequestContext.getCurrentInstance().execute("showPedidoOldInfoDialog.showModal();");
+
 
 		}
 
-		return null;
 
 
 	}
 
+
+
+	public Pedido getPedido() {
+		return pedido;
+	}
+
+
+	public void setPedido(Pedido pedido) {
+		this.pedido = pedido;
+	}
 
 
 	public EstoqueBean getEstoqueBean() {

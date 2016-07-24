@@ -32,7 +32,7 @@ public class ListaProdutoBean {
 
 	@PostConstruct
 	public void init(){
-		System.out.println("LIST PRODUTOS");
+
 		session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
 		produtoDao = new GenericDao<>(Produto.class);
 		listProduto = produtoDao.listar();

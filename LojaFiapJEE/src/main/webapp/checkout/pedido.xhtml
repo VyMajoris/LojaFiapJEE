@@ -1,0 +1,82 @@
+<!DOCTYPE html >
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:jsf="http://xmlns.jcp.org/jsf" xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://xmlns.jcp.org/jsp/jstl/core" xmlns:pe="http://primefaces.org/ui/extensions" xmlns:pa="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:o="http://omnifaces.org/ui" xmlns:of="http://omnifaces.org/functions">
+
+<h:head></h:head>
+<h:body>
+	<ui:composition template="/template/template.xhtml">
+		<ui:define name="content">
+			<f:metadata>
+			<f:viewParam name="pedidoId" value="#{pedidosBean.idPedido}" />
+			<f:event type="preRenderView" listener="#{pedidosBean.mostrarPedido}" />
+			</f:metadata>
+
+
+			<style>
+.boleto {
+	color: #fff;
+	background: url('../resources/img/boleto.jpg') center/cover;
+	background-position: 50% 40%;
+}
+
+.cartao {
+	color: #fff;
+	background: url('../resources/img/cartao.jpg') center/cover;
+	background-position: 50% 40%;
+}
+
+.frete {
+	color: #fff;
+	background: url('../resources/img/frete1.jpg') center/cover;
+}
+
+.totalpagar {
+	color: #fff;
+	background: url('../resources/img/pagamento2.jpg') center/cover;
+}
+</style>
+			
+
+
+
+			<div class="demo-blog__posts produto-container">
+
+				<div style="margin: 15px 0 0 0" class="demo-card-wide mdl-card mdl-cell--12-col mdl-shadow--2dp mdl-cell--middle">
+					<div class="mdl-card__title boleto ">
+						<div style="padding: 0px;" class="mdl-grid carrinho-top">
+							<div class="mdl-cell--12-col ">
+								<h4 class=" mdl-card__title-text carrinho-titulo">Pedido</h4>
+								<h4 class=" mdl-card__title-text carrinho-total">
+									<h:outputText value="#{pedidoBean.pedido}">
+										<f:convertNumber type="currency" locale="pt_BR" />
+									</h:outputText>
+								</h4>
+							</div>
+						</div>
+					</div>
+					<div class="mdl-card__supporting-text mdl-grid pagamento-container my-full-width">
+						<div class="mdl-cell mdl-cell--2-col mdl-cell--hide-phone mdl-cell--hide-tablet mdl-cell--1-col-tablet boleto-icon-container">
+							<i class="fa fa-barcode " aria-hidden="true"></i>
+						</div>
+						<div class="mdl-cell  mdl-cell--10-col-desktop mdl-cell--12-col-tablet mdl-cell--12-col-phone mdl-cell--7-col-tablet">
+							<h5 class="titulo-boleto">Pedido Realizado com sucesso!</h5>
+
+							<span class="texto-boleto">Número do pedido: <h:outputText styleClass="total-boleto preco" value="#{pedidosBean.pedido.id}"/> </span>
+							
+						</div>
+
+
+					</div>
+
+				</div>
+
+			</div>
+
+		</ui:define>
+
+
+	</ui:composition>
+</h:body>
+</html>

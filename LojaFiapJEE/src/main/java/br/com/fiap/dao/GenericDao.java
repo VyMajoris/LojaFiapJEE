@@ -52,16 +52,17 @@ public class GenericDao<T> implements Dao<T> {
 	@Override
 	public List<T> listar() {
 		Session session = HibernateUtil.getSessionFactory().openSession();
-		return session.createQuery("From " + classe.getSimpleName()).list();
+		return session.createQuery("From " + classe.getSimpleName()).setCacheable(true).list();
 	}
 
 	@Override
 	public T buscarById(Long id) {
 		T entidade;
 		Session session = HibernateUtil.getSessionFactory().openSession();
+
 		try {
 
-			entidade =  classe.cast(session.get(classe, id));
+			entidade =  classe.cast(session.get(classe, id) );
 		} finally {
 			session.flush();
 			session.close();
@@ -138,35 +139,34 @@ public class GenericDao<T> implements Dao<T> {
 
 	@Override
 	public List<T> pesquisar( String value, String prop){
-		Transaction trns = null;
+
 		Session session = HibernateUtil.getSessionFactory().openSession();
-		Criteria query = session.createCriteria(classe);
+
 		List<T> list = null;
 		try {
-			trns = session.getTransaction();
-			trns.begin();
-			query = session.createCriteria(classe);
+
+			Criteria query = session.createCriteria(classe).setCacheable(true);
+
+
+
 			query.add(Restrictions.like(prop, value, MatchMode.ANYWHERE));
 			System.out.println("QUERY::: "+query.toString());
 
-			if (!trns.wasCommitted()) {
-				trns.commit();
-			}
 
 
-			 list = query.list();
-			 for (T t : list) {
-				t.toString();
-			}
+
+			list = query.list();
+
+
 		} catch (RuntimeException e) {
-			if (trns != null) {
-				trns.rollback();
-			}
+
 			e.printStackTrace();
 
 		} finally {
+
 			session.flush();
 			session.close();
+
 		}
 		return list;
 
@@ -178,6 +178,8 @@ public class GenericDao<T> implements Dao<T> {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		try {
 			trns = session.beginTransaction();
+
+
 			session.update(entidade);
 			session.getTransaction().commit();
 		} catch (RuntimeException e) {

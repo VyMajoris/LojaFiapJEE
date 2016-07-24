@@ -12,11 +12,14 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.math.NumberUtils;
+import org.omnifaces.util.Ajax;
 import org.primefaces.context.RequestContext;
 
 import br.com.fiap.business.Calculos;
 import br.com.fiap.dao.GenericDao;
 import br.com.fiap.dto.Carrinho;
+import br.com.fiap.dto.ItemCarrinho;
 import br.com.fiap.entity.Cliente;
 import br.com.fiap.entity.Endereco;
 import br.com.fiap.entity.Produto;
@@ -47,14 +50,16 @@ public class CarrinhoBean {
 		this.freteValues = freteValues;
 	}
 
-	ArrayList<Produto> listProdutosSemEstoque = new ArrayList<>();
+	ArrayList<ItemCarrinho> listItensSemEstoque = new ArrayList<>();
 
-	public ArrayList<Produto> getListProdutosSemEstoque() {
-		return listProdutosSemEstoque;
+
+
+	public ArrayList<ItemCarrinho> getListItensSemEstoque() {
+		return listItensSemEstoque;
 	}
 
-	public void setListProdutosSemEstoque(ArrayList<Produto> listProdutosSemEstoque) {
-		this.listProdutosSemEstoque = listProdutosSemEstoque;
+	public void setListItensSemEstoque(ArrayList<ItemCarrinho> listItensSemEstoque) {
+		this.listItensSemEstoque = listItensSemEstoque;
 	}
 
 	private ArrayList<Long> itemCarrinhoKeySetList = new ArrayList<>();
@@ -87,14 +92,19 @@ public class CarrinhoBean {
 
 					if (enderecoBancoTemp.compareTo(enderecoSessionTemp) != 0) {
 						//novo endereço
-						RequestContext.getCurrentInstance().execute("confirmarNovoEnderecoDialog.showModal();");
-						System.out.println("new ENDEREÇO");
+
+						if (clienteBean.validaCliente()) {
+							RequestContext.getCurrentInstance().execute("confirmarNovoEnderecoDialog.showModal();");
+						}else{
+							RequestContext.getCurrentInstance().execute("erroNovoEndDialog.showModal();");
+
+						}
 
 
 						return;
 					}else if (enderecoBancoTemp.compareTo(enderecoSessionTemp) == 0) {
 						//mesmo endereço
-						System.out.println(" //mesmo endereço");
+
 						try {
 							FacesContext.getCurrentInstance().getExternalContext().redirect("../checkout/checkout.xhtml");
 						} catch (IOException e) {
@@ -104,7 +114,7 @@ public class CarrinhoBean {
 						return;
 
 					}else{
-						System.out.println("erroCheckoutDialog");
+
 						RequestContext.getCurrentInstance().execute("erroCheckoutDialog.showModal();");
 						return;
 
@@ -159,8 +169,12 @@ public class CarrinhoBean {
 	}
 
 	public void veriricarProdutosEstoque(){
-		if (listProdutosSemEstoque.size()>0) {
+		if (!listItensSemEstoque.isEmpty()) {
 			//show dialog sem estoque
+			Ajax.update("listProdutosSemEstoque");
+			RequestContext.getCurrentInstance().execute("erroProdutosCacheEstoqueDialog.showModal();");
+
+
 
 		}
 
@@ -204,9 +218,6 @@ public class CarrinhoBean {
 		itemCarrinhoKeySetList.clear();
 		carrinho.updateCarrinho();
 		updateSession(carrinho);
-		//Ajax.update("listCarrinho");
-		//Ajax.update("carrinho");
-		//Ajax.update("endereco");
 	}
 
 	public String putItem( Long produtoId, int qtd, boolean abrirCarrinho){
@@ -214,15 +225,19 @@ public class CarrinhoBean {
 
 
 		Produto produto = produtoDao.buscarById(produtoId);
-		if (hasEstoque(produto, qtd)) {
+
+		if ( qtd > produto.getEstoque()  ) {
+			//sem
+
+			RequestContext.getCurrentInstance().execute("putItemErroEstoqueDialog.showModal();");
+		}else{
+			//com
+
 			carrinho.putItemCarrinho(produtoId, qtd,produto);
 			itemCarrinhoKeySetList = new ArrayList<>(carrinho.getItemCarrinhoMap().keySet());
-			System.out.println("Has estoque");
-		}else{
-			// SHOW DIALOG mostra sem estqoue
-			System.out.println("SEM ESTOQUE");
-			System.out.println("ESATOQUE: "+produto.getEstoque());
+
 		}
+
 		updateSession(carrinho);
 
 		if (abrirCarrinho) {
@@ -233,30 +248,45 @@ public class CarrinhoBean {
 
 
 	public  void alterarQuantidade(){
+		String qtd;
+		int qtdInt;
 
 		FacesContext context = FacesContext.getCurrentInstance();
 		Map<String,String> params = context.getExternalContext().getRequestParameterMap();
+		qtd = params.get("qtd");
+
+		if (!NumberUtils.isNumber(qtd)) {
+			RequestContext.getCurrentInstance().execute("erroQtdCarrinhoDialog.showModal();");
+
+		}else{
+			qtdInt = Integer.parseInt(qtd);
+			Produto produto = produtoDao.buscarById(Long.parseLong(params.get("produtoId")));
 
 
+			if ( qtdInt > produto.getEstoque()  ) {
+				//sem
 
-		putItem(Long.parseLong(params.get("produtoId")), Integer.parseInt(params.get("qtd"))  ,false);
-
-
+				RequestContext.getCurrentInstance().execute("erroQtdEstoqueCarrinhoDialog.showModal();");
+			}else{
+				//com
+				putItem(Long.parseLong(params.get("produtoId")),qtdInt ,false);
+			}
+		}
 	}
+
+
 
 	public void removeItem(Long idProduto){
 
 
-		System.out.println("REMOVING: "+idProduto);
 
-		System.out.println("LIST BEFORE: "+itemCarrinhoKeySetList.size());
 		carrinho.removeItemCarrinho(idProduto);
 		itemCarrinhoKeySetList.clear();
 
 
 		itemCarrinhoKeySetList = new ArrayList<>(carrinho.getItemCarrinhoMap().keySet());
 		updateSession(carrinho);
-		System.out.println("LIST AFTERZ: "+itemCarrinhoKeySetList.size());
+
 
 		if (itemCarrinhoKeySetList.isEmpty()) {
 
@@ -264,9 +294,7 @@ public class CarrinhoBean {
 
 
 	}
-	public boolean hasEstoque(Produto produto, int qtd){
-		return produto.getEstoque() >= qtd;
-	}
+
 
 
 	//GETTER SETTER

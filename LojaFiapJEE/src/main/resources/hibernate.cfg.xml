@@ -14,17 +14,20 @@
 		<property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory</property>
 
 		<!-- For singleton factory -->
-		<!-- <property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</property> -->
+	<property name="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory</property> 
 
 		<!-- enable second level cache and query cache -->
 		<property name="hibernate.cache.use_second_level_cache">true</property>
 		<property name="hibernate.cache.use_query_cache">true</property>
+		<property name="hibernate.cache.use_structured_entries">true</property>
+		<property name="hibernate.generate_statistics">false</property>
+		
 		<property name="net.sf.ehcache.configurationResourceName">/ehcache.xml</property>
 
 		<mapping class="br.com.fiap.entity.Endereco" />
 		<mapping class="br.com.fiap.entity.Cliente" />
 		<mapping class="br.com.fiap.entity.Produto" />
-		<mapping class="br.com.fiap.entity.ProdutoDirect" />
+		<mapping class="br.com.fiap.entity.ProdutoNoCache" />
 		<mapping class="br.com.fiap.entity.Pedido" />
 		<mapping class="br.com.fiap.entity.Item" />
 	</session-factory>

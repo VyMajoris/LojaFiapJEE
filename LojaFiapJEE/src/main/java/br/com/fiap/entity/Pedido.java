@@ -35,23 +35,21 @@ public class Pedido implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date data;
 
-	//Data limite para pagamento antes que os produtos sejam retornados ao estoque
-	@Column(name="TIMEOUT")
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date timeout;
 
 	@OneToOne
 	private Cliente cliente;
 
-	//0 = boleto
-	//1 = cartao
-	@Column(name="TIPO")
-	private int tipo;
+	@Column(name="VALOR_FRETE")
+	private double valorFrete;
 
 
-	@Column(name="STATUS")
-	private PedidoStatus status = PedidoStatus.NAO_PAGO;
+	public double getValorFrete() {
+		return valorFrete;
+	}
 
+	public void setValorFrete(double valorFrete) {
+		this.valorFrete = valorFrete;
+	}
 
 	@Column(name="TOTAL")
 	private double total;
@@ -89,13 +87,7 @@ public class Pedido implements Serializable {
 		this.total = total;
 	}
 
-	public int getTipo() {
-		return tipo;
-	}
 
-	public void setTipo(int tipo) {
-		this.tipo = tipo;
-	}
 	public Cliente getCliente() {
 		return cliente;
 	}
@@ -105,19 +97,6 @@ public class Pedido implements Serializable {
 	}
 
 
-	public PedidoStatus getStatus() {
-		return status;
-	}
 
-	public void setStatus(PedidoStatus status) {
-		this.status = status;
-	}
 
-	public Date getTimeout() {
-		return timeout;
-	}
-
-	public void setTimeout(Date timeout) {
-		this.timeout = timeout;
-	}
 }

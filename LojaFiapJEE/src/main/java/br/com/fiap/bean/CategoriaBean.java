@@ -35,11 +35,13 @@ public class CategoriaBean {
 
 		session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
 		produtoDao = new GenericDao<>(Produto.class);
-		listProduto = produtoDao.listar();
+
 	}
 
 	public String pesquisarProdutos(){
-		listProdutoQuery = produtoDao.pesquisar(searchValue, "CATEGORIA");
+
+
+		listProdutoQuery = produtoDao.pesquisar(searchValue, "categoria");
 		return "/categoria/categoria.xhtml?faces-redirect=true";
 
 	}

@@ -38,20 +38,6 @@ $(document).ready(function() {
 	
 	$('.qtd').keydown(function(e){
 
-		if ((e.keyCode >= 48 && e.keyCode <= 57) || (e.keyCode >= 96 && e.keyCode <= 105)) {
-			var valueString = $(this).val()+""+(String.fromCharCode(e.keyCode));
-
-			if ( parseInt(valueString) >= 1 && parseInt(valueString) <= 10   ) {
-				
-				//
-
-			}else{
-				e.preventDefault();
-			}
-
-		}else{
-			e.preventDefault();
-		}
 	})
 
 

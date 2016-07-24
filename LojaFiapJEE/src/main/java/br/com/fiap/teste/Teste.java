@@ -34,16 +34,16 @@ public class Teste {
 
 
 
-		printStats(stats, 0);
+		//printStats(stats, 5);
 
 
 
 		//test3();
 
-		fillData(25, new String[]{"Categoria A","abstract"});
-		fillData(25,  new String[]{"Categoria B","business"});
-		fillData(25, new String[]{"Categoria C","cats"});
-		fillData(25,  new String[]{"Categoria D","technics"});
+		fillData(25,"Categoria A");
+		fillData(25,  "Categoria B");
+		fillData(25, "Categoria C");
+		fillData(25, "Categoria D");
 
 
 
@@ -58,29 +58,24 @@ public class Teste {
 		char[] chars = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 		StringBuilder sb = new StringBuilder();
 		Random random = new Random();
-		for (int i = 0; i < 5; i++) {
-		    char c = chars[random.nextInt(chars.length)];
-		    sb.append(c);
+		for (int i = 0; i < length; i++) {
+			char c = chars[random.nextInt(chars.length)];
+			sb.append(c);
 		}
-	    return sb.toString();
+		return sb.toString();
 	}
 
-	public static void fillData(int i, String[] strings){
-
-
+	public static void fillData(int i, String string){
 
 		for (int j = 0; j < i; j++) {
 			imgCount++;
 			Produto produto = new Produto();
-			produto.setDescricao(strings[0]  +" - "+ randomString(20) );
+			produto.setDescricao(string  +" - "+ randomString(20) );
 			produto.setEstoque(j);
 			produto.setNome("Produto "+ randomString(5) +" #"+j);
 			produto.setUrl_imagem("https://unsplash.it/800/600?image="+imgCount);
 			produto.setValor(100+j);
-			produto.setCategoria(strings[0]);
-
-
-
+			produto.setCategoria(string);
 			produto.setDataAdded( new DateTime(2016, 6, j+1, 0, 0).toDate());
 
 			produtodao.adicionar(produto);
@@ -99,17 +94,17 @@ public class Teste {
 
 	}
 	private static void printStats(Statistics stats, int i) {
+		produtodao.listar();
 		System.out.println("***** " + i + " *****");
-		System.out.println("Fetch Count="
-				+ stats.getEntityFetchCount());
-		System.out.println("Second Level Hit Count="
-				+ stats.getSecondLevelCacheHitCount());
-		System.out
-		.println("Second Level Miss Count="
-				+ stats
-				.getSecondLevelCacheMissCount());
-		System.out.println("Second Level Put Count="
-				+ stats.getSecondLevelCachePutCount());
+		System.out.println("Fetch Count="+stats.getEntityFetchCount());
+		produtodao.listar();
+		System.out.println("Second Level Hit Count="+ stats.getSecondLevelCacheHitCount());
+		produtodao.listar();
+		System.out.println("Second Level Miss Count="+ stats.getSecondLevelCacheMissCount());
+		produtodao.listar();
+		System.out.println("Second Level Put Count="+ stats.getSecondLevelCachePutCount());
+		produtodao.listar();
+		System.out.println("Second Level Put Count="+ stats.getSecondLevelCacheStatistics("produto"));
 	}
 
 
